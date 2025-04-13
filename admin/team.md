@@ -31,7 +31,9 @@ Fun Fact: I am good at rhythm games
 Languages: Java, Python <br>
 Fun Fact: I used to own 40 chickens at some point :3
 
-**Jason Naidu** <br>
+**Jason Naidu** [(jnaidu360)](https://github.com/jnaidu360) <br>
+Languages: C++, Python, JS
+Fun Fact: I've contributed to the Dolphin Emulator project.
 
 **Jonathan Nguyen** [(rec4l)](https://github.com/rec4l)<br>
 Languages: Python, HTML, JS <br>
