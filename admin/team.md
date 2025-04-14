@@ -11,13 +11,16 @@
 
 # Group Members
 
-**Alain Zhang** <br>
+**Alain Zhang** [(AlainZhangStudent)](https://github.com/AlainZhangStudent) [Website](https://alainzhangstudent.github.io/cse110-lab1) <br>
+Languages: Python and Haskell <br>
+Fun Fact: I have 3 cats at home
 
 **Danielle Sylliaasen** [(danieiiie)](https://github.com/danieiiie)<br>
 Language: Python <br>
 Fun Fact: I peel my grapes before I eat them
 
-**Elena Zhang** <br>
+**Elena Zhang** [(Elena-ee)](https://github.com/Elena-ee) <br>
+Language: Java
 
 **Erictuan Nong** [(erictuannong)](https://github.com/erictuannong) <br>
 Language: C++ <br>
@@ -27,7 +30,8 @@ Fun Fact: I am good at rhythm games
 Languages: C++, Java <br>
 Fun Fact: I like to play basketball
 
-**Ghaida Alruwais** <br>
+**Ghaida Alruwais** [(GhaidaALruwais)](https://github.com/GhaidaALruwais)
+Languages: Python, Swift
 
 **Gloria Lee** [(Mianbao004)](https://github.com/Mianbao004) <br>
 Languages: Java, Python <br>
@@ -41,7 +45,9 @@ Fun Fact: I've contributed to the Dolphin Emulator project.
 Languages: Python, HTML, JS <br>
 Fun Fact: I got immortal 2 in Valorant once
 
-**JP Davalos** <br>
+**JP Davalos** [(jpdavalos423)](https://github.com/jpdavalos423) <br>
+Language: Java
+Fun Fact: Founded a band on campus named Reverie
 
-**Kevin Cohen** [(kecohen575)](https://kecohen575.github.io/cse110_lab1) <br>
+**Kevin Cohen** [(kecohen575)](https://github.com/kecohen575) [Website](https://kecohen575.github.io/cse110_lab1)
 Languages: Ruby on Rails, Java, Python
