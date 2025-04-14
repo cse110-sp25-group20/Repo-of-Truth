@@ -30,7 +30,7 @@ Fun Fact: I am good at rhythm games
 Languages: C++, Java <br>
 Fun Fact: I like to play basketball
 
-**Ghaida Alruwais** [(GhaidaALruwais)](https://github.com/GhaidaALruwais)
+**Ghaida Alruwais** [(GhaidaALruwais)](https://github.com/GhaidaALruwais) <br>
 Languages: Python, Swift
 
 **Gloria Lee** [(Mianbao004)](https://github.com/Mianbao004) <br>
@@ -49,5 +49,5 @@ Fun Fact: I got immortal 2 in Valorant once
 Language: Java
 Fun Fact: Founded a band on campus named Reverie
 
-**Kevin Cohen** [(kecohen575)](https://github.com/kecohen575) [Website](https://kecohen575.github.io/cse110_lab1)
+**Kevin Cohen** [(kecohen575)](https://github.com/kecohen575) [Website](https://kecohen575.github.io/cse110_lab1) <br>
 Languages: Ruby on Rails, Java, Python
