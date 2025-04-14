@@ -23,7 +23,9 @@ Fun Fact: I peel my grapes before I eat them
 Language: C++ <br>
 Fun Fact: I am good at rhythm games
 
-**Ethan Kook** <br>
+**Ethan Kook** <br>[(ethankook)](https://github.com/ethankook) <br>
+Languages: C++, Java
+Fun Fact: I like to play basketball
 
 **Ghaida Alruwais** <br>
 
