@@ -24,7 +24,7 @@ Language: C++ <br>
 Fun Fact: I am good at rhythm games
 
 **Ethan Kook** <br>[(ethankook)](https://github.com/ethankook) <br>
-Languages: C++, Java
+Languages: C++, Java <br>
 Fun Fact: I like to play basketball
 
 **Ghaida Alruwais** <br>
