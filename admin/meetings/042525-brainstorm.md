@@ -1,4 +1,5 @@
 # Brainstorm Meeting 4/25/2025
+12:00-1:00PM Slack Huddle
 
 ## Attendance
 - Danielle Sylliaasen
