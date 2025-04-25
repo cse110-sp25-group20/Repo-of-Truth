@@ -32,3 +32,4 @@
 ## Summary
 - Most likely doing a collecter app (Pokemon focused)
 - Need to remeet with missing members to get on same page
+- Sending out annoucement to finalize topic choice
