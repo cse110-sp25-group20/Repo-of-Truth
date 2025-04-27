@@ -9,9 +9,9 @@
 
 
 ## Notes
-Started making google slides for the starting pitch
-Had fun with user personas
-Made a wireframe on MS Paint
+- Started making google slides for the starting pitch
+- Had fun with user personas
+- Made a wireframe on MS Paint
 
 ## Summary
 Basically just finished google slides for starting pitch
