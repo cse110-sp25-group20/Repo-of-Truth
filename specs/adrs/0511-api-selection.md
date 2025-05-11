@@ -5,6 +5,7 @@ Our application requires access to up-to-date and accurate Pokémon Trading Card
 * PokéTCG.io API
 * TCGdex.dev
 * PokéAPI
+* Webscraping and building a data set
 
 ## Decision Outcome
 Chosen option: **PokéTCG.io API**, because it is specifically designed for Pokémon TCG cards, offers advanced search and filtering features, and has good structure and documentation. It also supports metadata, set information, and high-resolution card images.
@@ -19,6 +20,7 @@ Chosen option: **PokéTCG.io API**, because it is specifically designed for Pok�
 
 ### Confirmation
 *We are waiting for TA approval
+*we will build a fallback status to account for the API shutting down temporarily 
 ## Pros and Cons of the Options
 
 ### PokéTCG.io API
@@ -37,6 +39,10 @@ Chosen option: **PokéTCG.io API**, because it is specifically designed for Pok�
 
 * Good, because it's popular and reliable for general Pokémon data
 * Bad, because it does not include card data or TCG-specific information like prices
+
+### Webscraping
+* Bad, it will take a long time web scraping different websites
+* Bad, the data will not be updated dynamically
 
 ## More Information
 
