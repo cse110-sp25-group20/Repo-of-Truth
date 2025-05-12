@@ -1,13 +1,19 @@
 name: E2E Tests
 on: [push, pull_request]
+
 jobs:
   test:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v3
+
       - uses: actions/setup-node@v3
         with:
           node-version: 18
+
       - run: npm install
-      - run: npm install cypress
-      - run: npx cypress run
+      - run: npm install cypress start-server-and-test
+
+      # 👇 Start your server and run tests when it's ready
+      - run: npx start-server-and-test "npm run dev" http://localhost:3000 "npx cypress run"
