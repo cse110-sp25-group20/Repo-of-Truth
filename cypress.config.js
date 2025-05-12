@@ -7,5 +7,6 @@ module.exports = defineConfig({
     },
     baseUrl: 'http://localhost:3000', // or whatever your dev server is
     specPattern: 'cypress/e2e/**/*.cy.{js,jsx,ts,tsx}',
+    supportFile: false,
   },
 })
