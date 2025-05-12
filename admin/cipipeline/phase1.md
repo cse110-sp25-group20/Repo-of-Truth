@@ -14,13 +14,13 @@ We implemented a linter into the pipeline. This step automatically checks each p
 - Might tweak in future based on results
 
 ## Code quality via tool
-We integrated an automated code quality analysis tool into the pipeline [Codacy](https://www.codacy.com/)
+We integrated an automated code quality analysis tool into the pipeline using [Codacy](https://www.codacy.com/)
 
 ### Functional
 - Codacy automates code quality as intended
 
 ### Planned/In Progress
-- N/A
+- May use branch protection provided by Codacy
 
 ## Code quality via human review
 We created a Pull Request template to ensure human review of code. Through this, we were able to implement branch protection on the main branch.
