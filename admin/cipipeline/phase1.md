@@ -1,7 +1,7 @@
 # Phase 1 Status
 In this phase, we established the foundation for our CI/CD pipeline with a focus on automation, code quality, and testing. Below is a summary of what has been implemented, what is in progress, and what is planned.
 
-Current pipeline diagram: ![CI/CD Pipeline Diagram](cipipeline/phase1.png)
+Current pipeline diagram: ![CI/CD Pipeline Diagram](phase1.png)
 
 ## Linting and code style enforcement
 We implemented a linter into the pipeline. This step automatically checks each pull request for styling and syntax consistency. This helps block any merges that fail from entering our workflow
