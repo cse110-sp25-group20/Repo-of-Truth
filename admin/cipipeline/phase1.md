@@ -31,7 +31,7 @@ We created a Pull Request template to ensure human review of code. Through this,
 - Reviewer section in Pull Request template 
 
 ### Planned/In Progress
-- Feature to assign team members to review Pull Requests
+- TBD
 
 ## Unit tests via automation
 We used **Jest** to make dummy functions. Through this process, we ensured that the Testing Framework was functional and that GitHub Actions is working.
