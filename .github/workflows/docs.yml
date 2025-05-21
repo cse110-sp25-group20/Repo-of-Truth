@@ -9,7 +9,9 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v3
         with:
-          persist-credentials: true  # allows pushing changes back?
+          # allows pushing changes
+          persist-credentials: true
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
@@ -23,6 +25,7 @@ jobs:
         run: npm run docs
 
       - name: Commit and push docs
+        if: github.event_name == 'push'
         uses: EndBug/add-and-commit@v9
         with:
           author_name: 'github-actions[bot]'
