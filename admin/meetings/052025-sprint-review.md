@@ -9,6 +9,8 @@
 - Jonathan Nguyen
 - JP Davalos
 - Ghaida Alruwais
+- Kevin Cohen
+- Alain Zhang
 
 ## Notes
 - Screenshared and each member explained what we contributed during the Sprint
@@ -17,7 +19,8 @@
 - Eric and Ethan went over testing
 - Jason went over binder functionality + other JavaScript
 - Alan went over CSS design (styling, page turn animation, etc.)
-- Kevin + JP went over ___ (stuck at GitHub Workflow)
+  - Although Elena couldn't make it, she said: We added styles for the body and buttons, as well as comments for styling
+- Kevin + JP went over auto documentation (stuck at GitHub Workflow)
 
 ## Summary + Future Plans
-- 
+- N/A
