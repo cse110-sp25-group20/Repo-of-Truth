@@ -1,6 +1,9 @@
 # Phase 2 Status
 In this phase, we enhanced the foundation of our CI/CD pipeline with a focus on documentation generation and coverage of our testing. Below is a summary of what has been implemented.
 
+Current pipeline diagram:  
+![CI/CD Pipeline Diagram](phase2.png)
+
 ---
 
 ## Code Coverage via Automation
