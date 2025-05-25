@@ -1,5 +1,5 @@
 // pokemon-binder.js
-const template = document.createElement("template");
+const template = document.createElement('template');
 template.innerHTML = `
   <style>
     :host {
@@ -91,36 +91,35 @@ template.innerHTML = `
       cursor: pointer;
     }
 
-    .card-modal {
+    .card-popup { 
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(0, 0, 0, 0.8);
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.5) rotate(0deg);
       z-index: 9999;
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      transition: transform 0.5s ease, opacity 0.5s ease;
+      opacity: 0;
       pointer-events: none;
     }
 
-    .card-modal.hidden {
-      display: none;
+    .card-popup img {
+      width: 300px;
+      height: auto;
+      max-height: 90vh;
+      display: block;
+      object-fit: contain;
     }
 
-    .modal-card {
-      max-width: 400px;
-      max-height: 600px;
-      transform: scale(0) rotateY(0deg);
-      transition: transform 0.8s ease;
+    .card-popup.show {
+      transform: translate(-50%, -50%) scale(1.2) rotate(360deg);
+      opacity: 1;
       pointer-events: auto;
-      cursor: pointer;
     }
 
-    .card-modal.show .modal-card {
-      transform: scale(1.5) rotateY(360deg);
-    }
   </style>
   <div class="binder">
     <div class="leaf left-leaf">
@@ -144,44 +143,27 @@ template.innerHTML = `
       </div>
     </div>
   </div>
-  <div class="card-modal hidden">
-    <img class="modal-card" src="" alt="Enlarged Pokemon Card">
-  </div>
 `;
 
-/**
- * @class PokemonBinder
- * @extends HTMLElement
- * @description A custom web component that creates an interactive Pokemon card binder with page-turning animations
- */
 class PokemonBinder extends HTMLElement {
-  /**
-   * @description Initializes the PokemonBinder component and sets up event listeners
-   */
   constructor() {
     super();
-    this.attachShadow({ mode: "open" });
+    this.attachShadow({ mode: 'open' });
     this.shadowRoot.appendChild(template.content.cloneNode(true));
 
     this.pagesData = [];
     this.currentIndex = 0;
 
-    this._leftLeaf = this.shadowRoot.querySelector(".left-leaf");
-    this._rightLeaf = this.shadowRoot.querySelector(".right-leaf");
-
-    this.modal = this.shadowRoot.querySelector(".card-modal");
-    this.modalCard = this.shadowRoot.querySelector(".modal-card");
-
-    this.modalCard.addEventListener("click", () => this.toggleModal());
+    this._leftLeaf = this.shadowRoot.querySelector('.left-leaf');
+    this._rightLeaf = this.shadowRoot.querySelector('.right-leaf');
 
     this._renderFaces();
   }
 
-  /**
-   * @description Sets the pages data and renders the binder faces
-   * @param {Array<Array<string>>} pages - Array of pages, where each page is an array of card image URLs
-   * @returns {void}
-   */
+  connectedCallback() {
+    this.shadowRoot.addEventListener('click', this._onCardClick.bind(this));
+  }
+
   setPages(pages) {
     if (!Array.isArray(pages)) return;
     this.pagesData = pages;
@@ -189,63 +171,29 @@ class PokemonBinder extends HTMLElement {
     this._renderFaces();
   }
 
-  /**
-   * @description Renders all visible faces of the binder with card data
-   * @private
-   * @returns {void}
-   */
-  _renderFaces() {
+   _renderFaces() {
     // left leaf
-    this._loadFace(
-      this._leftLeaf.querySelector(".front"),
-      this.pagesData[this.currentIndex],
-      this.currentIndex + 1
-    );
-    this._loadFace(
-      this._leftLeaf.querySelector(".back"),
-      this.pagesData[this.currentIndex - 1],
-      this.currentIndex
-    );
+    this._loadFace(this._leftLeaf.querySelector('.front'), this.pagesData[this.currentIndex], this.currentIndex + 1);
+    this._loadFace(this._leftLeaf.querySelector('.back'), this.pagesData[this.currentIndex - 1], this.currentIndex);
     // right leaf
-    this._loadFace(
-      this._rightLeaf.querySelector(".front"),
-      this.pagesData[this.currentIndex + 1],
-      this.currentIndex + 2
-    );
-    this._loadFace(
-      this._rightLeaf.querySelector(".back"),
-      this.pagesData[this.currentIndex + 2],
-      this.currentIndex + 3
-    );
+    this._loadFace(this._rightLeaf.querySelector('.front'), this.pagesData[this.currentIndex + 1], this.currentIndex + 2);
+    this._loadFace(this._rightLeaf.querySelector('.back'), this.pagesData[this.currentIndex + 2], this.currentIndex + 3);
   }
 
-  /**
-   * @description Loads card images into a specific face/page of the binder
-   * @private
-   * @param {HTMLElement} faceEl - The face element to load cards into
-   * @param {Array<string>} cardUrls - Array of card image URLs
-   * @param {number} pageNumber - The page number to display
-   * @returns {void}
-   */
   _loadFace(faceEl, cardUrls, pageNumber) {
-    faceEl.querySelector(".page-number").textContent = pageNumber
-      ? `Page ${pageNumber}`
-      : "";
-    const container = faceEl.querySelector(".cards-container");
-    container.innerHTML = "";
+    faceEl.querySelector('.page-number').textContent = pageNumber ? `Page ${pageNumber}` : '';
+    const container = faceEl.querySelector('.cards-container');
+    container.innerHTML = '';
     const urls = Array.isArray(cardUrls) ? cardUrls : [];
 
     for (let i = 0; i < 9; i++) {
-      const slot = document.createElement("div");
-      slot.className = "card-slot";
+      const slot = document.createElement('div');
+      slot.className = 'card-slot';
 
       if (urls[i]) {
-        const img = document.createElement("img");
+        const img = document.createElement('img');
         img.src = urls[i];
-        img.alt = "Pokemon card";
-
-        img.addEventListener("click", () => this.showModal(img.src));
-
+        img.alt = 'Pokemon card';
         slot.appendChild(img);
       }
 
@@ -253,78 +201,71 @@ class PokemonBinder extends HTMLElement {
     }
   }
 
-  /**
-   * @description Animates the page turn forward and updates the binder content
-   * @returns {void}
-   */
   flipForward() {
-    this._loadFace(
-      this._rightLeaf.querySelector(".back"),
-      this.pagesData[this.currentIndex + 2],
-      this.currentIndex + 3
-    );
-    this._rightLeaf.classList.add("flip-forward");
-    this._rightLeaf.addEventListener(
-      "transitionend",
-      () => {
-        this._rightLeaf.classList.remove("flip-forward");
-        this.currentIndex += 2;
-        const prev = this._rightLeaf.style.transition;
-        this._rightLeaf.style.transition = "none";
-        this._renderFaces();
-        void this._rightLeaf.offsetWidth;
-        this._rightLeaf.style.transition = prev;
-      },
-      { once: true }
-    );
+    this._loadFace(this._rightLeaf.querySelector('.back'), this.pagesData[this.currentIndex + 2], this.currentIndex + 3);
+    this._rightLeaf.classList.add('flip-forward');
+    this._rightLeaf.addEventListener('transitionend', () => {
+      this._rightLeaf.classList.remove('flip-forward');
+      this.currentIndex += 2;
+      const prev = this._rightLeaf.style.transition;
+      this._rightLeaf.style.transition = 'none';
+      this._renderFaces();
+      void this._rightLeaf.offsetWidth;
+      this._rightLeaf.style.transition = prev;
+    }, { once: true });
   }
 
-  /**
-   * @description Animates the page turn backward and updates the binder content
-   * @returns {void}
-   */
   flipBackward() {
     if (this.currentIndex < 2) return;
-    this._loadFace(
-      this._leftLeaf.querySelector(".back"),
-      this.pagesData[this.currentIndex - 1],
-      this.currentIndex
-    );
-    this._leftLeaf.classList.add("flip-back");
-    this._leftLeaf.addEventListener(
-      "transitionend",
-      () => {
-        this._leftLeaf.classList.remove("flip-back");
-        this.currentIndex -= 2;
-        const prev = this._leftLeaf.style.transition;
-        this._leftLeaf.style.transition = "none";
-        this._renderFaces();
-        void this._leftLeaf.offsetWidth;
-        this._leftLeaf.style.transition = prev;
-      },
-      { once: true }
-    );
+    this._loadFace(this._leftLeaf.querySelector('.back'), this.pagesData[this.currentIndex - 1], this.currentIndex);
+    this._leftLeaf.classList.add('flip-back');
+    this._leftLeaf.addEventListener('transitionend', () => {
+      this._leftLeaf.classList.remove('flip-back');
+      this.currentIndex -= 2;
+      const prev = this._leftLeaf.style.transition;
+      this._leftLeaf.style.transition = 'none';
+      this._renderFaces();
+      void this._leftLeaf.offsetWidth;
+      this._leftLeaf.style.transition = prev;
+    }, { once: true });
   }
 
-  /**
-   * @description Shows the modal with an enlarged version of the clicked card
-   * @param {string} imgSrc - The source URL of the card image to display
-   * @returns {void}
-   */
-  showModal(imgSrc) {
-    this.modalCard.src = imgSrc;
-    this.modal.classList.remove("hidden");
-    this.modal.classList.add("show");
-  }
+  // handles card popup
+  _onCardClick(e) {
+    if (e.target.tagName === 'IMG' && e.target.closest('.card-slot')) {
+      const img = e.target;
+      document.querySelectorAll('.card-popup, .card-overlay').forEach(el => el.remove());
 
-  /**
-   * @description Toggles the card modal visibility
-   * @returns {void}
-   */
-  toggleModal() {
-    this.modal.classList.remove("show");
-    this.modal.classList.add("hidden");
+      const overlay = document.createElement('div');
+      overlay.className = 'card-overlay';
+      const popup = document.createElement('div');
+      popup.className = 'card-popup';
+
+      const clonedImg = document.createElement('img');
+      clonedImg.src = img.src;
+      clonedImg.alt = img.alt;
+
+      popup.appendChild(clonedImg);
+      document.body.appendChild(overlay);
+      document.body.appendChild(popup);
+
+      requestAnimationFrame(() => {
+        overlay.classList.add('show');
+        popup.classList.add('show');
+      });
+
+      const removePopup = () => {
+        popup.classList.remove('show');
+        overlay.classList.remove('show');
+        popup.addEventListener('transitionend', () => popup.remove(), { once: true });
+        overlay.addEventListener('transitionend', () => overlay.remove(), { once: true });
+      };
+
+      popup.addEventListener('click', removePopup);
+      overlay.addEventListener('click', removePopup);
+    }
   }
 }
 
-customElements.define("pokemon-binder", PokemonBinder);
+customElements.define('pokemon-binder', PokemonBinder);
+
