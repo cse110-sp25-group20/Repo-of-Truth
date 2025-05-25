@@ -7,7 +7,7 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "jest",
+    "test": "jest --coverage --coverageThreshold='{\"global\": {\"branches\": 70, \"functions\": 70, \"lines\": 70, \"statements\": 70}}'",
     "docs": "jsdoc -c jsdoc.json"
   },
   "repository": {
