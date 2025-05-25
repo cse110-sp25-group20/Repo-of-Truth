@@ -1,4 +1,6 @@
 # Use Figma for UI 
+## Status
+Deprecated
 ## Context and Problem Statement
 We needed a collaborative design tool for building the user interface of our application. It was essential that this tool support real-time editing, feedback sharing, and easy access for all team members. Moreover, we need a tool that is easy to convert to css.
 ## Considered Options
@@ -35,3 +37,6 @@ Chosen option: **Figma**, because it provides the best combination of collaborat
 ## More Information
 
 * [Figma vs. Miro](https://htmlburger.com/blog/figma-vs-miro/)
+
+## Update:
+See ADR [0524-ui-consistency.md](https://github.com/cse110-sp25-group20/Repo-of-Truth/tree/main/specs/adrs) for the updated decision on how UI consistency will be maintained in the absence of Figma.
