@@ -23,3 +23,10 @@ turnRightButton.addEventListener('click', turnPageRight);
 
 const turnLeftButton = document.getElementById('turnPageLeft');
 turnLeftButton.addEventListener('click', turnPageLeft);
+
+
+/**
+ * @description A test function to verify JSDoc generation
+ * @param {string} testParam - A test parameter
+ * @returns {void}
+ */
