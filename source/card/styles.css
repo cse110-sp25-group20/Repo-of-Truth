@@ -5,17 +5,17 @@ body {
   margin: 2rem;
 }
 
-#search-form {
+#pokemon-form {
   margin-bottom: 1rem;
 }
 
-#search-form input {
+#pokemon-form input {
   padding: 0.5rem;
   font-size: 1rem;
   width: 200px;
 }
 
-#search-form button {
+#pokemon-form button {
   padding: 0.5rem 1rem;
   font-size: 1rem;
   margin-left: 0.5rem;

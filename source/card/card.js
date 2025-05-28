@@ -1,5 +1,22 @@
 const API_BASE = 'https://api.pokemontcg.io/v2';
 
+/**
+ * Builds a Lucene query for the Pokémon name, handling multi-word names.
+ * @param {string} name
+ * @returns {string} Query string for the API
+ */
+function buildNameQuery(name) {
+  const trimmed = name.trim();
+  if (!trimmed) return '';
+
+  // If the name contains spaces, treat it as an exact phrase
+  if (/\s/.test(trimmed)) {
+    return `name:"${trimmed}"`;
+  }
+
+  // Single word: use wildcard for partial matches
+  return `name:*${trimmed}*`;
+}
 
 // Function to fetch a card by ID
 // async function getCardByID(cardId) {
@@ -34,35 +51,22 @@ const API_BASE = 'https://api.pokemontcg.io/v2';
  * @returns {Promise<Array>} Array of card objects
  */
 async function getCardsByName(pokemonName) {
-  // Use wildcard * before/after to match partial names, e.g. *charizard*
-  const query = encodeURIComponent(`name:*${pokemonName}*`);
-  const url   = `${API_BASE}/cards?q=${query}`;
+  const queryString = buildNameQuery(pokemonName);
+  if (!queryString) return [];
+
+  const qParam = encodeURIComponent(queryString);
+  const url = `${API_BASE}/cards?q=${qParam}`;
 
   const res = await fetch(url, {
     headers: { 'X-Api-Key': API_KEY }
   });
-
   if (!res.ok) {
     throw new Error(`API error: ${res.status} ${res.statusText}`);
   }
 
   const { data } = await res.json();
-  return data;  // an array of card objects
+  return data;
 }
-
-// Example usage
-// (async () => {
-//   try {
-//     const cards = await getCardsByName('Oshawott');
-//     console.log(`Found ${cards.length} cards:`);
-//     cards.forEach(c => {
-//       console.log(`• ${c.name} [${c.set.name}]`);
-//     });
-//   } catch (err) {
-//     console.error(err);
-//   }
-// })();
-
 
 // Handle form submission
 document.addEventListener('DOMContentLoaded', () => {
