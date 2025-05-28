@@ -1,0 +1,52 @@
+/* styles.css */
+
+body {
+  font-family: Arial, sans-serif;
+  margin: 2rem;
+}
+
+#search-form {
+  margin-bottom: 1rem;
+}
+
+#search-form input {
+  padding: 0.5rem;
+  font-size: 1rem;
+  width: 200px;
+}
+
+#search-form button {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  margin-left: 0.5rem;
+}
+
+/* Display cards inline using flex container */
+#results {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.card {
+  width: 250px;
+  display: inline-block;
+  vertical-align: top;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 0.5rem;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.card img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+}
+
+.card-name {
+  margin-top: 0.5rem;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
