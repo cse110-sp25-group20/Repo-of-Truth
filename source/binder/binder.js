@@ -32,6 +32,7 @@ function turnPageRight() {
   const binder = document.querySelector("pokemon-binder");
   binder.flipForward();
   if (currentPage < pages.length - 1) currentPage++;
+  console.log("hi");
 }
 
 function turnPageLeft() {
