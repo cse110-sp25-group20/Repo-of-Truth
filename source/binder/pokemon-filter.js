@@ -16,7 +16,7 @@ export function initializeFilters() {
         const existingFilter = document.querySelector('.filter-wrapper');
         if (existingFilter) existingFilter.remove();
 
-        // Create filter container
+        // Create filter container with cleaner design
         const filterWrapper = document.createElement('div');
         filterWrapper.className = 'filter-wrapper';
         filterWrapper.innerHTML = `
@@ -24,14 +24,14 @@ export function initializeFilters() {
                 <h3 class="filter-title">SORT CARDS</h3>
                 <div class="filter-controls">
                     <select id="sort-options" class="filter-select">
-                        <option value="set">BY SET</option>
-                        <option value="name">BY NAME</option>
-                        <option value="binder">BY BINDER</option>
-                        <option value="date">BY DATE</option>
-                        <option value="value">BY VALUE</option>
-                        <option value="hp">BY HP</option>
+                        <option value="set">By Set</option>
+                        <option value="name">By Name</option>
+                        <option value="binder">By Binder</option>
+                        <option value="date">By Date</option>
+                        <option value="value">By Value</option>
+                        <option value="hp">By HP</option>
                     </select>
-                    <button class="filter-btn">APPLY</button>
+                    <button class="filter-btn">Apply</button>
                 </div>
             </div>
         `;
@@ -64,67 +64,68 @@ export function initializeFilters() {
         
         filterWrapper.style.cssText = `
             position: fixed;
-            top: ${headerRect.bottom + 20}px;
+            top: ${headerRect.bottom + 15}px;
             left: 20px;
-            width: 220px;
+            width: 180px;
             z-index: 1000;
         `;
     }
 
-    // Add styles
+    // Add cleaner styles matching your preferred design
     const style = document.createElement('style');
     style.textContent = `
         .filter-wrapper {
             transition: top 0.3s ease;
         }
         .filter-container {
-            background-color: var(--card-bg-color);
-            border: 3px solid var(--accent-color);
-            border-radius: 10px;
-            padding: 15px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            background: #fff;
+            border: 2px solid #e91e63;
+            border-radius: 8px;
+            padding: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
         .filter-title {
-            color: var(--accent-color);
-            margin: 0 0 15px 0;
-            font-size: 1.2rem;
-            text-transform: uppercase;
+            color: #e91e63;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
             text-align: center;
         }
         .filter-controls {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 6px;
         }
         .filter-select {
-            padding: 8px 12px;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            border: 2px solid var(--accent-color);
-            border-radius: 6px;
-            font-weight: bold;
+            padding: 5px 8px;
+            font-size: 0.85rem;
+            border: 1.5px solid #e91e63;
+            border-radius: 5px;
+            background-color: white;
+            color: #333;
             cursor: pointer;
-            width: 100%;
+        }
+        .filter-select:focus {
+            outline: none;
+            border-color: #c2185b;
         }
         .filter-btn {
-            padding: 8px 16px;
-            background-color: var(--accent-color);
+            padding: 5px 10px;
+            font-size: 0.8rem;
+            background-color: #e91e63;
             color: white;
             border: none;
-            border-radius: 6px;
+            border-radius: 5px;
             font-weight: bold;
-            text-transform: uppercase;
             cursor: pointer;
-            transition: all 0.2s;
-            width: 100%;
+            transition: background-color 0.2s;
         }
         .filter-btn:hover {
-            background-color: var(--accent-hover-color);
-            transform: translateY(-2px);
+            background-color: #d81b60;
         }
     `;
     document.head.appendChild(style);
 }
+
 document.addEventListener('DOMContentLoaded', () => {
     initializeFilters();
 });
