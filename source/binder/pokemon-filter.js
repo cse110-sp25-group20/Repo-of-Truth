@@ -1,63 +1,130 @@
 // pokemon-filter.js
 export function initializeFilters() {
-    // Wait for the custom element to be defined first
-    customElements.whenDefined('pokemon-binder').then(() => {
+    // Wait for essential elements to be available
+    const checkElements = setInterval(() => {
+        const header = document.querySelector('header');
+        const pokemonBinder = document.querySelector('pokemon-binder');
+        
+        if (header && pokemonBinder) {
+            clearInterval(checkElements);
+            createFilterPanel();
+        }
+    }, 100);
+
+    function createFilterPanel() {
+        // Remove existing filter if present
+        const existingFilter = document.querySelector('.filter-wrapper');
+        if (existingFilter) existingFilter.remove();
+
         // Create filter container
-        const filterContainer = document.createElement('div');
-        filterContainer.className = 'filter-container';
-        filterContainer.innerHTML = `
-            <h3>Sort Cards</h3>
-            <div class="filter-controls">
-                <select id="sort-options">
-                    <option value="set">By Set</option>
-                    <option value="binder">By Binder Section</option>
-                    <option value="date">By Date Added</option>
-                    <option value="value">By Market Value</option>
-                </select>
-                <button class="filter-btn">Apply Sort</button>
+        const filterWrapper = document.createElement('div');
+        filterWrapper.className = 'filter-wrapper';
+        filterWrapper.innerHTML = `
+            <div class="filter-container">
+                <h3 class="filter-title">SORT CARDS</h3>
+                <div class="filter-controls">
+                    <select id="sort-options" class="filter-select">
+                        <option value="set">BY BASE</option>
+                        <option value="binder">BY BINDER</option>
+                        <option value="date">DATE ADDED</option>
+                        <option value="value">BY VALUE</option>
+                    </select>
+                    <button class="filter-btn">APPLY</button>
+                </div>
             </div>
         `;
 
-        // Try multiple insertion points with fallbacks
-        const insertionPoints = [
-            { selector: 'pokemon-binder', position: 'beforebegin' },
-            { selector: '.controls', position: 'beforebegin' },
-            { selector: 'header', position: 'afterend' }
-        ];
+        // Add to DOM
+        document.body.appendChild(filterWrapper);
 
-        for (const point of insertionPoints) {
-            const element = document.querySelector(point.selector);
-            if (element) {
-                element.insertAdjacentElement(point.position, filterContainer);
-                setupFilterEvents();
-                return;
-            }
-        }
+        // Position relative to header
+        positionFilterPanel();
 
-        console.error('Could not find insertion point for filters');
-    }).catch(error => {
-        console.error('Failed to initialize filters:', error);
-    });
+        // Handle window resize
+        window.addEventListener('resize', positionFilterPanel);
 
-    function setupFilterEvents() {
-        const sortSelect = document.getElementById('sort-options');
-        const applyButton = document.querySelector('.filter-btn');
-
-        if (!sortSelect || !applyButton) {
-            console.error('Filter controls not found');
-            return;
-        }
-
-        applyButton.addEventListener('click', () => {
-            const sortMethod = sortSelect.value;
+        // Add event listeners
+        document.querySelector('.filter-btn').addEventListener('click', () => {
+            const sortMethod = document.getElementById('sort-options').value;
             document.dispatchEvent(new CustomEvent('sortCards', {
                 detail: { sortMethod }
             }));
         });
     }
-}
 
-// Initialize only if running directly (for testing)
-if (import.meta.url.includes('pokemon-filter.js')) {
-    document.addEventListener('DOMContentLoaded', initializeFilters);
+    function positionFilterPanel() {
+        const header = document.querySelector('header');
+        const filterWrapper = document.querySelector('.filter-wrapper');
+        
+        if (!header || !filterWrapper) return;
+
+        const headerRect = header.getBoundingClientRect();
+        
+        filterWrapper.style.cssText = `
+            position: fixed;
+            top: ${headerRect.bottom + 20}px;
+            left: 20px;
+            width: 180px;
+            z-index: 1000;
+        `;
+    }
+
+    // Add styles
+    const style = document.createElement('style');
+    style.textContent = `
+        .filter-wrapper {
+            transition: top 0.3s ease;
+        }
+        .filter-container {
+            background-color: var(--card-bg-color);
+            border: 2px solid var(--accent-color);
+            border-radius: 8px;
+            padding: 10px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+        }
+        .filter-title {
+            color: var(--accent-color);
+            margin: 0 0 10px 0;
+            font-size: 1rem;
+            text-transform: uppercase;
+            text-align: center;
+        }
+        .filter-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .filter-select {
+            padding: 6px 10px;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            border: 2px solid var(--accent-color);
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            cursor: pointer;
+            width: 100%;
+        }
+        .filter-btn {
+            padding: 6px 10px;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.2s;
+            width: 100%;
+        }
+        .filter-btn:hover {
+            background-color: var(--accent-hover-color);
+            transform: translateY(-2px);
+        }
+    `;
+    document.head.appendChild(style);
 }
+document.addEventListener('DOMContentLoaded', () => {
+    initializeFilters();
+});
