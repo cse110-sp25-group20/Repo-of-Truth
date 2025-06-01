@@ -1,0 +1,148 @@
+/* =========================
+   DARK MODE: GLOBAL & BODY
+   ========================= */
+body.dark-mode {
+  background: linear-gradient(135deg, #23272f 0%, #2a2a3a 60%, #1a1a22 100%);
+  color: #f3f3f3;
+}
+body.dark-mode::before {
+  opacity: 0.18;
+}
+
+/* =========================
+   DARK MODE: HEADER & NAV
+   ========================= */
+body.dark-mode h1 {
+  color: #ffcb05;
+  text-shadow: 2px 2px 0 #2a75bb, 4px 4px 0 #ee1515;
+}
+
+body.dark-mode .navbar {
+  background: rgba(34, 39, 47, 0.92);
+  border: 2px solid #ffcb05;
+  box-shadow: 0 2px 12px #ee151533;
+}
+body.dark-mode .navbar a {
+  color: #ffcb05;
+}
+body.dark-mode .navbar a:hover, body.dark-mode .navbar a:focus {
+  background: linear-gradient(90deg, #2a75bb 60%, #ee1515 100%);
+  color: #fff;
+  box-shadow: 0 4px 16px #2a75bb33;
+}
+
+/* =========================
+   DARK MODE: TOGGLE BUTTON
+   ========================= */
+body.dark-mode #darkModeToggle:focus-visible {
+  outline: 2px solid #ffcb05;
+}
+body.dark-mode .pokeball-toggle {
+  background: radial-gradient(circle at 50% 60%, #23272f 60%, #2a75bb 100%);
+  border: 4px solid #ffcb05;
+  box-shadow: 0 2px 8px #ffcb0555;
+}
+body.dark-mode .pokeball-toggle::before {
+  background: #2a75bb;
+}
+body.dark-mode .pokeball-toggle::after {
+  background: #23272f;
+  border: 4px solid #ffcb05;
+  box-shadow: 0 0 0 2px #2a75bb;
+}
+body.dark-mode #darkModeToggle:hover .pokeball-toggle,
+body.dark-mode #darkModeToggle:focus .pokeball-toggle {
+  box-shadow: 0 0 0 4px #2a75bbaa;
+}
+
+/* =========================
+   DARK MODE: BINDER & PAGE
+   ========================= */
+body.dark-mode pokemon-binder {
+  background: #23272f;
+  border: 4px solid #ffcb05;
+  box-shadow: 0 12px 36px #ee151544, 0 0 0 6px #2a75bb;
+}
+body.dark-mode .page-number {
+  color: #ffcb05;
+  text-shadow: 1px 1px 2px #2a75bb;
+}
+body.dark-mode .card-slot {
+  background: linear-gradient(145deg, #23272f 0%, #2a2a3a 100%);
+  border: 2px solid #2a75bb !important;
+  box-shadow: 0 2px 8px #ffcb0533;
+}
+body.dark-mode .card-slot:empty::after {
+  opacity: 0.18;
+}
+body.dark-mode .card-slot:hover {
+  border-color: #ffcb05 !important;
+  box-shadow: 0 4px 16px #ffcb0533;
+}
+
+/* =========================
+   DARK MODE: BUTTONS
+   ========================= */
+body.dark-mode button {
+  background: linear-gradient(90deg, #2a75bb 60%, #ee1515 100%);
+  color: #fff;
+  border: 2px solid #ffcb05;
+  box-shadow: 0 4px 12px #2a75bb33;
+}
+body.dark-mode button:hover {
+  background: linear-gradient(90deg, #ee1515 60%, #2a75bb 100%);
+  color: #ffcb05;
+  box-shadow: 0 8px 24px #ffcb0533;
+}
+body.dark-mode button:active {
+  box-shadow: 0 2px 6px #2a75bb33;
+}
+body.dark-mode #addCard {
+  background: linear-gradient(90deg, #43a047 60%, #2a75bb 100%);
+  color: #fff;
+  border-color: #ffcb05;
+}
+body.dark-mode #addCard:hover {
+  background: linear-gradient(90deg, #2a75bb 60%, #43a047 100%);
+  color: #ffcb05;
+}
+
+/* =========================
+   DARK MODE: MODAL POPUP
+   ========================= */
+body.dark-mode .modal-content {
+  background: linear-gradient(135deg, #23272f 0%, #2a2a3a 100%);
+  border: 3px solid #ffcb05;
+  box-shadow: 0 8px 32px #ffcb0544;
+}
+body.dark-mode .modal-image {
+  background: linear-gradient(135deg, #2a75bb 0%, #23272f 100%);
+  box-shadow: 0 2px 8px #ffcb0533;
+}
+body.dark-mode .modal-card {
+  background: #23272f;
+  box-shadow: 0 2px 8px #ffcb0533;
+}
+body.dark-mode .modal-info {
+  background: rgba(34, 39, 47, 0.92);
+  color: #ffcb05;
+}
+body.dark-mode .modal-name {
+  color: #ffcb05;
+  text-shadow: 1px 1px 0 #2a75bb, 2px 2px 0 #ee1515;
+}
+body.dark-mode .modal-details li {
+  color: #ffcb05;
+}
+
+/* =========================
+   DARK MODE: RESPONSIVE
+   ========================= */
+@media (max-width: 900px) {
+  body.dark-mode .modal-content {
+    background: linear-gradient(135deg, #23272f 0%, #2a2a3a 100%);
+  }
+  body.dark-mode .modal-image {
+    background: linear-gradient(135deg, #2a75bb 0%, #23272f 100%);
+  }
+} 
