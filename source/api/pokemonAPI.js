@@ -27,7 +27,6 @@ async function _fetchJson(endpoint, params = {}) {
     headers: defaultHeaders(),
   });
 
-  // 1) If server returned a non-2xx, throw an error
   if (!response.ok) {
     const errText = await response.text();
     throw new Error(
@@ -35,7 +34,6 @@ async function _fetchJson(endpoint, params = {}) {
     );
   }
 
-  // 2) Parse JSON
   const json = await response.json();
   return json;
 }
@@ -59,7 +57,7 @@ export async function getCardsByName(name) {
   // _fetchJson returns an object { data: [ …card objects… ], page, pageSize, count, … }
   const result = await _fetchJson("/cards", { q: query });
 
-  // result.data might be undefined or not an array if something is weird; guard it:
+  // result.data might be undefined or not an array if something goes wrong
   return Array.isArray(result.data) ? result.data : [];
 }
 
@@ -75,7 +73,6 @@ export async function getCardById(id) {
   }
 
   // Endpoint: GET /v2/cards/{id}
-  // If 404, Pokémon TCG returns a 404 status code.
   try {
     const result = await _fetchJson(`/cards/${encodeURIComponent(id)}`);
     // result.data is a single card object

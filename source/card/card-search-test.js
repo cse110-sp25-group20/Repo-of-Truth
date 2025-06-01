@@ -1,5 +1,8 @@
 import { getCardsByName, getCardById } from "../api/pokemonAPI.js";
 
+// JP made this for test page in ./card-search-test.html
+// demo to look up all cards by name
+
 // Handle form submission
 document.addEventListener('DOMContentLoaded', () => {
   const form = document.getElementById('pokemon-form');
