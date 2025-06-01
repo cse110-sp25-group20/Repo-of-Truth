@@ -87,6 +87,38 @@ export async function getCardById(id) {
 
 
 /**
+ * Search for a card by (partial) name and exact number.
+ * @param {string} name   – e.g. "Charizard"
+ * @param {string|number} number – e.g. "4" or 4
+ * @returns {Promise<Array<object>>}
+ */
+export async function getCardsByNameAndNumber(name, number) {
+  if (!name || !number) {
+    throw new Error("getCardsByNameAndNumber: both name and number are required");
+  }
+
+  // build the name part (wrap multi-word in quotes, wildcard single words):
+  const trimmed = name.trim();
+  const nameQuery = /\s/.test(trimmed)
+    ? `name:"${trimmed}"`
+    : `name:*${trimmed}*`;
+
+  // force number to string and escape:
+  const numStr = String(number).trim();
+  if (!numStr) {
+    throw new Error("getCardsByNameAndNumber: number must be a non-empty string or number");
+  }
+  const numberQuery = `number:"${encodeURIComponent(numStr)}"`;
+
+  // combine with a space (Lucene AND)
+  const lucene = `${nameQuery} ${numberQuery}`;
+
+  const result = await _fetchJson("/cards", { q: lucene });
+  return Array.isArray(result.data) ? result.data : [];
+}
+
+
+/**
  * Get a list of all sets.
  * @returns {Promise<Array<object>>} - Array of set objects { id, name, series, … }.
  */
