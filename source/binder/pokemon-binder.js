@@ -437,9 +437,51 @@ class PokemonBinder extends HTMLElement {
    * @returns {void}
    */
   toggleModal() {
+    // remove existing modal
     const modal = document.getElementById('global-pokemon-modal');
     if (modal) modal.remove();
+
+    
   }
+
+  /**
+   * @description Shows the modal to search for and add a card from the API
+   * @returns {void}
+   */
+  showAddCardModal() {
+    const oldModal = document.getElementById('global-pokemon-modal');
+    if (oldModal) oldModal.remove();
+
+    const modal = document.createElement('div');
+    modal.className = 'card-modal';
+    modal.id = 'global-pokemon-modal';
+    modal.innerHTML = `
+      <section class="modal-content" role="dialog" aria-modal="true">
+        <article class="modal-info" style="flex: 1;">
+          <h2 class="modal-name">Add a Pokémon Card</h2>
+          <input id="cardSearchInput" type="text" placeholder="Enter Pokemon name" style="padding: 8px; width: 100%; box-sizing: border-box;" />
+          <div id="cardSearchResult" style="margin-top: 16px; display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px;"></div>
+          <button id="confirmAddCardBtn" style="display: none; margin-top: 10px; padding: 8px 12px; background: #ffcb05; color: black; border: none; border-radius: 5px; font-weight: bold; cursor: pointer;">Add to Binder</button>
+        </article>
+      </section>
+    `;
+
+    document.body.appendChild(modal);
+
+    //close on background click
+    modal.addEventListener('click', (e) => {
+      if(e.target === modal) modal.remove();
+    });
+
+    const searchBtn = modal.querySelector("#cardSearchBtn");
+    const input = modal.querySelector("#cardSearchInput");
+    const resultBox = modal.querySelector("#cardSearchResult");
+    const confirmBtn = modal.querySelector("#confirmAddCardBtn");
+
+
+  }
+
 }
+
 
 customElements.define("pokemon-binder", PokemonBinder);
