@@ -1,4 +1,4 @@
-import { getCardsByName, getCardById, getCardsByNameAndNumber } from "../api/pokemonAPI.js";
+import { getCardsByName, getCardById, getCardsByNameAndNumber } from "./api/pokemonAPI.js";
 
 // test page is ./card-search-test.html
 // demo to look up all cards by name, id, or name with number
