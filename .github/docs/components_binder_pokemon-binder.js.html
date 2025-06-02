@@ -27,6 +27,9 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>// pokemon-binder.js
+import { getCardsByName, getCardById, getCardsByNameAndNumber } from "../../demos/api-search/api/pokemonAPI.js";
+import { handleAddCard } from "../../assets/scripts/binder-controller.js";
+
 const template = document.createElement("template");
 template.innerHTML = `
   &lt;style>
@@ -465,13 +468,159 @@ class PokemonBinder extends HTMLElement {
    * @returns {void}
    */
   toggleModal() {
+    // remove existing modal
     const modal = document.getElementById('global-pokemon-modal');
     if (modal) modal.remove();
+
+    
   }
+
+  /**
+   * @description Shows the modal to search for and add a card from the API
+   * @returns {void}
+   */
+  showAddCardModal() {
+    const oldModal = document.getElementById('global-pokemon-modal');
+    if (oldModal) oldModal.remove();
+
+    const modal = document.createElement('div');
+    modal.className = 'card-modal';
+    modal.id = 'global-pokemon-modal';
+    modal.innerHTML = `
+      &lt;style>
+        .card.selected {
+          border: 2px solid #2a75bb !important;
+          box-shadow: 0 0 12px #2a75bb !important;
+          background-color: #e0f7ff !important;
+          transform: scale(1.05);
+        }
+      &lt;/style>
+      &lt;section class="modal-content" role="dialog" aria-modal="true">
+        &lt;article class="modal-info" style="flex: 1;">
+          &lt;h2 class="modal-name">Add a Pokémon Card&lt;/h2>
+          &lt;input id="cardSearchInput" type="text" placeholder="Enter Pokemon name" style="padding: 8px; width: 100%; box-sizing: border-box;" />
+          &lt;div id="cardSearchResult" style="
+            margin-top: 16px; 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 50px;
+            max-height:60vh;
+            overflow-y: auto;">
+          &lt;/div>
+          &lt;button id="confirmAddCardBtn" style="display: none; margin-top: 10px; padding: 8px 12px; background: #ffcb05; color: black; border: none; border-radius: 5px; font-weight: bold; cursor: pointer;">Add to Binder&lt;/button>
+        &lt;/article>
+      &lt;/section>
+    `;
+
+
+    document.body.appendChild(modal);
+
+    //close on background click
+    modal.addEventListener('click', (e) => {
+      if(e.target === modal) modal.remove();
+    });
+    const input = modal.querySelector("#cardSearchInput");
+    const resultBox = modal.querySelector("#cardSearchResult");
+    const confirmBtn = modal.querySelector("#confirmAddCardBtn");
+
+    let selectedCard = null;
+
+    confirmBtn.addEventListener('click', () => {
+      if (selectedCard &amp;&amp; selectedCard.images?.small) {
+      handleAddCard(selectedCard.images.small); // or .large if you prefer
+      document.getElementById('global-pokemon-modal')?.remove();
+  }
+    })
+
+    input.addEventListener('input', async (e) => {
+      const query = e.target.value.trim();
+      console.log("Searching for:", query);
+      try {
+        resultBox.innerHTML = '&lt;p style="text-align:center;">Loading...&lt;/p>';
+        const cards = await getCardsByName(query);
+        resultBox.innerHTML = '';
+
+      if (cards.length === 0) {
+        resultBox.innerHTML = '&lt;p>No cards found.&lt;/p>';
+        return;
+      }
+
+      // Display each card
+      cards.forEach(card => {
+        const cardDiv = document.createElement('div');
+
+        cardDiv.className = 'card';
+        cardDiv.style.display = 'flex';
+        cardDiv.style.flexDirection = 'column';
+        cardDiv.style.alignItems = 'center';
+        cardDiv.style.justifyContent = 'center';
+        cardDiv.style.padding = '10px';
+        cardDiv.style.border = '1px solid #ccc';
+        cardDiv.style.borderRadius = '8px';
+        cardDiv.style.backgroundColor = '#fff';
+        cardDiv.style.boxShadow = '0 2px 6px rgba(0,0,0,0.1)';
+        cardDiv.style.cursor = 'pointer';
+        cardDiv.style.transition = 'transform 0.2s ease';
+        cardDiv.style.maxWidth = '110px';
+        cardDiv.style.margin = 'auto';
+
+        cardDiv.classList.add('card');
+        
+
+        cardDiv.style.border = '2px solid transparent'; // default
+        cardDiv.style.transition = 'transform 0.2s ease, border 0.2s ease';
+
+
+        cardDiv.addEventListener('mouseover', () => {
+          cardDiv.style.transform = 'scale(1.05)';
+        });
+
+        cardDiv.addEventListener('mouseout', () => {
+          cardDiv.style.transform = 'scale(1)';
+        });
+
+        cardDiv.addEventListener('click', () => {
+          //deselect previously selceted
+          resultBox.querySelectorAll('.card.selected').forEach(el => el.classList.remove('selected'));
+          
+          cardDiv.classList.add('selected');
+          selectedCard = card;
+          confirmBtn.style.display = 'block';
+
+        })
+        
+
+        const img = document.createElement('img');
+        img.src = card.images.small;
+        img.alt = card.name;
+        img.style.width = '100%';
+        img.style.borderRadius = '6px';
+
+        const nameEl = document.createElement('div');
+        nameEl.className = 'card-name';
+        nameEl.textContent = card.name;
+        nameEl.style.marginTop = '8px';
+        nameEl.style.fontWeight = 'bold';
+        nameEl.style.fontSize = '12px';
+        nameEl.style.textAlign = 'center';
+        nameEl.style.wordBreak = 'break-word';
+
+        cardDiv.appendChild(img);
+        cardDiv.appendChild(nameEl);
+        resultBox.appendChild(cardDiv);
+      });
+
+    } catch (err) {
+      resultBox.innerHTML = `&lt;p>Error: ${err.message}&lt;/p>`;
+    }
+    })
+  }
+  
+
 }
 
-customElements.define("pokemon-binder", PokemonBinder);
-</code></pre>
+
+customElements.define("pokemon-binder", PokemonBinder);</code></pre>
         </article>
     </section>
 
@@ -487,7 +636,7 @@ customElements.define("pokemon-binder", PokemonBinder);
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Mon Jun 02 2025 22:30:18 GMT+0000 (Coordinated Universal Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Mon Jun 02 2025 23:12:24 GMT+0000 (Coordinated Universal Time)
 </footer>
 
 <script> prettyPrint(); </script>
