@@ -473,12 +473,14 @@ class PokemonBinder extends HTMLElement {
       if(e.target === modal) modal.remove();
     });
 
-    const searchBtn = modal.querySelector("#cardSearchBtn");
     const input = modal.querySelector("#cardSearchInput");
     const resultBox = modal.querySelector("#cardSearchResult");
     const confirmBtn = modal.querySelector("#confirmAddCardBtn");
 
-
+    input.addEventListener('input', (e) => {
+      const query = e.target.value.trim();
+      getCardsByName(query);
+    })
   }
 
 }
