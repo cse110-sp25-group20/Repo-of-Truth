@@ -361,6 +361,11 @@ button:active {
   box-shadow: 0 0 0 4px #ffcb05aa;
 }
 
+.card.selected {
+  border: 2px solid #2a75bb;
+  box-shadow: 0 0 10px rgba(42, 117, 187, 0.6);
+}
+
 /* =========================
    RESPONSIVE DESIGN
    ========================= */
