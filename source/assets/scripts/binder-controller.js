@@ -14,7 +14,7 @@ function updateBinder() {
   binder.setPages(pages);
 }
 
-function handleAddCard() {
+export function handleAddCard(imgURL) {
   let page = pages[currentPage];
   let emptyIndex = page.indexOf("");
   if (emptyIndex === -1) {
@@ -26,11 +26,10 @@ function handleAddCard() {
   }
   // Add a new card (Bulbasaur) this was also used for a placeholder for testing cards ui
   // TODO: replace with actual info from the api that user selects from the add button
-  page[emptyIndex] = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png";
+  page[emptyIndex] = imgURL;
   updateBinder();
 }
 
-// 
 function turnPageRight() {
   const binder = document.querySelector("pokemon-binder");
   binder.flipForward();
@@ -44,6 +43,11 @@ function turnPageLeft() {
 }
 
 document.addEventListener('DOMContentLoaded', updateBinder);
-document.getElementById("addCard").addEventListener("click", handleAddCard);
+
+document.getElementById("addCard").addEventListener("click", () => {
+  const binder = document.querySelector("pokemon-binder");
+  binder.showAddCardModal();
+});
+
 document.getElementById("turnPageRight").addEventListener("click", turnPageRight);
 document.getElementById("turnPageLeft").addEventListener("click", turnPageLeft);
