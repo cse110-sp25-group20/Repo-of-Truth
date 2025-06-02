@@ -3,15 +3,42 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Pokémon Collector App</title>
-    <link rel="stylesheet" href="style.css" />
+    <title>Pokémon Card Binder</title>
+    <link rel="stylesheet" href="style.css?v=20250601" />
+    <link rel="stylesheet" href="darkMode.css?v=20250601" />
 </head>
 <body>
+    <header>
+        <h1>Pokémon Cards</h1>
+        <nav>
+            <ul class="navbar">
+                <li><a href="#">Home</a></li>
+                <li><a href="#">My Binder</a></li>
+                <li><a href="#">Smth else</a></li>
+                <li><a href="#">smth else</a></li>
+                <li>
+                  <button id="darkModeToggle" aria-label="Toggle dark mode" title="Toggle dark mode">
+                      <span class="pokeball-toggle"></span>
+                  </button>
+                </li>
+            </ul>
+        </nav>
+    </header>
     <pokemon-binder></pokemon-binder>
-    <button id="addCard">addCard()</button>
-    <button id="turnPageLeft">turnPageLeft()</button>
-    <button id="turnPageRight">turnPageRight()</button>
+    <section class="controls">
+        <button id="addCard">Add Card</button>
+        <button id="turnPageLeft">Previous Page</button>
+        <button id="turnPageRight">Next Page</button>
+
+        <label for="setSelector">Choose Set:</label>
+        <select id="setSelector">
+            <option value="">(loading…)</option>
+        </select>
+        
+        <button id="showMissing">Show Missing Cards</button>
+    </section>
 
     <script type="module" src="./binder/binder.js"></script>
+    <script type="module" src="./toggleMode.js"></script>
 </body>
 </html>

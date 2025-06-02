@@ -62,9 +62,11 @@ template.innerHTML = `
       visibility: visible;
     }
     .page-number {
-      font-size: 14px;
-      text-align: center;
-      margin-bottom: 10px;
+      font-weight: bold;
+      color: #2a75bb;
+      font-size: 18px !important;
+      margin-bottom: 15px !important;
+      text-shadow: 1px 1px 2px #ffcb05;
     }
     .cards-container {
       flex: 1;
@@ -90,7 +92,26 @@ template.innerHTML = `
       object-fit: contain;
       cursor: pointer;
     }
-
+    .pokemon-card {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to bottom right, #fff, #f9f9f9);
+      border: 2px solid #2a75bb;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      padding: 8px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .pokemon-card:hover {
+      transform: scale(1.03);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+      z-index: 5;
+    }
     .card-modal {
       position: fixed;
       top: 0;
@@ -103,23 +124,93 @@ template.innerHTML = `
       justify-content: center;
       z-index: 9999;
       pointer-events: none;
+      overflow: auto;
     }
-
     .card-modal.hidden {
       display: none;
     }
-
-    .modal-card {
-      max-width: 400px;
-      max-height: 600px;
-      transform: scale(0) rotateY(0deg);
-      transition: transform 0.8s ease;
+    .modal-content {
+      display: flex;
+      flex-direction: row;
+      background: #fff;
+      border-radius: 24px;
+      box-shadow: 0 8px 32px #2228;
+      padding: 24px 16px;
+      max-width: 95vw;
+      max-height: 95vh;
+      align-items: center;
       pointer-events: auto;
-      cursor: pointer;
+      gap: 24px;
+      position: relative;
+      box-sizing: border-box;
+      margin: auto;
+      flex-shrink: 1;
     }
-
-    .card-modal.show .modal-card {
-      transform: scale(1.5) rotateY(360deg);
+    .modal-image {
+      flex: 0 1 140px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #ffcb05 0%, #fff 100%);
+      border-radius: 16px;
+      box-shadow: 0 2px 8px #2a75bb33;
+      padding: 12px;
+      min-width: 100px;
+      min-height: 120px;
+      margin: 0;
+      flex-shrink: 1;
+    }
+    .modal-card {
+      max-width: 100px;
+      max-height: 120px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px #2a75bb33;
+      background: #fff;
+    }
+    .modal-info {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-width: 180px;
+      color: #222;
+    }
+    .modal-name {
+      font-family: 'Luckiest Guy', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #ee1515;
+      font-size: 2rem;
+      margin: 0 0 8px 0;
+      text-shadow: 1px 1px 0 #ffcb05, 2px 2px 0 #2a75bb;
+    }
+    .modal-details {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .modal-details li {
+      font-size: 1.1rem;
+      color: #2a75bb;
+      font-weight: bold;
+    }
+    @media (max-width: 600px) {
+      .modal-content {
+        flex-direction: column;
+        padding: 12px 4px;
+        gap: 12px;
+        max-width: 98vw;
+        max-height: 98vh;
+      }
+      .modal-image {
+        min-width: 60px;
+        min-height: 60px;
+        padding: 4px;
+      }
+      .modal-card {
+        max-width: 60px;
+        max-height: 60px;
+      }
     }
   </style>
   <div class="binder">
@@ -143,9 +234,6 @@ template.innerHTML = `
         <div class="cards-container"></div>
       </div>
     </div>
-  </div>
-  <div class="card-modal hidden">
-    <img class="modal-card" src="" alt="Enlarged Pokemon Card">
   </div>
 `;
 
@@ -312,9 +400,36 @@ class PokemonBinder extends HTMLElement {
    * @returns {void}
    */
   showModal(imgSrc) {
-    this.modalCard.src = imgSrc;
-    this.modal.classList.remove("hidden");
-    this.modal.classList.add("show");
+    // Remove any existing modal
+    const oldModal = document.getElementById('global-pokemon-modal');
+    if (oldModal) oldModal.remove();
+
+    // Create modal element- THE INFO IS PLACEHOLDER FOR TESTING UI and will be replaced with actual info from the api
+    // TODO: replace with actual info from the api
+    const modal = document.createElement('div');
+    modal.className = 'card-modal';
+    modal.id = 'global-pokemon-modal';
+    modal.innerHTML = `
+      <section class="modal-content" role="dialog" aria-modal="true">
+        <figure class="modal-image">
+          <img class="modal-card" src="${imgSrc}" alt="Pokemon Card">
+        </figure>
+        <article class="modal-info">
+          <h2 class="modal-name">Pikachu</h2>
+          <ul class="modal-details">
+            <li class="modal-type">Type: Electric</li>
+            <li class="modal-hp">HP: 60</li>
+            <li class="modal-rarity">Rarity: Common</li>
+            <li class="modal-set">Set: Base</li>
+          </ul>
+        </article>
+      </section>
+    `;
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) modal.remove();
+    });
+    document.body.appendChild(modal);
+    setTimeout(() => { modal.classList.remove('hidden'); }, 10);
   }
 
   /**
@@ -322,8 +437,8 @@ class PokemonBinder extends HTMLElement {
    * @returns {void}
    */
   toggleModal() {
-    this.modal.classList.remove("show");
-    this.modal.classList.add("hidden");
+    const modal = document.getElementById('global-pokemon-modal');
+    if (modal) modal.remove();
   }
 }
 
