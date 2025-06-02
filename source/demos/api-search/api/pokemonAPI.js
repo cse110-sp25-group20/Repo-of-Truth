@@ -1,0 +1,150 @@
+// Configuration: base URL and API key (move to env)
+const BASE_URL = "https://api.pokemontcg.io/v2";
+const API_KEY  = "29d15cf4-7669-4b3d-9d25-d1aad76e4e10";
+
+// Build a headers object that all requests share
+function defaultHeaders() {
+  return {
+    "X-Api-Key": API_KEY,
+    "Content-Type": "application/json",
+  };
+}
+
+// Helper to do GET requests and parse JSON (not to be exported)
+async function _fetchJson(endpoint, params = {}) {
+  // endpoint is a string like "/cards" or "/cards/{id}"
+  const url = new URL(BASE_URL + endpoint);
+
+  // If params = { q: 'name:pikachu' }, this turns into ?q=name:pikachu
+  Object.keys(params).forEach((key) => {
+    if (params[key] !== undefined && params[key] !== null) {
+      url.searchParams.append(key, params[key]);
+    }
+  });
+
+  const response = await fetch(url.toString(), {
+    method: "GET",
+    headers: defaultHeaders(),
+  });
+
+  if (!response.ok) {
+    const errText = await response.text();
+    throw new Error(
+      `Pokémon TCG API error: ${response.status} ${response.statusText} - ${errText}`
+    );
+  }
+
+  const json = await response.json();
+  return json;
+}
+
+// ----------- Exported Functions for Interacting with API -------------
+
+/**
+ * Search for cards by (partial) name.
+ * @param {string} name  - e.g. "pikachu" or "charizard".
+ * @returns {Promise<Array<object>>}  - Resolves to an array of card objects, or [] if none.
+ */
+export async function getCardsByName(name) {
+  if (!name || typeof name !== "string") {
+    throw new Error("getCardsByName: name must be a non-empty string.");
+  }
+
+  // According to the Pokémon TCG docs, to search by name you do:
+  // GET /v2/cards?q=name:[searchTerm]
+  const query = `name:${encodeURIComponent(name)}`;
+
+  // _fetchJson returns an object { data: [ …card objects… ], page, pageSize, count, … }
+  const result = await _fetchJson("/cards", { q: query });
+
+  // result.data might be undefined or not an array if something goes wrong
+  return Array.isArray(result.data) ? result.data : [];
+}
+
+
+/**
+ * Get a single card by its exact ID.
+ * @param {string} id  - the card’s “id” field, e.g. "XY7-54" (set-number)
+ * @returns {Promise<object|null>} - Resolves to the card object, or null if not found.
+ */
+export async function getCardById(id) {
+  if (!id || typeof id !== "string") {
+    throw new Error("getCardById: id must be a non-empty string.");
+  }
+
+  // Endpoint: GET /v2/cards/{id}
+  try {
+    const result = await _fetchJson(`/cards/${encodeURIComponent(id)}`);
+    // result.data is a single card object
+    return result.data || null;
+  } catch (err) {
+    if (err.message.includes("404")) {
+      return null; // Not found
+    }
+    throw err; // Some other error
+  }
+}
+
+
+/**
+ * Search for a card by (partial) name and exact number.
+ * @param {string} name   – e.g. "Charizard"
+ * @param {string|number} number – e.g. "4" or 4
+ * @returns {Promise<Array<object>>}
+ */
+export async function getCardsByNameAndNumber(name, number) {
+  if (!name || !number) {
+    throw new Error("getCardsByNameAndNumber: both name and number are required");
+  }
+
+  // build the name part (wrap multi-word in quotes, wildcard single words):
+  const trimmed = name.trim();
+  const nameQuery = /\s/.test(trimmed)
+    ? `name:"${trimmed}"`
+    : `name:*${trimmed}*`;
+
+  // force number to string and escape:
+  const numStr = String(number).trim();
+  if (!numStr) {
+    throw new Error("getCardsByNameAndNumber: number must be a non-empty string or number");
+  }
+  const numberQuery = `number:"${encodeURIComponent(numStr)}"`;
+
+  // combine with a space (Lucene AND)
+  const lucene = `${nameQuery} ${numberQuery}`;
+
+  const result = await _fetchJson("/cards", { q: lucene });
+  return Array.isArray(result.data) ? result.data : [];
+}
+
+
+/**
+ * Get a list of all sets.
+ * @returns {Promise<Array<object>>} - Array of set objects { id, name, series, … }.
+ */
+export async function getAllSets() {
+  const result = await _fetchJson("/sets");
+  return Array.isArray(result.data) ? result.data : [];
+}
+
+/**
+ * Get all cards in the set with the set ID.
+ * @param {string} setID  – e.g. "base1" or "base2"
+ * @returns {Promise<Array<object>>}  – Array of card objects
+ */
+export async function getCardsBySet(setID) {
+  if (!setID || typeof setID !== "string") {
+    throw new Error("getCardsBySet: setID must be a valid string.");
+  }
+
+  const result = await _fetchJson("/cards", {
+    q: `set.id:${encodeURIComponent(setID)}`,
+    pageSize: 250
+  });
+
+  return Array.isArray(result.data) ? result.data : [];
+}
+
+
+// More functions should be added as needed: getCardsByType(type), getCardsBySet(setId), etc.
+// Just follow the pattern: call _fetchJson(endpoint, params) and return result.data.
