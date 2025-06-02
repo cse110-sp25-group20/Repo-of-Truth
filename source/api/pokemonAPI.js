@@ -127,6 +127,24 @@ export async function getAllSets() {
   return Array.isArray(result.data) ? result.data : [];
 }
 
+/**
+ * Get all cards in the set with the set ID.
+ * @param {string} setID  – e.g. "base1" or "base2"
+ * @returns {Promise<Array<object>>}  – Array of card objects
+ */
+export async function getCardsBySet(setID) {
+  if (!setID || typeof setID !== "string") {
+    throw new Error("getCardsBySet: setID must be a valid string.");
+  }
+
+  const result = await _fetchJson("/cards", {
+    q: `set.id:${encodeURIComponent(setID)}`,
+    pageSize: 250
+  });
+
+  return Array.isArray(result.data) ? result.data : [];
+}
+
 
 // More functions should be added as needed: getCardsByType(type), getCardsBySet(setId), etc.
 // Just follow the pattern: call _fetchJson(endpoint, params) and return result.data.
