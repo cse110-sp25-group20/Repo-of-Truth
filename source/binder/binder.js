@@ -1,3 +1,4 @@
+import { getAllSets, getCardsBySet } from "../api/pokemonAPI.js";
 import "./pokemon-binder.js";
 
 //used placehodlers for testing cards ui
@@ -40,7 +41,87 @@ function turnPageLeft() {
   if (currentPage > 0) currentPage--;
 }
 
+function getOwnedCardIDs() {
+  const raw = window.localStorage.getItem("ownedCards");
+  try {
+    return raw ? JSON.parse(raw) : [];
+  }
+  catch {
+    return [];
+  }
+}
+
+function computeMissingCards(allCards, ownedIDs) {
+  const ownedSet = new Set(ownedIDs);
+  return allCards.filter(card => !ownedSet.has(card.id));
+}
+
+function buildPagesFromCardObjects(cardObjs) {
+  const urls = cardObjs.map(c => c.images.small || "");
+  const pagesArr = [];
+
+  for (let i = 0; i < urls.length; i += 9) {
+    const urlChunk = urls.slice(i, i + 9);
+    while (urlChunk.length < 9) urlChunk.push("");
+    pagesArr.push(urlChunk);
+  }
+
+  return pagesArr.length ? pagesArr : [["", "", "", "", "", "", "", "", ""]];
+}
+
+async function handleShowMissingCards() {
+  const setSelector = document.getElementById("setSelector");
+  const setID = setSelector.value;
+
+  if (!setID) {
+    return;
+  }
+
+  try {
+    const allCards = await getCardsBySet(setID);
+    const ownedIDs = getOwnedCardIDs();
+    const missingCardObjs = computeMissingCards(allCards, ownedIDs);
+    const missingPages = buildPagesFromCardObjects(missingCardObjs);
+
+    pages = missingPages;
+    currentPage = 0;
+    
+    updateBinder();
+  }
+  catch (err) {
+    console.error("Error in handleShowMissingCards: ", err);
+  }
+}
+
+document.addEventListener("DOMContentLoaded", async () => {
+  const setSelector = document.getElementById("setSelector");
+
+  try {
+    const allSets = await getAllSets();
+    setSelector.innerHTML = `<option value="">-- choose a set --</option>`;
+
+    allSets.forEach(setObj => {
+      const opt = document.createElement("option");
+      opt.value = setObj.id;
+      opt.textContent = setObj.name;
+      setSelector.appendChild(opt);
+    });
+  }
+  catch (err) {
+    console.error("Failed to load set list:", err);
+  }
+
+  updateBinder();
+
+  document.getElementById("addCard").addEventListener("click", handleAddCard);
+  document.getElementById("turnPageRight").addEventListener("click", turnPageRight);
+  document.getElementById("turnPageLeft").addEventListener("click", turnPageLeft);
+  document.getElementById("showMissing").addEventListener("click", handleShowMissingCards);
+});
+
+/*
 document.addEventListener('DOMContentLoaded', updateBinder);
 document.getElementById("addCard").addEventListener("click", handleAddCard);
 document.getElementById("turnPageRight").addEventListener("click", turnPageRight);
 document.getElementById("turnPageLeft").addEventListener("click", turnPageLeft);
+*/
