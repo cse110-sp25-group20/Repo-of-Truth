@@ -1,6 +1,6 @@
 // binder.js
 
-import "./pokemon-binder.js";
+import "../../components/binder/pokemon-binder.js";
 
 //used placehodlers for testing cards ui
 // TODO: replace with actual info from the api
