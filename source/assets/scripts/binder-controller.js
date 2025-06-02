@@ -1,4 +1,6 @@
-import "./pokemon-binder.js";
+// binder.js
+
+import "../../components/binder/pokemon-binder.js";
 
 //used placehodlers for testing cards ui
 // TODO: replace with actual info from the api
@@ -28,6 +30,7 @@ function handleAddCard() {
   updateBinder();
 }
 
+// 
 function turnPageRight() {
   const binder = document.querySelector("pokemon-binder");
   binder.flipForward();
