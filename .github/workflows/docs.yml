@@ -20,7 +20,10 @@ jobs:
 
       - name: Install dependencies
         run: npm install
-
+        
+      - name: Clean old docs
+        run: rm -rf .github/docs
+          
       - name: Generate JSDoc
         run: npm run docs
 
