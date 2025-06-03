@@ -1,4 +1,4 @@
-# Sprint Review Meeting 06/02/2025
+# Sprint Retro Meeting 06/02/2025
 10:00-11:00PM Discord Call
 
 ## Attendance 
