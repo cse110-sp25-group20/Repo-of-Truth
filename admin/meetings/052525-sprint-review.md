@@ -14,16 +14,15 @@
 
 ## Notes
 - Pulled issues from backlog
-- Assigned issues
-- JP and Kevin were assigned auto doc documentation
-- Alain and Erictuan were assigned card sort filter
-- Danielle was assigned card popup animation and card flip information
-- Assigned Ethan addcard function
-- Assigned Ghaida to CI/CD submissions, ADR checkpoints, and CSS Phase 1
 - Talked about CI/CD for docs and code coverage. Code coverage fails our test if our tested code is below 70% of total code.
 - Talked about plan to increase that to 80% in the next weeks.
-- Went over Project backlog and described our process in the next few weeks. 
+- Went over project backlog and described our process in the next few weeks. 
+- Created video for meeting admin/videos/052525-meeting-demos.mp4.
 
 ## Summary + Future Plans
 - Planned to increase code coverage to 80% in the next weeks.
-- N/A
+- JP and Kevin were assigned auto doc documentation.
+- Alain and Erictuan were assigned card sort filter.
+- Danielle was assigned card popup animation and card flip information,
+- Assigned Ethan addcard function,
+- Assigned Ghaida to CI/CD submissions, ADR checkpoints, and CSS Phase 1
