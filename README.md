@@ -2,6 +2,8 @@
 
 A modern web app to browse, collect, and filter for Pokémon from all generations. Built with HTML, powered by Pokemon TCG API.
 
+![App Screenshot](admin/misc/app_screenshot.png)
+
 ---
 
 ## 📦 Features
@@ -13,5 +15,6 @@ A modern web app to browse, collect, and filter for Pokémon from all generation
 ---
 
 Built with love and care by Team 20 Vibe Coders  
-*We do not debug, we vibe check*
-![Team Logo](admin/branding/darklogo.png)
+*We do not debug, we vibe check*  
+
+<img src="admin/branding/darklogo.png" alt="drawing" width="200"/>
