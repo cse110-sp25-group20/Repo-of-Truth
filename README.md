@@ -1,6 +1,12 @@
 # Pokémon Collector App
 
-A modern web app to browse, collect, and filter for Pokémon from all generations. Built with HTML, powered by Pokemon TCG API.
+<!-- TODO: 
+- read here: https://github.com/matiassingers/awesome-readme for more good README.md files
+- make a gif for website usage (would be cool)
+- link website when its all done :)
+-->
+
+A modern web app to browse, collect, and filter for Pokémon from all generations. Built with HTML + CSS + JS, powered by Pokemon TCG API.
 
 ![App Screenshot](admin/misc/app_screenshot.png)
 
