@@ -2,6 +2,8 @@
 
 import "../../components/collection/collection-view.js";
 
+const COLLECTION_KEY = 'pokemonCollection';
+
 /**
  * Shows the collection view and hides the binder view.
  * @returns {void}
@@ -42,22 +44,12 @@ document.getElementById('navBinder').addEventListener('click', e => {
 });
 
 /**
- * Handles navigation to the home view (binder).
- * @param {Event} e -  click event.
- * @returns {void}
- */
-document.getElementById('navHome').addEventListener('click', e => {
-  e.preventDefault();
-  showBinder();
-});
-
-/**
  * Adds a card to the user's collection in localStorage if it does not exist.
  * @param {Object} card - The card stores image  
  * @returns {void}
  */
 window.addCardToCollection = function(card) {
-  let collection = PokemonCollection.getCollection();
+  const collection = document.querySelector("pokemon-collection").getCollection();
   if (!collection.some(c => c.imgUrl === card.imgUrl)) {
     collection.push(card);
     localStorage.setItem(COLLECTION_KEY, JSON.stringify(collection));
