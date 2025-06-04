@@ -1,6 +1,7 @@
 // binder.js
 
 import "../../components/binder/pokemon-binder.js";
+import { buildMissingPages } from "./missing-cards.js"; // filter missing cards
 
 /**
  * @constant {string} BINDER_STORAGE_KEY
@@ -79,6 +80,15 @@ function turnPageLeft() {
   if (currentPage > 0) currentPage--;
 }
 
+// filter missing cards
+function showPagesWithMissingSlots() {
+  const viewPages = buildMissingPages(pages);
+  currentPage = 0;
+  const binder = document.querySelector("pokemon-binder");
+  binder.setPages(viewPages);
+}
+// filter missing cards
+
 document.addEventListener('DOMContentLoaded', updateBinder);
 
 document.getElementById("addCard").addEventListener("click", () => {
@@ -88,6 +98,10 @@ document.getElementById("addCard").addEventListener("click", () => {
 
 document.getElementById("turnPageRight").addEventListener("click", turnPageRight);
 document.getElementById("turnPageLeft").addEventListener("click", turnPageLeft);
+
+// filter missing cards
+document.getElementById("showMissing").addEventListener("click", showPagesWithMissingSlots);
+// filter missing cards
 
 /**
  * Returns the current binder pages array.
