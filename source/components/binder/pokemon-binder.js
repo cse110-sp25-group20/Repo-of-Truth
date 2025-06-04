@@ -375,7 +375,9 @@ class PokemonBinder extends HTMLElement {
    * @returns {void}
    */
   flipBackward() {
-    if (this.currentIndex < 2) return;
+    // Prevent flipping if we're at the first page or if currentIndex would go negative
+    if (this.currentIndex <= 0) return;
+    
     this._loadFace(
       this._leftLeaf.querySelector(".back"),
       this.pagesData[this.currentIndex - 1],
@@ -386,7 +388,7 @@ class PokemonBinder extends HTMLElement {
       "transitionend",
       () => {
         this._leftLeaf.classList.remove("flip-back");
-        this.currentIndex -= 2;
+        this.currentIndex = Math.max(0, this.currentIndex - 2); // Ensure we don't go below 0
         const prev = this._leftLeaf.style.transition;
         this._leftLeaf.style.transition = "none";
         this._renderFaces();
