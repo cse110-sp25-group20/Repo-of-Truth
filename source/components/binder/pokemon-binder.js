@@ -1,6 +1,6 @@
 /**
  * @file pokemon-binder.js
- * @description Custom web component for displaying and managing a Pokemon card binder includes a page turning feature.
+ * @description Custom web component for displaying and managing a Pokemon card binder, including a page-turning feature.
  * @module PokemonBinder
  */
 
@@ -245,26 +245,18 @@ template.innerHTML = `
   </div>
 `;
 
-/**
- * @class PokemonBinder
- * @extends HTMLElement
- * @description A custom web component that creates an interactive Pokemon card binder with page-turning animations
- */
 class PokemonBinder extends HTMLElement {
-  /**
-   * @description Initializes the PokemonBinder component and sets up event listeners
-   */
   constructor() {
     super();
     this.attachShadow({ mode: "open" });
     this.shadowRoot.appendChild(template.content.cloneNode(true));
 
-    this.pagesData = [];
-    this.currentIndex = 0;
+    // pagesData is now a Map<pageNumber, Array<9 imgUrls>>
+    this.pagesData = new Map();
+    this.currentIndex = 0; // this holds the “current page number” (1-based)
 
     this._leftLeaf = this.shadowRoot.querySelector(".left-leaf");
     this._rightLeaf = this.shadowRoot.querySelector(".right-leaf");
-
     this.modal = this.shadowRoot.querySelector(".card-modal");
     this.modalCard = this.shadowRoot.querySelector(".modal-card");
 
@@ -272,61 +264,106 @@ class PokemonBinder extends HTMLElement {
   }
 
   /**
-   * @description Sets the pages data and renders the binder faces
-   * @param {Array<Array<string>>} pages - Array of pages, where each page is an array of card image URLs
-   * @returns {void}
+   * @description Takes a flat collection of { name, imgUrl, page, slot } objects,
+   *              builds a Map keyed by pageNumber → array of 9 img URLs,
+   *              then re-renders the binder.
+   * @param {Array<{ name: string, imgUrl: string, page: number|string, slot: number|string }>} collection
    */
-  setPages(pages) {
-    if (!Array.isArray(pages)) return;
-    this.pagesData = pages;
-    this.currentIndex = 0;
+  setPages(collection) {
+    if (!Array.isArray(collection)) return;
+
+    // 1) Build a Map<pageNumber, Array(9)>
+    const pagesMap = new Map();
+
+    for (const card of collection) {
+      const page = parseInt(card.page, 10);
+      const slot = parseInt(card.slot, 10);
+
+      // Skip invalid page/slot/img
+      if (
+        !Number.isInteger(page) ||
+        page < 1 ||
+        !Number.isInteger(slot) ||
+        slot < 0 ||
+        slot > 8 ||
+        !card.imgUrl
+      ) {
+        continue;
+      }
+
+      if (!pagesMap.has(page)) {
+        pagesMap.set(page, Array(9).fill(undefined));
+      }
+      pagesMap.get(page)[slot] = card.imgUrl;
+    }
+
+    // 2) Swap in our new Map
+    this.pagesData = pagesMap;
+
+    // 3) Set currentIndex to the smallest pageNumber, or 0 if none
+    if (pagesMap.size > 0) {
+      this.currentIndex = Math.min(...pagesMap.keys());
+    } else {
+      this.currentIndex = 0;
+    }
+
+    // 4) Re-render
     this._renderFaces();
   }
 
   /**
-   * @description Renders all visible faces of the binder with card data
-   * @private
-   * @returns {void}
+   * @description Renders the four visible “faces” of the binder (two pages on each leaf).
+   *              Uses page numbers relative to this.currentIndex.
    */
   _renderFaces() {
-    // left leaf
+    // For each “face,” fetch the array of imgURLs from the Map (or undefined if missing)
+    const leftFrontData = this.pagesData.get(this.currentIndex);
+    const leftBackData = this.pagesData.get(this.currentIndex - 1);
+    const rightFrontData = this.pagesData.get(this.currentIndex + 1);
+    const rightBackData = this.pagesData.get(this.currentIndex + 2);
+
+    // Left leaf: front face shows page “currentIndex”
     this._loadFace(
       this._leftLeaf.querySelector(".front"),
-      this.pagesData[this.currentIndex],
-      this.currentIndex + 1
-    );
-    this._loadFace(
-      this._leftLeaf.querySelector(".back"),
-      this.pagesData[this.currentIndex - 1],
+      leftFrontData,
       this.currentIndex
     );
-    // right leaf
+    // Left leaf: back face shows page “currentIndex – 1”
+    this._loadFace(
+      this._leftLeaf.querySelector(".back"),
+      leftBackData,
+      this.currentIndex - 1
+    );
+
+    // Right leaf: front face shows page “currentIndex + 1”
     this._loadFace(
       this._rightLeaf.querySelector(".front"),
-      this.pagesData[this.currentIndex + 1],
-      this.currentIndex + 2
+      rightFrontData,
+      this.currentIndex + 1
     );
+    // Right leaf: back face shows page “currentIndex + 2”
     this._loadFace(
       this._rightLeaf.querySelector(".back"),
-      this.pagesData[this.currentIndex + 2],
-      this.currentIndex + 3
+      rightBackData,
+      this.currentIndex + 2
     );
   }
 
   /**
-   * @description Loads card images into a specific face/page of the binder
-   * @private
-   * @param {HTMLElement} faceEl - The face element to load cards into
-   * @param {Array<string>} cardUrls - Array of card image URLs
-   * @param {number} pageNumber - The page number to display
-   * @returns {void}
+   * @description Given a face element and its array of up to 9 img URLs, plus a pageNumber,
+   *              populate the 3×3 grid.  If pageNumber ≤ 0, the label is blank.
+   * @param {HTMLElement} faceEl
+   * @param {Array<string>|undefined} cardUrls
+   * @param {number} pageNumber
    */
   _loadFace(faceEl, cardUrls, pageNumber) {
-    faceEl.querySelector(".page-number").textContent = pageNumber
-      ? `Page ${pageNumber}`
-      : "";
+    const pageLabel = faceEl.querySelector(".page-number");
+    pageLabel.textContent = pageNumber > 0 ? `Page ${pageNumber}` : "";
+
     const container = faceEl.querySelector(".cards-container");
     container.innerHTML = "";
+
+    // Normalize to array (or empty array)
     const urls = Array.isArray(cardUrls) ? cardUrls : [];
 
     for (let i = 0; i < 9; i++) {
@@ -345,73 +382,78 @@ class PokemonBinder extends HTMLElement {
   }
 
   /**
-   * @description Animates the page turn forward and updates the binder content
-   * @returns {void}
+   * @description Flip two pages forward (from currentIndex & currentIndex+1 to currentIndex+2 & +3)
    */
   flipForward() {
+    // Preload the back face of the right leaf (which will become visible mid-flip)
+    const nextBackData = this.pagesData.get(this.currentIndex + 2);
     this._loadFace(
       this._rightLeaf.querySelector(".back"),
-      this.pagesData[this.currentIndex + 2],
-      this.currentIndex + 3
+      nextBackData,
+      this.currentIndex + 2
     );
+
     this._rightLeaf.classList.add("flip-forward");
     this._rightLeaf.addEventListener(
       "transitionend",
       () => {
         this._rightLeaf.classList.remove("flip-forward");
+        // Advance by two page-numbers
         this.currentIndex += 2;
-        const prev = this._rightLeaf.style.transition;
+        // Temporarily disable transition so we can re-render instantly
+        const prevTransition = this._rightLeaf.style.transition;
         this._rightLeaf.style.transition = "none";
         this._renderFaces();
+        // Force reflow then restore transition
         void this._rightLeaf.offsetWidth;
-        this._rightLeaf.style.transition = prev;
+        this._rightLeaf.style.transition = prevTransition;
       },
       { once: true }
     );
   }
 
   /**
-   * @description Animates the page turn backward and updates the binder content
-   * @returns {void}
+   * @description Flip two pages backward (from currentIndex & currentIndex−1 to currentIndex−2 & −3)
    */
   flipBackward() {
-    if (this.currentIndex < 2) return;
+    if (this.currentIndex < 2) return; // nothing to flip if we're at page 0 or 1
+
+    // Preload the back face of the left leaf (which reveals currentIndex−1)
+    const prevBackData = this.pagesData.get(this.currentIndex - 1);
     this._loadFace(
       this._leftLeaf.querySelector(".back"),
-      this.pagesData[this.currentIndex - 1],
-      this.currentIndex
+      prevBackData,
+      this.currentIndex - 1
     );
+
     this._leftLeaf.classList.add("flip-back");
     this._leftLeaf.addEventListener(
       "transitionend",
       () => {
         this._leftLeaf.classList.remove("flip-back");
+        // Move back by two page-numbers
         this.currentIndex -= 2;
-        const prev = this._leftLeaf.style.transition;
+        const prevTransition = this._leftLeaf.style.transition;
         this._leftLeaf.style.transition = "none";
         this._renderFaces();
         void this._leftLeaf.offsetWidth;
-        this._leftLeaf.style.transition = prev;
+        this._leftLeaf.style.transition = prevTransition;
       },
       { once: true }
     );
   }
 
   /**
-   * @description Shows the modal with an enlarged version of the clicked card
-   * @param {string} imgSrc - The source URL of the card image to display
-   * @returns {void}
+   * @description Displays a modal with a larger view of the clicked card.
+   * @param {string} imgSrc
    */
   showModal(imgSrc) {
-    // Remove any existing modal
-    const oldModal = document.getElementById('global-pokemon-modal');
+    const oldModal = document.getElementById("global-pokemon-modal");
     if (oldModal) oldModal.remove();
 
-    // Create modal element- THE INFO IS PLACEHOLDER FOR TESTING UI and will be replaced with actual info from the api
-    // TODO: replace with actual info from the api
-    const modal = document.createElement('div');
-    modal.className = 'card-modal';
-    modal.id = 'global-pokemon-modal';
+    const modal = document.createElement("div");
+    modal.className = "card-modal";
+    modal.id = "global-pokemon-modal";
     modal.innerHTML = `
       <section class="modal-content" role="dialog" aria-modal="true">
         <figure class="modal-image">
@@ -428,40 +470,39 @@ class PokemonBinder extends HTMLElement {
         </article>
       </section>
     `;
-    modal.addEventListener('click', (e) => {
+    modal.addEventListener("click", (e) => {
       if (e.target === modal) modal.remove();
     });
     setTimeout(() => {
-      const modalCard = modal.querySelector('.modal-card');
+      const modalCard = modal.querySelector(".modal-card");
       if (modalCard) {
-        modalCard.addEventListener('click', () => this.toggleModal());
+        modalCard.addEventListener("click", () => this.toggleModal());
       }
     }, 0);
     document.body.appendChild(modal);
-    setTimeout(() => { modal.classList.remove('hidden'); }, 10);
+    setTimeout(() => {
+      modal.classList.remove("hidden");
+    }, 10);
   }
 
   /**
-   * @description Toggles the card modal visibility
-   * @returns {void}
+   * @description Hides/removes the currently displayed modal.
    */
   toggleModal() {
-    // remove existing modal
-    const modal = document.getElementById('global-pokemon-modal');
+    const modal = document.getElementById("global-pokemon-modal");
     if (modal) modal.remove();
   }
 
   /**
-   * @description Shows the modal to search for and add a card from the API
-   * @returns {void}
+   * @description Opens a search modal to look up cards from the API and add them.
    */
   showAddCardModal() {
-    const oldModal = document.getElementById('global-pokemon-modal');
+    const oldModal = document.getElementById("global-pokemon-modal");
     if (oldModal) oldModal.remove();
 
-    const modal = document.createElement('div');
-    modal.className = 'card-modal';
-    modal.id = 'global-pokemon-modal';
+    const modal = document.createElement("div");
+    modal.className = "card-modal";
+    modal.id = "global-pokemon-modal";
     modal.innerHTML = `
       <style>
         .card.selected {
@@ -489,122 +530,117 @@ class PokemonBinder extends HTMLElement {
     `;
 
     document.body.appendChild(modal);
-
-    //close on background click
-    modal.addEventListener('click', (e) => {
-      if(e.target === modal) modal.remove();
+    modal.addEventListener("click", (e) => {
+      if (e.target === modal) modal.remove();
     });
+
     const input = modal.querySelector("#cardSearchInput");
     const resultBox = modal.querySelector("#cardSearchResult");
     const confirmBtn = modal.querySelector("#confirmAddCardBtn");
-
     let selectedCard = null;
 
-    confirmBtn.addEventListener('click', () => {
+    confirmBtn.addEventListener("click", () => {
       if (selectedCard && selectedCard.images?.small) {
-        // Add to collection
+        // Add to collection in localStorage or your data store
         if (window.addCardToCollection) {
-          window.addCardToCollection({ name: selectedCard.name, imgUrl: selectedCard.images.small });
+          window.addCardToCollection({
+            name: selectedCard.name,
+            imgUrl: selectedCard.images.small,
+            // You might assign default page/slot here or leave that to your binder-controller logic
+          });
         }
-        // Add to binder
+        // Add to binder using binder-controller helper
         handleAddCard(selectedCard.images.small);
-        // Refresh both views if present
-        if (document.querySelector('pokemon-binder')) {
-          document.querySelector('pokemon-binder').setPages(window.getBinderPages ? window.getBinderPages() : []);
+        // Refresh binder view
+        const binderEl = document.querySelector("pokemon-binder");
+        if (binderEl && window.getBinderPages) {
+          binderEl.setPages(window.getBinderPages());
         }
-        if (document.querySelector('pokemon-collection')) {
-          document.querySelector('pokemon-collection').render && document.querySelector('pokemon-collection').render();
+        // If you have a separate collection component, refresh that too
+        const collEl = document.querySelector("pokemon-collection");
+        if (collEl && typeof collEl.render === "function") {
+          collEl.render();
         }
-        document.getElementById('global-pokemon-modal')?.remove();
+        document.getElementById("global-pokemon-modal")?.remove();
       }
     });
 
-    input.addEventListener('input', async (e) => {
+    input.addEventListener("input", async (e) => {
       const query = e.target.value.trim();
-      console.log("Searching for:", query);
+      resultBox.innerHTML = '<p style="text-align:center;">Loading...</p>';
+
       try {
-        resultBox.innerHTML = '<p style="text-align:center;">Loading...</p>';
         const cards = await getCardsByName(query);
-        resultBox.innerHTML = '';
+        resultBox.innerHTML = "";
 
-      if (cards.length === 0) {
-        resultBox.innerHTML = '<p>No cards found.</p>';
-        return;
+        if (!cards.length) {
+          resultBox.innerHTML = "<p>No cards found.</p>";
+          return;
+        }
+
+        cards.forEach((card) => {
+          const cardDiv = document.createElement("div");
+          cardDiv.className = "card";
+          Object.assign(cardDiv.style, {
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "10px",
+            border: "1px solid #ccc",
+            borderRadius: "8px",
+            backgroundColor: "#fff",
+            boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
+            cursor: "pointer",
+            transition: "transform 0.2s ease, border 0.2s ease",
+            maxWidth: "110px",
+            margin: "auto",
+            border: "2px solid transparent",
+          });
+
+          cardDiv.addEventListener("mouseover", () => {
+            cardDiv.style.transform = "scale(1.05)";
+          });
+          cardDiv.addEventListener("mouseout", () => {
+            cardDiv.style.transform = "scale(1)";
+          });
+          cardDiv.addEventListener("click", () => {
+            resultBox
+              .querySelectorAll(".card.selected")
+              .forEach((el) => el.classList.remove("selected"));
+            cardDiv.classList.add("selected");
+            selectedCard = card;
+            confirmBtn.style.display = "block";
+          });
+
+          const img = document.createElement("img");
+          img.src = card.images.small;
+          img.alt = card.name;
+          Object.assign(img.style, {
+            width: "100%",
+            borderRadius: "6px",
+          });
+
+          const nameEl = document.createElement("div");
+          nameEl.className = "card-name";
+          nameEl.textContent = card.name;
+          Object.assign(nameEl.style, {
+            marginTop: "8px",
+            fontWeight: "bold",
+            fontSize: "12px",
+            textAlign: "center",
+            wordBreak: "break-word",
+          });
+
+          cardDiv.appendChild(img);
+          cardDiv.appendChild(nameEl);
+          resultBox.appendChild(cardDiv);
+        });
+      } catch (err) {
+        resultBox.innerHTML = `<p>Error: ${err.message}</p>`;
       }
-
-      // Display each card
-      cards.forEach(card => {
-        const cardDiv = document.createElement('div');
-
-        cardDiv.className = 'card';
-        cardDiv.style.display = 'flex';
-        cardDiv.style.flexDirection = 'column';
-        cardDiv.style.alignItems = 'center';
-        cardDiv.style.justifyContent = 'center';
-        cardDiv.style.padding = '10px';
-        cardDiv.style.border = '1px solid #ccc';
-        cardDiv.style.borderRadius = '8px';
-        cardDiv.style.backgroundColor = '#fff';
-        cardDiv.style.boxShadow = '0 2px 6px rgba(0,0,0,0.1)';
-        cardDiv.style.cursor = 'pointer';
-        cardDiv.style.transition = 'transform 0.2s ease';
-        cardDiv.style.maxWidth = '110px';
-        cardDiv.style.margin = 'auto';
-
-        cardDiv.classList.add('card');
-        
-
-        cardDiv.style.border = '2px solid transparent'; // default
-        cardDiv.style.transition = 'transform 0.2s ease, border 0.2s ease';
-
-
-        cardDiv.addEventListener('mouseover', () => {
-          cardDiv.style.transform = 'scale(1.05)';
-        });
-
-        cardDiv.addEventListener('mouseout', () => {
-          cardDiv.style.transform = 'scale(1)';
-        });
-
-        cardDiv.addEventListener('click', () => {
-          //deselect previously selceted
-          resultBox.querySelectorAll('.card.selected').forEach(el => el.classList.remove('selected'));
-          
-          cardDiv.classList.add('selected');
-          selectedCard = card;
-          confirmBtn.style.display = 'block';
-
-        })
-        
-
-        const img = document.createElement('img');
-        img.src = card.images.small;
-        img.alt = card.name;
-        img.style.width = '100%';
-        img.style.borderRadius = '6px';
-
-        const nameEl = document.createElement('div');
-        nameEl.className = 'card-name';
-        nameEl.textContent = card.name;
-        nameEl.style.marginTop = '8px';
-        nameEl.style.fontWeight = 'bold';
-        nameEl.style.fontSize = '12px';
-        nameEl.style.textAlign = 'center';
-        nameEl.style.wordBreak = 'break-word';
-
-        cardDiv.appendChild(img);
-        cardDiv.appendChild(nameEl);
-        resultBox.appendChild(cardDiv);
-      });
-
-    } catch (err) {
-      resultBox.innerHTML = `<p>Error: ${err.message}</p>`;
-    }
-    })
+    });
   }
-  
-
 }
-
 
 customElements.define("pokemon-binder", PokemonBinder);

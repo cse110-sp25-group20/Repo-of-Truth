@@ -36,7 +36,8 @@ function loadBinderFromStorage() {
   ];
 }
 
-let pages = loadBinderFromStorage();
+//let pages = loadBinderFromStorage();
+let pages = JSON.parse(localStorage.getItem('pokemonCollection'));
 let currentPage = 0;
 
 function updateBinder() {
