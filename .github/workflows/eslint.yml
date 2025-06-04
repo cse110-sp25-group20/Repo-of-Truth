@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
+    - name: Checkout repository
       uses: actions/checkout@v2
 
     - name: Set up Node.js
@@ -16,8 +16,8 @@ jobs:
         node-version: '18'
         cache: 'npm'
 
-    - name: Install dependencies
+    - name: Install required dependencies
       run: npm ci
 
-    - name: Run ESLint
+    - name: Run ESLint on Codebase
       run: npx eslint . --ext .js,.jsx,.ts,.tsx
