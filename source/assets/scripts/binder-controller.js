@@ -14,7 +14,9 @@ function loadBinderFromStorage() {
     try {
       const parsed = JSON.parse(stored);
       if (Array.isArray(parsed)) return parsed;
-    } catch {}
+    } catch {
+      // Ignore JSON parse errors
+    }
   }
   return [
     ["", "", "", "", "", "", "", "", ""]

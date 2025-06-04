@@ -1,5 +1,5 @@
 // pokemon-binder.js
-import { getCardsByName, getCardById, getCardsByNameAndNumber } from "../../demos/api-search/api/pokemonAPI.js";
+import { getCardsByName } from "../../demos/api-search/api/pokemonAPI.js";
 import { handleAddCard } from "../../assets/scripts/binder-controller.js";
 
 const template = document.createElement("template");

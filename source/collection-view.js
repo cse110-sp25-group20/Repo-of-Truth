@@ -1,4 +1,4 @@
-import { assignCardToSlot, getBinderPages } from './assets/scripts/binder-controller.js';
+import { assignCardToSlot } from './assets/scripts/binder-controller.js';
 
 const COLLECTION_KEY = 'pokemonCollection';
 
@@ -95,7 +95,9 @@ class PokemonCollection extends HTMLElement {
       try {
         const parsed = JSON.parse(stored);
         if (Array.isArray(parsed)) return parsed;
-      } catch {}
+      } catch {
+        // Ignore JSON parse errors
+      }
     }
     return [];
   }
