@@ -34,6 +34,7 @@ Issues linked:
 - [ ] I’ve tested my changes locally
 - [ ] I’ve added relevant tests
 - [ ] I’ve updated docs/comments as needed
+- [ ] Did I assign the correct people to this issue?
 
 ---
 
