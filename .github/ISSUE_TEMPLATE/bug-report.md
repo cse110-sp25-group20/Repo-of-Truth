@@ -1,6 +1,6 @@
 ---
-name: NameOfBug
-about: dsdsdsd
+name: Bug Report Template
+about: Something isn't working as intended
 title: "[BUG] <short description>"
 labels: bug
 assignees: ''
