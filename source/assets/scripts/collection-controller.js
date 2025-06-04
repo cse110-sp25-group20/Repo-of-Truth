@@ -11,6 +11,8 @@ const COLLECTION_KEY = 'pokemonCollection';
 function showCollection() {
   document.querySelector('pokemon-collection').style.display = 'flex';
   document.querySelector('pokemon-binder').style.display = 'none';
+  document.getElementById('turnPageLeft').style.display = 'none';
+  document.getElementById('turnPageRight').style.display = 'none';
 }
 
 /**
@@ -20,6 +22,8 @@ function showCollection() {
 function showBinder() {
   document.querySelector('pokemon-collection').style.display = 'none';
   document.querySelector('pokemon-binder').style.display = '';
+  document.getElementById('turnPageLeft').style.display = 'inline-block';
+  document.getElementById('turnPageRight').style.display = 'inline-block';
 }
 
 // Navigation event listeners
