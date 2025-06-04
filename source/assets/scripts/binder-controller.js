@@ -2,16 +2,47 @@
 
 import "../../components/binder/pokemon-binder.js";
 
-//used placehodlers for testing cards ui
-// TODO: replace with actual info from the api
-let pages = [
-  ["https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png", "", "", "", "", "", "", "", ""]
-];
+/**
+ * @constant {string} BINDER_STORAGE_KEY
+ * @description The key used to store and retrieve the user's Pokemon binder pages from localStorage.
+ */
+const BINDER_STORAGE_KEY = 'pokemonBinderPages';
+
+/**
+ * Saves the current binder pages to localStorage using the BINDER_STORAGE_KEY.
+ * @returns {void}
+ */
+function saveBinderToStorage() {
+  localStorage.setItem(BINDER_STORAGE_KEY, JSON.stringify(pages));
+}
+
+/**
+ * Loads the binder pages from localStorage using the BINDER_STORAGE_KEY.
+ * If no valid data is found, returns a default single empty page.
+ * @returns {Array<Array<string>>} The array of binder pages.
+ */
+function loadBinderFromStorage() {
+  const stored = localStorage.getItem(BINDER_STORAGE_KEY);
+  if (stored) {
+    try {
+      const parsed = JSON.parse(stored);
+      if (Array.isArray(parsed)) return parsed;
+    } catch {
+      // Ignore JSON parse errors
+    }
+  }
+  return [
+    ["", "", "", "", "", "", "", "", ""]
+  ];
+}
+
+let pages = loadBinderFromStorage();
 let currentPage = 0;
 
 function updateBinder() {
   const binder = document.querySelector("pokemon-binder");
   binder.setPages(pages);
+  saveBinderToStorage();
 }
 
 export function handleAddCard(imgURL) {
@@ -27,6 +58,12 @@ export function handleAddCard(imgURL) {
   // Add a new card (Bulbasaur) this was also used for a placeholder for testing cards ui
   // TODO: replace with actual info from the api that user selects from the add button
   page[emptyIndex] = imgURL;
+  updateBinder();
+}
+
+export function assignCardToSlot(cardImgUrl, pageIndex, slotIndex) {
+  if (!pages[pageIndex]) pages[pageIndex] = ["", "", "", "", "", "", "", "", ""];
+  pages[pageIndex][slotIndex] = cardImgUrl;
   updateBinder();
 }
 
@@ -51,3 +88,15 @@ document.getElementById("addCard").addEventListener("click", () => {
 
 document.getElementById("turnPageRight").addEventListener("click", turnPageRight);
 document.getElementById("turnPageLeft").addEventListener("click", turnPageLeft);
+
+/**
+ * Returns the current binder pages array.
+ * shows on window as window.getBinderPages so ui components 
+ * can fetch the latest binder data after changes 
+ * this is used to sync binder ui with localstorage changes 
+ * @returns {Array<Array<string>>} The array of binder pages.
+ */
+export function getBinderPages() {
+  return pages;
+}
+window.getBinderPages = getBinderPages;
