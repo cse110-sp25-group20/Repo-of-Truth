@@ -200,9 +200,7 @@ window.addEventListener('assign-card-to-slot', (e) => {
   showBinder();
 });
 
-// Optionally, expose a way to add cards to the collection for demo
 window.addCardToCollection = function(card) {
-  // card: { name, imgUrl }
   let collection = PokemonCollection.getCollection();
   if (!collection.some(c => c.imgUrl === card.imgUrl)) {
     collection.push(card);
