@@ -589,7 +589,7 @@ class PokemonBinder extends HTMLElement {
             alignItems: "center",
             justifyContent: "center",
             padding: "10px",
-            border: "1px solid #ccc",
+            //border: "1px solid #ccc",
             borderRadius: "8px",
             backgroundColor: "#fff",
             boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
@@ -597,7 +597,6 @@ class PokemonBinder extends HTMLElement {
             transition: "transform 0.2s ease, border 0.2s ease",
             maxWidth: "110px",
             margin: "auto",
-            border: "2px solid transparent",
           });
 
           cardDiv.addEventListener("mouseover", () => {
