@@ -300,11 +300,13 @@ class PokemonBinder extends HTMLElement {
     // 2) Swap in our new Map
     this.pagesData = pagesMap;
 
-    // 3) Set currentIndex to the smallest pageNumber, or 0 if none
-    if (pagesMap.size > 0) {
-      this.currentIndex = Math.min(...pagesMap.keys());
+    // 3) Set currentIndex to the smallest pageNumber, or 1 if none
+    if (pagesMap.size > 1) {
+      const minKey = Math.min(...pagesMap.keys());
+      // If minKey is odd, use minKey; if it’s even, subtract 1
+      this.currentIndex = (minKey % 2 === 1) ? minKey : (minKey - 1);
     } else {
-      this.currentIndex = 0;
+      this.currentIndex = 1;
     }
 
     // 4) Re-render
