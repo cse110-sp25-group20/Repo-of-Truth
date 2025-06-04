@@ -1,8 +1,19 @@
-import { assignCardToSlot } from './assets/scripts/binder-controller.js';
-
+/**
+ * @constant {string} COLLECTION_KEY
+ * @description The key used in local storage to store and retrieve the cards in the collection.
+ */
 const COLLECTION_KEY = 'pokemonCollection';
 
+/**
+ * @class PokemonCollection
+ * @extends HTMLElement
+ * @description Custom web component for displaying the collection view
+ */
 class PokemonCollection extends HTMLElement {
+  /**
+   * @constructor
+   * @description Initializes the PokemonCollection component and sets up the shadow DOM.
+   */
   constructor() {
     super();
     this.attachShadow({ mode: 'open' });
@@ -81,14 +92,21 @@ class PokemonCollection extends HTMLElement {
         <div class="collection-list" id="collection-list"></div>
       </div>
     `;
-    this.assignMode = false;
-    this.assignTarget = null;
   }
 
+  /**
+   * Called when the element is inserted into the DOM.
+   * @returns {void}
+   */
   connectedCallback() {
     this.render();
   }
 
+  /**
+   * Retrieves the user's collection from localStorage using the constant COLLECTION_KEY.
+   * @static
+   * @returns {Array<Object>} The array of card objects in the collection.
+   */
   static getCollection() {
     const stored = localStorage.getItem(COLLECTION_KEY);
     if (stored) {
@@ -102,22 +120,18 @@ class PokemonCollection extends HTMLElement {
     return [];
   }
 
+  /**
+   * Gets the user's card collection.
+   * @returns {Array<Object>} The array of card objects in the collection.
+   */
   getCollection() {
     return PokemonCollection.getCollection();
   }
 
-  setAssignMode(assignTarget) {
-    this.assignMode = true;
-    this.assignTarget = assignTarget;
-    this.render();
-  }
-
-  clearAssignMode() {
-    this.assignMode = false;
-    this.assignTarget = null;
-    this.render();
-  }
-
+  /**
+   * Renders the collection view, displaying all cards or a message if empty.
+   * @returns {void}
+   */
   render() {
     const container = this.shadowRoot.getElementById('collection-list');
     container.innerHTML = '';
@@ -137,21 +151,6 @@ class PokemonCollection extends HTMLElement {
       nameEl.textContent = card.name;
       cardDiv.appendChild(img);
       cardDiv.appendChild(nameEl);
-      if (this.assignMode && this.assignTarget) {
-        cardDiv.style.cursor = 'pointer';
-        cardDiv.title = 'Assign this card to binder slot';
-        cardDiv.addEventListener('click', () => {
-          window.dispatchEvent(new CustomEvent('assign-card-to-slot', {
-            detail: {
-              cardImgUrl: card.imgUrl,
-              pageIndex: this.assignTarget.pageIndex,
-              slotIndex: this.assignTarget.slotIndex
-            }
-          }));
-          this.clearAssignMode();
-          this.style.display = 'none';
-        });
-      }
       container.appendChild(cardDiv);
     });
   }
@@ -159,49 +158,60 @@ class PokemonCollection extends HTMLElement {
 
 customElements.define('pokemon-collection', PokemonCollection);
 
-// --- Integration logic for nav and assignment modal ---
-
+/**
+ * Shows the collection view and hides the binder view.
+ * @returns {void}
+ */
 function showCollection() {
   document.querySelector('pokemon-collection').style.display = 'flex';
   document.querySelector('pokemon-binder').style.display = 'none';
 }
+
+/**
+ * Shows the binder view and hides the collection view.
+ * @returns {void}
+ */
 function showBinder() {
   document.querySelector('pokemon-collection').style.display = 'none';
   document.querySelector('pokemon-binder').style.display = '';
 }
 
+// Navigation event listeners
+/**
+ * Handles navigation to the collection view.
+ * @param {Event} e -  click event.
+ * @returns {void}
+ */
 document.getElementById('navCollection').addEventListener('click', e => {
   e.preventDefault();
   showCollection();
-  document.querySelector('pokemon-collection').clearAssignMode();
 });
+
+/**
+ * Handles navigation to the binder view.
+ * @param {Event} e -  click event.
+ * @returns {void}
+ */
 document.getElementById('navBinder').addEventListener('click', e => {
   e.preventDefault();
   showBinder();
 });
+
+/**
+ * Handles navigation to the home view (binder).
+ * @param {Event} e -  click event.
+ * @returns {void}
+ */
 document.getElementById('navHome').addEventListener('click', e => {
   e.preventDefault();
   showBinder();
 });
 
-// Listen for assign modal requests from binder
-window.addEventListener('message', (event) => {
-  if (event.data && event.data.type === 'showAssignCardModal') {
-    showCollection();
-    document.querySelector('pokemon-collection').setAssignMode({
-      pageIndex: event.data.pageIndex,
-      slotIndex: event.data.slotIndex
-    });
-  }
-});
-
-// Listen for assignment from collection
-window.addEventListener('assign-card-to-slot', (e) => {
-  const { cardImgUrl, pageIndex, slotIndex } = e.detail;
-  assignCardToSlot(cardImgUrl, pageIndex, slotIndex);
-  showBinder();
-});
-
+/**
+ * Adds a card to the user's collection in localStorage if it does not exist.
+ * @param {Object} card - The card stores image  
+ * @returns {void}
+ */
 window.addCardToCollection = function(card) {
   let collection = PokemonCollection.getCollection();
   if (!collection.some(c => c.imgUrl === card.imgUrl)) {

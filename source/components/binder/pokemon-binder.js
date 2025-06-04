@@ -1,4 +1,9 @@
-// pokemon-binder.js
+/**
+ * @file pokemon-binder.js
+ * @description Custom web component for displaying and managing a Pokemon card binder includes a page turning feature.
+ * @module PokemonBinder
+ */
+
 import { getCardsByName } from "../../demos/api-search/api/pokemonAPI.js";
 import { handleAddCard } from "../../assets/scripts/binder-controller.js";
 
@@ -334,13 +339,6 @@ class PokemonBinder extends HTMLElement {
         img.alt = "Pokemon card";
         img.addEventListener("click", () => this.showModal(img.src));
         slot.appendChild(img);
-      } else {
-        // Empty slot: allow assigning from collection
-        slot.addEventListener("click", () => {
-          window.postMessage({ type: 'showAssignCardModal', pageIndex: this.currentIndex, slotIndex: i }, '*');
-        });
-        slot.style.cursor = 'pointer';
-        slot.title = 'Assign a card from your collection';
       }
       container.appendChild(slot);
     }
@@ -451,8 +449,6 @@ class PokemonBinder extends HTMLElement {
     // remove existing modal
     const modal = document.getElementById('global-pokemon-modal');
     if (modal) modal.remove();
-
-    
   }
 
   /**
@@ -491,7 +487,6 @@ class PokemonBinder extends HTMLElement {
         </article>
       </section>
     `;
-
 
     document.body.appendChild(modal);
 
