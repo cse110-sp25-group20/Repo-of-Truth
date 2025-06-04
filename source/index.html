@@ -12,8 +12,9 @@
         <h1>Pokémon Cards</h1>
         <nav>
             <ul class="navbar">
-                <li><a href="#">Home</a></li>
-                <li><a href="#">My Binder</a></li>
+                <li><a href="index.html" id="navHome">Home</a></li>
+                <li><a href="index.html" id="navBinder" class="active">My Binder</a></li>
+                <li><a href="#" id="navCollection">My Collection</a></li>
                 <li><a href="#">Smth else</a></li>
                 <li><a href="#">smth else</a></li>
                 <li>
@@ -25,6 +26,7 @@
         </nav>
     </header>
     <pokemon-binder></pokemon-binder>
+    <pokemon-collection style="display:none;"></pokemon-collection>
     <section class="controls">
         <button id="addCard">Add Card</button>
         <button id="turnPageLeft">Previous Page</button>
@@ -39,6 +41,7 @@
     </section>
 
     <script type="module" src="./assets/scripts/binder-controller.js"></script>
+    <script type="module" src="./collection-view.js"></script>
     <script type="module" src="./toggleMode.js"></script>
     <script type="module" src="./assets/scripts/pokemon-filter.js"></script>
 </body>

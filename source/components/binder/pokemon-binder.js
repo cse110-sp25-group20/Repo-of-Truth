@@ -263,8 +263,6 @@ class PokemonBinder extends HTMLElement {
     this.modal = this.shadowRoot.querySelector(".card-modal");
     this.modalCard = this.shadowRoot.querySelector(".modal-card");
 
-    this.modalCard.addEventListener("click", () => this.toggleModal());
-
     this._renderFaces();
   }
 
@@ -334,12 +332,16 @@ class PokemonBinder extends HTMLElement {
         const img = document.createElement("img");
         img.src = urls[i];
         img.alt = "Pokemon card";
-
         img.addEventListener("click", () => this.showModal(img.src));
-
         slot.appendChild(img);
+      } else {
+        // Empty slot: allow assigning from collection
+        slot.addEventListener("click", () => {
+          window.postMessage({ type: 'showAssignCardModal', pageIndex: this.currentIndex, slotIndex: i }, '*');
+        });
+        slot.style.cursor = 'pointer';
+        slot.title = 'Assign a card from your collection';
       }
-
       container.appendChild(slot);
     }
   }
@@ -431,6 +433,12 @@ class PokemonBinder extends HTMLElement {
     modal.addEventListener('click', (e) => {
       if (e.target === modal) modal.remove();
     });
+    setTimeout(() => {
+      const modalCard = modal.querySelector('.modal-card');
+      if (modalCard) {
+        modalCard.addEventListener('click', () => this.toggleModal());
+      }
+    }, 0);
     document.body.appendChild(modal);
     setTimeout(() => { modal.classList.remove('hidden'); }, 10);
   }
@@ -499,10 +507,22 @@ class PokemonBinder extends HTMLElement {
 
     confirmBtn.addEventListener('click', () => {
       if (selectedCard && selectedCard.images?.small) {
-      handleAddCard(selectedCard.images.small); // or .large if you prefer
-      document.getElementById('global-pokemon-modal')?.remove();
-  }
-    })
+        // Add to collection
+        if (window.addCardToCollection) {
+          window.addCardToCollection({ name: selectedCard.name, imgUrl: selectedCard.images.small });
+        }
+        // Add to binder
+        handleAddCard(selectedCard.images.small);
+        // Refresh both views if present
+        if (document.querySelector('pokemon-binder')) {
+          document.querySelector('pokemon-binder').setPages(window.getBinderPages ? window.getBinderPages() : []);
+        }
+        if (document.querySelector('pokemon-collection')) {
+          document.querySelector('pokemon-collection').render && document.querySelector('pokemon-collection').render();
+        }
+        document.getElementById('global-pokemon-modal')?.remove();
+      }
+    });
 
     input.addEventListener('input', async (e) => {
       const query = e.target.value.trim();
