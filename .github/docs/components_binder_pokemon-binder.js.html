@@ -26,8 +26,13 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>// pokemon-binder.js
-import { getCardsByName, getCardById, getCardsByNameAndNumber } from "../../demos/api-search/api/pokemonAPI.js";
+            <pre class="prettyprint source linenums"><code>/**
+ * @file pokemon-binder.js
+ * @description Custom web component for displaying and managing a Pokemon card binder includes a page turning feature.
+ * @module PokemonBinder
+ */
+
+import { getCardsByName } from "../../demos/api-search/api/pokemonAPI.js";
 import { handleAddCard } from "../../assets/scripts/binder-controller.js";
 
 const template = document.createElement("template");
@@ -291,8 +296,6 @@ class PokemonBinder extends HTMLElement {
     this.modal = this.shadowRoot.querySelector(".card-modal");
     this.modalCard = this.shadowRoot.querySelector(".modal-card");
 
-    this.modalCard.addEventListener("click", () => this.toggleModal());
-
     this._renderFaces();
   }
 
@@ -362,12 +365,9 @@ class PokemonBinder extends HTMLElement {
         const img = document.createElement("img");
         img.src = urls[i];
         img.alt = "Pokemon card";
-
         img.addEventListener("click", () => this.showModal(img.src));
-
         slot.appendChild(img);
       }
-
       container.appendChild(slot);
     }
   }
@@ -459,6 +459,12 @@ class PokemonBinder extends HTMLElement {
     modal.addEventListener('click', (e) => {
       if (e.target === modal) modal.remove();
     });
+    setTimeout(() => {
+      const modalCard = modal.querySelector('.modal-card');
+      if (modalCard) {
+        modalCard.addEventListener('click', () => this.toggleModal());
+      }
+    }, 0);
     document.body.appendChild(modal);
     setTimeout(() => { modal.classList.remove('hidden'); }, 10);
   }
@@ -471,8 +477,6 @@ class PokemonBinder extends HTMLElement {
     // remove existing modal
     const modal = document.getElementById('global-pokemon-modal');
     if (modal) modal.remove();
-
-    
   }
 
   /**
@@ -512,7 +516,6 @@ class PokemonBinder extends HTMLElement {
       &lt;/section>
     `;
 
-
     document.body.appendChild(modal);
 
     //close on background click
@@ -527,10 +530,22 @@ class PokemonBinder extends HTMLElement {
 
     confirmBtn.addEventListener('click', () => {
       if (selectedCard &amp;&amp; selectedCard.images?.small) {
-      handleAddCard(selectedCard.images.small); // or .large if you prefer
-      document.getElementById('global-pokemon-modal')?.remove();
-  }
-    })
+        // Add to collection
+        if (window.addCardToCollection) {
+          window.addCardToCollection({ name: selectedCard.name, imgUrl: selectedCard.images.small });
+        }
+        // Add to binder
+        handleAddCard(selectedCard.images.small);
+        // Refresh both views if present
+        if (document.querySelector('pokemon-binder')) {
+          document.querySelector('pokemon-binder').setPages(window.getBinderPages ? window.getBinderPages() : []);
+        }
+        if (document.querySelector('pokemon-collection')) {
+          document.querySelector('pokemon-collection').render &amp;&amp; document.querySelector('pokemon-collection').render();
+        }
+        document.getElementById('global-pokemon-modal')?.remove();
+      }
+    });
 
     input.addEventListener('input', async (e) => {
       const query = e.target.value.trim();
@@ -630,13 +645,13 @@ customElements.define("pokemon-binder", PokemonBinder);</code></pre>
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="PokemonBinder.html">PokemonBinder</a></li></ul><h3>Global</h3><ul><li><a href="global.html#getAllSets">getAllSets</a></li><li><a href="global.html#getCardById">getCardById</a></li><li><a href="global.html#getCardsByName">getCardsByName</a></li><li><a href="global.html#getCardsByNameAndNumber">getCardsByNameAndNumber</a></li><li><a href="global.html#getCardsBySet">getCardsBySet</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-PokemonBinder.html">PokemonBinder</a></li></ul><h3>Classes</h3><ul><li><a href="PokemonCollection.html">PokemonCollection</a></li><li><a href="module-PokemonBinder-PokemonBinder.html">PokemonBinder</a></li></ul><h3>Global</h3><ul><li><a href="global.html#BINDER_STORAGE_KEY">BINDER_STORAGE_KEY</a></li><li><a href="global.html#COLLECTION_KEY">COLLECTION_KEY</a></li><li><a href="global.html#getAllSets">getAllSets</a></li><li><a href="global.html#getBinderPages">getBinderPages</a></li><li><a href="global.html#getCardById">getCardById</a></li><li><a href="global.html#getCardsByName">getCardsByName</a></li><li><a href="global.html#getCardsByNameAndNumber">getCardsByNameAndNumber</a></li><li><a href="global.html#getCardsBySet">getCardsBySet</a></li><li><a href="global.html#loadBinderFromStorage">loadBinderFromStorage</a></li><li><a href="global.html#saveBinderToStorage">saveBinderToStorage</a></li><li><a href="global.html#showBinder">showBinder</a></li><li><a href="global.html#showCollection">showCollection</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Wed Jun 04 2025 01:12:45 GMT+0000 (Coordinated Universal Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Wed Jun 04 2025 02:18:49 GMT+0000 (Coordinated Universal Time)
 </footer>
 
 <script> prettyPrint(); </script>
