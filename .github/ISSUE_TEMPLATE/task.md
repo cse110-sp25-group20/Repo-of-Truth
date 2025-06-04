@@ -18,11 +18,6 @@ List what needs to be true for this task to be considered complete.
 - [ ] Clear requirement 2  
 - [ ] Test coverage added
 
-## 🔗 Related Issue(s)
-
-Link any related issues
-Ex: Closes #42, related to #24.
-
 ## 📝 Notes
 
 Any additional context or implementation tips for whoever picks this up?
