@@ -1,6 +1,9 @@
 name: Generate JSDoc
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - main
 
 jobs:
   build-docs:
@@ -9,7 +12,6 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v3
         with:
-          # allows pushing changes
           persist-credentials: true
           token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -21,14 +23,16 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Clean old docs
+        run: rm -rf .github/docs
+
       - name: Generate JSDoc
         run: npm run docs
 
-      - name: Commit and push docs
-        if: github.event_name == 'push'
+      - name: Commit and push docs to main
         uses: EndBug/add-and-commit@v9
         with:
           author_name: 'github-actions[bot]'
           author_email: 'github-actions[bot]@users.noreply.github.com'
-          message: 'chore: update generated JSDoc'
-          add: '.github/docs'
+          message: 'chore: regenerate docs on merge to main'
+          add: '.github/docs --force'

@@ -1,0 +1,610 @@
+/**
+ * @file pokemon-binder.js
+ * @description Custom web component for displaying and managing a Pokemon card binder includes a page turning feature.
+ * @module PokemonBinder
+ */
+
+import { getCardsByName } from "../../demos/api-search/api/pokemonAPI.js";
+import { handleAddCard } from "../../assets/scripts/binder-controller.js";
+
+const template = document.createElement("template");
+template.innerHTML = `
+  <style>
+    :host {
+      display: block;
+      width: 800px;
+      height: 600px;
+      border: 2px solid #333;
+      background: #f9f9f9;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      perspective: 1000px;
+    }
+    .binder {
+      display: flex;
+      width: 100%;
+      height: 100%;
+      position: relative;
+    }
+    .leaf {
+      flex: 1;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.6s ease;
+      overflow: hidden;
+      z-index: 1;
+    }
+    .leaf.flip-forward,
+    .leaf.flip-back {
+      z-index: 2;
+    }
+    .leaf.flip-forward {
+      transform-origin: left center;
+      transform: rotateY(-180deg);
+    }
+    .leaf.flip-back {
+      transform-origin: right center;
+      transform: rotateY(180deg);
+    }
+    .page {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      backface-visibility: hidden;
+      box-sizing: border-box;
+      padding: 10px;
+      background: #fff;
+    }
+    .page.back {
+      transform: rotateY(180deg);
+    }
+    .page.back .page-number {
+      transform: rotateY(180deg);
+      visibility: hidden;
+    }
+    .leaf.flip-forward .page.back .page-number,
+    .leaf.flip-back .page.back .page-number {
+      visibility: visible;
+    }
+    .page-number {
+      font-weight: bold;
+      color: #2a75bb;
+      font-size: 18px !important;
+      margin-bottom: 15px !important;
+      text-shadow: 1px 1px 2px #ffcb05;
+    }
+    .cards-container {
+      flex: 1;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(3, auto);
+      gap: 10px;
+    }
+    .card-slot {
+      width: 100%;
+      background: #eaeaea;
+      border: 1px dashed #bbb;
+      border-radius: 8px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      aspect-ratio: 1 / 1.4;
+    }
+    .card-slot img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      cursor: pointer;
+    }
+    .pokemon-card {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to bottom right, #fff, #f9f9f9);
+      border: 2px solid #2a75bb;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      padding: 8px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .pokemon-card:hover {
+      transform: scale(1.03);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+      z-index: 5;
+    }
+    .card-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      pointer-events: none;
+      overflow: auto;
+    }
+    .card-modal.hidden {
+      display: none;
+    }
+    .modal-content {
+      display: flex;
+      flex-direction: row;
+      background: #fff;
+      border-radius: 24px;
+      box-shadow: 0 8px 32px #2228;
+      padding: 24px 16px;
+      max-width: 95vw;
+      max-height: 95vh;
+      align-items: center;
+      pointer-events: auto;
+      gap: 24px;
+      position: relative;
+      box-sizing: border-box;
+      margin: auto;
+      flex-shrink: 1;
+    }
+    .modal-image {
+      flex: 0 1 140px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #ffcb05 0%, #fff 100%);
+      border-radius: 16px;
+      box-shadow: 0 2px 8px #2a75bb33;
+      padding: 12px;
+      min-width: 100px;
+      min-height: 120px;
+      margin: 0;
+      flex-shrink: 1;
+    }
+    .modal-card {
+      max-width: 100px;
+      max-height: 120px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px #2a75bb33;
+      background: #fff;
+    }
+    .modal-info {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-width: 180px;
+      color: #222;
+    }
+    .modal-name {
+      font-family: 'Luckiest Guy', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #ee1515;
+      font-size: 2rem;
+      margin: 0 0 8px 0;
+      text-shadow: 1px 1px 0 #ffcb05, 2px 2px 0 #2a75bb;
+    }
+    .modal-details {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .modal-details li {
+      font-size: 1.1rem;
+      color: #2a75bb;
+      font-weight: bold;
+    }
+    @media (max-width: 600px) {
+      .modal-content {
+        flex-direction: column;
+        padding: 12px 4px;
+        gap: 12px;
+        max-width: 98vw;
+        max-height: 98vh;
+      }
+      .modal-image {
+        min-width: 60px;
+        min-height: 60px;
+        padding: 4px;
+      }
+      .modal-card {
+        max-width: 60px;
+        max-height: 60px;
+      }
+    }
+  </style>
+  <div class="binder">
+    <div class="leaf left-leaf">
+      <div class="page front">
+        <div class="page-number"></div>
+        <div class="cards-container"></div>
+      </div>
+      <div class="page back">
+        <div class="page-number"></div>
+        <div class="cards-container"></div>
+      </div>
+    </div>
+    <div class="leaf right-leaf">
+      <div class="page front">
+        <div class="page-number"></div>
+        <div class="cards-container"></div>
+      </div>
+      <div class="page back">
+        <div class="page-number"></div>
+        <div class="cards-container"></div>
+      </div>
+    </div>
+  </div>
+`;
+
+/**
+ * @class PokemonBinder
+ * @extends HTMLElement
+ * @description A custom web component that creates an interactive Pokemon card binder with page-turning animations
+ */
+class PokemonBinder extends HTMLElement {
+  /**
+   * @description Initializes the PokemonBinder component and sets up event listeners
+   */
+  constructor() {
+    super();
+    this.attachShadow({ mode: "open" });
+    this.shadowRoot.appendChild(template.content.cloneNode(true));
+
+    this.pagesData = [];
+    this.currentIndex = 0;
+
+    this._leftLeaf = this.shadowRoot.querySelector(".left-leaf");
+    this._rightLeaf = this.shadowRoot.querySelector(".right-leaf");
+
+    this.modal = this.shadowRoot.querySelector(".card-modal");
+    this.modalCard = this.shadowRoot.querySelector(".modal-card");
+
+    this._renderFaces();
+  }
+
+  /**
+   * @description Sets the pages data and renders the binder faces
+   * @param {Array<Array<string>>} pages - Array of pages, where each page is an array of card image URLs
+   * @returns {void}
+   */
+  setPages(pages) {
+    if (!Array.isArray(pages)) return;
+    this.pagesData = pages;
+    this.currentIndex = 0;
+    this._renderFaces();
+  }
+
+  /**
+   * @description Renders all visible faces of the binder with card data
+   * @private
+   * @returns {void}
+   */
+  _renderFaces() {
+    // left leaf
+    this._loadFace(
+      this._leftLeaf.querySelector(".front"),
+      this.pagesData[this.currentIndex],
+      this.currentIndex + 1
+    );
+    this._loadFace(
+      this._leftLeaf.querySelector(".back"),
+      this.pagesData[this.currentIndex - 1],
+      this.currentIndex
+    );
+    // right leaf
+    this._loadFace(
+      this._rightLeaf.querySelector(".front"),
+      this.pagesData[this.currentIndex + 1],
+      this.currentIndex + 2
+    );
+    this._loadFace(
+      this._rightLeaf.querySelector(".back"),
+      this.pagesData[this.currentIndex + 2],
+      this.currentIndex + 3
+    );
+  }
+
+  /**
+   * @description Loads card images into a specific face/page of the binder
+   * @private
+   * @param {HTMLElement} faceEl - The face element to load cards into
+   * @param {Array<string>} cardUrls - Array of card image URLs
+   * @param {number} pageNumber - The page number to display
+   * @returns {void}
+   */
+  _loadFace(faceEl, cardUrls, pageNumber) {
+    faceEl.querySelector(".page-number").textContent = pageNumber
+      ? `Page ${pageNumber}`
+      : "";
+    const container = faceEl.querySelector(".cards-container");
+    container.innerHTML = "";
+    const urls = Array.isArray(cardUrls) ? cardUrls : [];
+
+    for (let i = 0; i < 9; i++) {
+      const slot = document.createElement("div");
+      slot.className = "card-slot";
+
+      if (urls[i]) {
+        const img = document.createElement("img");
+        img.src = urls[i];
+        img.alt = "Pokemon card";
+        img.addEventListener("click", () => this.showModal(img.src));
+        slot.appendChild(img);
+      }
+      container.appendChild(slot);
+    }
+  }
+
+  /**
+   * @description Animates the page turn forward and updates the binder content
+   * @returns {void}
+   */
+  flipForward() {
+    this._loadFace(
+      this._rightLeaf.querySelector(".back"),
+      this.pagesData[this.currentIndex + 2],
+      this.currentIndex + 3
+    );
+    this._rightLeaf.classList.add("flip-forward");
+    this._rightLeaf.addEventListener(
+      "transitionend",
+      () => {
+        this._rightLeaf.classList.remove("flip-forward");
+        this.currentIndex += 2;
+        const prev = this._rightLeaf.style.transition;
+        this._rightLeaf.style.transition = "none";
+        this._renderFaces();
+        void this._rightLeaf.offsetWidth;
+        this._rightLeaf.style.transition = prev;
+      },
+      { once: true }
+    );
+  }
+
+  /**
+   * @description Animates the page turn backward and updates the binder content
+   * @returns {void}
+   */
+  flipBackward() {
+    if (this.currentIndex < 2) return;
+    this._loadFace(
+      this._leftLeaf.querySelector(".back"),
+      this.pagesData[this.currentIndex - 1],
+      this.currentIndex
+    );
+    this._leftLeaf.classList.add("flip-back");
+    this._leftLeaf.addEventListener(
+      "transitionend",
+      () => {
+        this._leftLeaf.classList.remove("flip-back");
+        this.currentIndex -= 2;
+        const prev = this._leftLeaf.style.transition;
+        this._leftLeaf.style.transition = "none";
+        this._renderFaces();
+        void this._leftLeaf.offsetWidth;
+        this._leftLeaf.style.transition = prev;
+      },
+      { once: true }
+    );
+  }
+
+  /**
+   * @description Shows the modal with an enlarged version of the clicked card
+   * @param {string} imgSrc - The source URL of the card image to display
+   * @returns {void}
+   */
+  showModal(imgSrc) {
+    // Remove any existing modal
+    const oldModal = document.getElementById('global-pokemon-modal');
+    if (oldModal) oldModal.remove();
+
+    // Create modal element- THE INFO IS PLACEHOLDER FOR TESTING UI and will be replaced with actual info from the api
+    // TODO: replace with actual info from the api
+    const modal = document.createElement('div');
+    modal.className = 'card-modal';
+    modal.id = 'global-pokemon-modal';
+    modal.innerHTML = `
+      <section class="modal-content" role="dialog" aria-modal="true">
+        <figure class="modal-image">
+          <img class="modal-card" src="${imgSrc}" alt="Pokemon Card">
+        </figure>
+        <article class="modal-info">
+          <h2 class="modal-name">Pikachu</h2>
+          <ul class="modal-details">
+            <li class="modal-type">Type: Electric</li>
+            <li class="modal-hp">HP: 60</li>
+            <li class="modal-rarity">Rarity: Common</li>
+            <li class="modal-set">Set: Base</li>
+          </ul>
+        </article>
+      </section>
+    `;
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) modal.remove();
+    });
+    setTimeout(() => {
+      const modalCard = modal.querySelector('.modal-card');
+      if (modalCard) {
+        modalCard.addEventListener('click', () => this.toggleModal());
+      }
+    }, 0);
+    document.body.appendChild(modal);
+    setTimeout(() => { modal.classList.remove('hidden'); }, 10);
+  }
+
+  /**
+   * @description Toggles the card modal visibility
+   * @returns {void}
+   */
+  toggleModal() {
+    // remove existing modal
+    const modal = document.getElementById('global-pokemon-modal');
+    if (modal) modal.remove();
+  }
+
+  /**
+   * @description Shows the modal to search for and add a card from the API
+   * @returns {void}
+   */
+  showAddCardModal() {
+    const oldModal = document.getElementById('global-pokemon-modal');
+    if (oldModal) oldModal.remove();
+
+    const modal = document.createElement('div');
+    modal.className = 'card-modal';
+    modal.id = 'global-pokemon-modal';
+    modal.innerHTML = `
+      <style>
+        .card.selected {
+          border: 2px solid #2a75bb !important;
+          box-shadow: 0 0 12px #2a75bb !important;
+          background-color: #e0f7ff !important;
+          transform: scale(1.05);
+        }
+      </style>
+      <section class="modal-content" role="dialog" aria-modal="true">
+        <article class="modal-info" style="flex: 1;">
+          <h2 class="modal-name">Add a Pokémon Card</h2>
+          <input id="cardSearchInput" type="text" placeholder="Enter Pokemon name" style="padding: 8px; width: 100%; box-sizing: border-box;" />
+          <div id="cardSearchResult" style="
+            margin-top: 16px; 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 50px;
+            max-height:60vh;
+            overflow-y: auto;">
+          </div>
+          <button id="confirmAddCardBtn" style="display: none; margin-top: 10px; padding: 8px 12px; background: #ffcb05; color: black; border: none; border-radius: 5px; font-weight: bold; cursor: pointer;">Add to Binder</button>
+        </article>
+      </section>
+    `;
+
+    document.body.appendChild(modal);
+
+    //close on background click
+    modal.addEventListener('click', (e) => {
+      if(e.target === modal) modal.remove();
+    });
+    const input = modal.querySelector("#cardSearchInput");
+    const resultBox = modal.querySelector("#cardSearchResult");
+    const confirmBtn = modal.querySelector("#confirmAddCardBtn");
+
+    let selectedCard = null;
+
+    confirmBtn.addEventListener('click', () => {
+      if (selectedCard && selectedCard.images?.small) {
+        // Add to collection
+        if (window.addCardToCollection) {
+          window.addCardToCollection({ name: selectedCard.name, imgUrl: selectedCard.images.small });
+        }
+        // Add to binder
+        handleAddCard(selectedCard.images.small);
+        // Refresh both views if present
+        if (document.querySelector('pokemon-binder')) {
+          document.querySelector('pokemon-binder').setPages(window.getBinderPages ? window.getBinderPages() : []);
+        }
+        if (document.querySelector('pokemon-collection')) {
+          document.querySelector('pokemon-collection').render && document.querySelector('pokemon-collection').render();
+        }
+        document.getElementById('global-pokemon-modal')?.remove();
+      }
+    });
+
+    input.addEventListener('input', async (e) => {
+      const query = e.target.value.trim();
+      console.log("Searching for:", query);
+      try {
+        resultBox.innerHTML = '<p style="text-align:center;">Loading...</p>';
+        const cards = await getCardsByName(query);
+        resultBox.innerHTML = '';
+
+      if (cards.length === 0) {
+        resultBox.innerHTML = '<p>No cards found.</p>';
+        return;
+      }
+
+      // Display each card
+      cards.forEach(card => {
+        const cardDiv = document.createElement('div');
+
+        cardDiv.className = 'card';
+        cardDiv.style.display = 'flex';
+        cardDiv.style.flexDirection = 'column';
+        cardDiv.style.alignItems = 'center';
+        cardDiv.style.justifyContent = 'center';
+        cardDiv.style.padding = '10px';
+        cardDiv.style.border = '1px solid #ccc';
+        cardDiv.style.borderRadius = '8px';
+        cardDiv.style.backgroundColor = '#fff';
+        cardDiv.style.boxShadow = '0 2px 6px rgba(0,0,0,0.1)';
+        cardDiv.style.cursor = 'pointer';
+        cardDiv.style.transition = 'transform 0.2s ease';
+        cardDiv.style.maxWidth = '110px';
+        cardDiv.style.margin = 'auto';
+
+        cardDiv.classList.add('card');
+        
+
+        cardDiv.style.border = '2px solid transparent'; // default
+        cardDiv.style.transition = 'transform 0.2s ease, border 0.2s ease';
+
+
+        cardDiv.addEventListener('mouseover', () => {
+          cardDiv.style.transform = 'scale(1.05)';
+        });
+
+        cardDiv.addEventListener('mouseout', () => {
+          cardDiv.style.transform = 'scale(1)';
+        });
+
+        cardDiv.addEventListener('click', () => {
+          //deselect previously selceted
+          resultBox.querySelectorAll('.card.selected').forEach(el => el.classList.remove('selected'));
+          
+          cardDiv.classList.add('selected');
+          selectedCard = card;
+          confirmBtn.style.display = 'block';
+
+        })
+        
+
+        const img = document.createElement('img');
+        img.src = card.images.small;
+        img.alt = card.name;
+        img.style.width = '100%';
+        img.style.borderRadius = '6px';
+
+        const nameEl = document.createElement('div');
+        nameEl.className = 'card-name';
+        nameEl.textContent = card.name;
+        nameEl.style.marginTop = '8px';
+        nameEl.style.fontWeight = 'bold';
+        nameEl.style.fontSize = '12px';
+        nameEl.style.textAlign = 'center';
+        nameEl.style.wordBreak = 'break-word';
+
+        cardDiv.appendChild(img);
+        cardDiv.appendChild(nameEl);
+        resultBox.appendChild(cardDiv);
+      });
+
+    } catch (err) {
+      resultBox.innerHTML = `<p>Error: ${err.message}</p>`;
+    }
+    })
+  }
+  
+
+}
+
+
+customElements.define("pokemon-binder", PokemonBinder);
