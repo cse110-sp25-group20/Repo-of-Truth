@@ -1,7 +1,7 @@
 // binder.js
 
 import "../../components/binder/pokemon-binder.js";
-import { buildMissingPages } from "./missing-cards.js"; // filter missing cards
+import { buildMissingPages } from "./missing-cards.js";
 
 /**
  * @constant {string} BINDER_STORAGE_KEY
@@ -80,14 +80,23 @@ function turnPageLeft() {
   if (currentPage > 0) currentPage--;
 }
 
-// filter missing cards
+/**
+ * When the user clicks “Show Missing”:
+ *   1) buildMissingPages(...) filters out any fully complete page
+ *   2) re‐render the binder with only those pages that still have empty slots
+ */
 function showPagesWithMissingSlots() {
   const viewPages = buildMissingPages(pages);
+
+  if (viewPages.length === 0) {
+    alert("All pages are completely full — no missing slots left!");
+    return;
+  }
+
   currentPage = 0;
   const binder = document.querySelector("pokemon-binder");
   binder.setPages(viewPages);
 }
-// filter missing cards
 
 document.addEventListener('DOMContentLoaded', updateBinder);
 
@@ -99,9 +108,8 @@ document.getElementById("addCard").addEventListener("click", () => {
 document.getElementById("turnPageRight").addEventListener("click", turnPageRight);
 document.getElementById("turnPageLeft").addEventListener("click", turnPageLeft);
 
-// filter missing cards
+// Attach “Show Missing” listener
 document.getElementById("showMissing").addEventListener("click", showPagesWithMissingSlots);
-// filter missing cards
 
 /**
  * Returns the current binder pages array.

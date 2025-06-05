@@ -1,21 +1,11 @@
 /* missing-cards.js */
 
-// Search for owned cards by img
-export function getOwnedImgURLs(pages) {
-    return new Set(pages.flat().filter(url => url));
-}
-
-// Build an array of pages
+/**
+ * Return an array of pages that still have at least one empty slot.
+ * If all pages are completely full, it will return [].
+ * @param {Array<Array<string>>} pages
+ * @returns {Array<Array<string>>}
+ */
 export function buildMissingPages(pages) {
-    return pages
-    .filter(page => page.some(url => !url))
-    .map(page => {
-        const copy = [...page];
-        return copy;
-    })
-    .concat(
-        pages.some(page => page.some(url => !url))
-        ? []
-        : [["", "", "", "", "", "", "", "", ""]]
-    );
+    return pages.filter(page => page.some(url => !url));
 }
