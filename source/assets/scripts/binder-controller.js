@@ -61,17 +61,5 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 export function handleAddCard(imgURL) {
-  let page = pages[currentPage];
-  let emptyIndex = page.indexOf("");
-  if (emptyIndex === -1) {
-    // If current page is full, add a new page
-    page = ["", "", "", "", "", "", "", "", ""];
-    pages.push(page);
-    currentPage = pages.length - 1;
-    emptyIndex = 0;
-  }
-  // Add a new card (Bulbasaur) this was also used for a placeholder for testing cards ui
-  // TODO: replace with actual info from the api that user selects from the add button
-  page[emptyIndex] = imgURL;
   updateBinder();
 }
