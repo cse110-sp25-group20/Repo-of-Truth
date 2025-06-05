@@ -8,9 +8,8 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "jest --coverage --coverageThreshold='{\"global\": {\"branches\": 70, \"functions\": 70, \"lines\": 70, \"statements\": 70}}'",
     "docs": "jsdoc -c jsdoc.json",
-    "test-esm": "node --experimental-vm-modules node_modules/.bin/jest --coverage --coverageThreshold='{\"global\": {\"branches\": 70, \"functions\": 70, \"lines\": 70, \"statements\": 70}}' tests/"
+    "test-esm": "node --experimental-vm-modules node_modules/.bin/jest --coverage --coverageThreshold='{\"global\": {\"branches\": 70, \"functions\": 70, \"lines\": 70, \"statements\": 70}}' --"
   },
   "repository": {
     "type": "git",
@@ -34,5 +33,18 @@
   },
   "dependencies": {
     "dotenv": "^16.5.0"
+  },
+  "jest": {
+  "rootDir": "tests",
+  "testEnvironment": "jest-environment-jsdom",
+  "collectCoverage": true,
+  "coverageThreshold": {
+    "global": {
+      "branches": 70,
+      "functions": 70,
+      "lines": 70,
+      "statements": 70
+      }
+    }
   }
 }

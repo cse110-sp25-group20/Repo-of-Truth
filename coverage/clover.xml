@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1749101989906" clover="3.2.0">
-  <project timestamp="1749101989906" name="All files">
-    <metrics statements="218" coveredstatements="55" conditionals="99" coveredconditionals="19" methods="38" coveredmethods="4" elements="355" coveredelements="78" complexity="0" loc="218" ncloc="218" packages="3" files="3" classes="3"/>
+<coverage generated="1749102897956" clover="3.2.0">
+  <project timestamp="1749102897956" name="All files">
+    <metrics statements="218" coveredstatements="78" conditionals="99" coveredconditionals="21" methods="38" coveredmethods="8" elements="355" coveredelements="107" complexity="0" loc="218" ncloc="218" packages="3" files="3" classes="3"/>
     <package name="assets.scripts">
       <metrics statements="23" coveredstatements="1" conditionals="8" coveredconditionals="0" methods="6" coveredmethods="0"/>
       <file name="binder-controller.js" path="/Users/alainzhang/Documents/GitHub/Repo-of-Truth/source/assets/scripts/binder-controller.js">
@@ -32,9 +32,9 @@
       </file>
     </package>
     <package name="components.binder">
-      <metrics statements="152" coveredstatements="52" conditionals="52" coveredconditionals="19" methods="24" coveredmethods="4"/>
+      <metrics statements="152" coveredstatements="75" conditionals="52" coveredconditionals="21" methods="24" coveredmethods="8"/>
       <file name="pokemon-binder.js" path="/Users/alainzhang/Documents/GitHub/Repo-of-Truth/source/components/binder/pokemon-binder.js">
-        <metrics statements="152" coveredstatements="52" conditionals="52" coveredconditionals="19" methods="24" coveredmethods="4"/>
+        <metrics statements="152" coveredstatements="75" conditionals="52" coveredconditionals="21" methods="24" coveredmethods="8"/>
         <line num="10" count="1" type="stmt"/>
         <line num="11" count="1" type="stmt"/>
         <line num="250" count="6" type="stmt"/>
@@ -71,44 +71,44 @@
         <line num="334" count="8" type="stmt"/>
         <line num="341" count="8" type="stmt"/>
         <line num="347" count="8" type="stmt"/>
-        <line num="362" count="32" type="stmt"/>
-        <line num="363" count="32" type="cond" truecount="2" falsecount="0"/>
-        <line num="365" count="32" type="stmt"/>
-        <line num="366" count="32" type="stmt"/>
-        <line num="369" count="32" type="cond" truecount="2" falsecount="0"/>
-        <line num="371" count="32" type="stmt"/>
-        <line num="372" count="288" type="stmt"/>
-        <line num="373" count="288" type="stmt"/>
-        <line num="375" count="288" type="cond" truecount="2" falsecount="0"/>
+        <line num="362" count="34" type="stmt"/>
+        <line num="363" count="34" type="cond" truecount="2" falsecount="0"/>
+        <line num="365" count="34" type="stmt"/>
+        <line num="366" count="34" type="stmt"/>
+        <line num="369" count="34" type="cond" truecount="2" falsecount="0"/>
+        <line num="371" count="34" type="stmt"/>
+        <line num="372" count="306" type="stmt"/>
+        <line num="373" count="306" type="stmt"/>
+        <line num="375" count="306" type="cond" truecount="2" falsecount="0"/>
         <line num="376" count="2" type="stmt"/>
         <line num="377" count="2" type="stmt"/>
         <line num="378" count="2" type="stmt"/>
         <line num="379" count="2" type="stmt"/>
         <line num="380" count="2" type="stmt"/>
-        <line num="382" count="288" type="stmt"/>
-        <line num="391" count="0" type="stmt"/>
-        <line num="392" count="0" type="stmt"/>
-        <line num="398" count="0" type="stmt"/>
-        <line num="399" count="0" type="stmt"/>
-        <line num="402" count="0" type="stmt"/>
-        <line num="404" count="0" type="stmt"/>
-        <line num="406" count="0" type="stmt"/>
-        <line num="407" count="0" type="stmt"/>
-        <line num="408" count="0" type="stmt"/>
-        <line num="410" count="0" type="stmt"/>
-        <line num="411" count="0" type="stmt"/>
-        <line num="421" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="424" count="0" type="stmt"/>
-        <line num="425" count="0" type="stmt"/>
-        <line num="431" count="0" type="stmt"/>
-        <line num="432" count="0" type="stmt"/>
-        <line num="435" count="0" type="stmt"/>
-        <line num="437" count="0" type="stmt"/>
-        <line num="438" count="0" type="stmt"/>
-        <line num="439" count="0" type="stmt"/>
-        <line num="440" count="0" type="stmt"/>
-        <line num="441" count="0" type="stmt"/>
-        <line num="442" count="0" type="stmt"/>
+        <line num="382" count="306" type="stmt"/>
+        <line num="391" count="1" type="stmt"/>
+        <line num="392" count="1" type="stmt"/>
+        <line num="398" count="1" type="stmt"/>
+        <line num="399" count="1" type="stmt"/>
+        <line num="402" count="1" type="stmt"/>
+        <line num="404" count="1" type="stmt"/>
+        <line num="406" count="1" type="stmt"/>
+        <line num="407" count="1" type="stmt"/>
+        <line num="408" count="1" type="stmt"/>
+        <line num="410" count="1" type="stmt"/>
+        <line num="411" count="1" type="stmt"/>
+        <line num="421" count="2" type="cond" truecount="2" falsecount="0"/>
+        <line num="424" count="1" type="stmt"/>
+        <line num="425" count="1" type="stmt"/>
+        <line num="431" count="1" type="stmt"/>
+        <line num="432" count="1" type="stmt"/>
+        <line num="435" count="1" type="stmt"/>
+        <line num="437" count="1" type="stmt"/>
+        <line num="438" count="1" type="stmt"/>
+        <line num="439" count="1" type="stmt"/>
+        <line num="440" count="1" type="stmt"/>
+        <line num="441" count="1" type="stmt"/>
+        <line num="442" count="1" type="stmt"/>
         <line num="453" count="0" type="stmt"/>
         <line num="454" count="0" type="cond" truecount="0" falsecount="2"/>
         <line num="456" count="0" type="stmt"/>
