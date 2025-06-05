@@ -58,4 +58,14 @@ window.addCardToCollection = function(card) {
     collection.push(card);
     localStorage.setItem(COLLECTION_KEY, JSON.stringify(collection));
   }
-} 
+}
+
+// On initial load, hide prev/next buttons if collection is visible
+window.addEventListener('DOMContentLoaded', () => {
+  const collectionVisible =
+    document.querySelector('pokemon-collection').style.display !== 'none';
+  if (collectionVisible) {
+    document.getElementById('turnPageLeft').style.display = 'none';
+    document.getElementById('turnPageRight').style.display = 'none';
+  }
+}); 
