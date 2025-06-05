@@ -9,7 +9,7 @@ jobs:
   build-docs:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out repository
+      - name: Checkout repository
         uses: actions/checkout@v3
         with:
           persist-credentials: true
@@ -23,13 +23,13 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Clean old docs
+      - name: Remove previous documentation
         run: rm -rf .github/docs
 
-      - name: Generate JSDoc
+      - name: Generate JSDoc documentation
         run: npm run docs
 
-      - name: Commit and push docs to main
+      - name: Commit and push updated docs
         uses: EndBug/add-and-commit@v9
         with:
           author_name: 'github-actions[bot]'

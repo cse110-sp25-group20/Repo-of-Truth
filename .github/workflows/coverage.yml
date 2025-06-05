@@ -1,4 +1,4 @@
-name: Run Code Coverage
+name: Run Tests + Code Coverage
 
 on:
   push:
@@ -7,11 +7,11 @@ on:
     branches: [main]
 
 jobs:
-  coverage:
+  run-tests-with-coverage:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Set up Node.js
@@ -19,8 +19,8 @@ jobs:
         with:
           node-version: 18
 
-      - name: Install dependencies
+      - name: Install project dependencies
         run: npm install
 
-      - name: Run tests with coverage check
+      - name: Run tests with coverage report
         run: npm test

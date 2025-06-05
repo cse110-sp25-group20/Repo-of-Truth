@@ -1,7 +1,26 @@
-# Repo-of-Truth
+# Pokémon Collector App
 
-[Team Page](admin/team.md)
-<br>
-[Figma UI page](https://www.figma.com/design/3BL213GiKqrBxdkgft9es3/Pokemon-Trading-App?node-id=1-5&t=GNXVeBmH9ExuQB6j-1)
+<!-- TODO: 
+- read here: https://github.com/matiassingers/awesome-readme for more good README.md files
+- make a gif for website usage (would be cool)
+- link website when its all done :)
+-->
 
-Team Status video 1: https://youtu.be/sF1T6Ul5qJc
+A modern web app to browse, collect, and filter for Pokémon from all generations. Built with HTML + CSS + JS, powered by Pokemon TCG API.
+
+![App Screenshot](admin/misc/app_screenshot.png)
+
+---
+
+## 📦 Features
+
+- 🔍 **Filter by type, generation, or name**
+- 📋 **Track your Pokémon collection**
+- Keep track of favorite cards in a binder
+
+---
+
+Built with love and care by Team 20 Vibe Coders  
+*We do not debug, we vibe check*  
+
+<img src="admin/branding/darklogo.png" alt="drawing" width="200"/>
