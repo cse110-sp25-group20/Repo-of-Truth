@@ -60,6 +60,7 @@ h1 {
     text-shadow: 2px 2px 0 #ffcb05, 4px 4px 0 #2a75bb;
 }
 h1::before, h1::after {
+    background: url('assets/images/pokemon-ball.png') no-repeat center/contain;
     content: '';
     display: inline-block;
     height: 48px;
