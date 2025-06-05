@@ -74,12 +74,13 @@ template.innerHTML = `
     .leaf.flip-back .page.back .page-number { visibility: visible; }
     .leaf-inner.instant { transition: none !important; }
     .page-number {
-      font-family: 'Luckiest Guy','Segoe UI',Tahoma,Verdana,sans-serif !important;
+      font-family: 'Luckiest Guy', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
       font-weight: bold;
       color: #2a75bb;
       font-size: 18px !important;
       margin-bottom: 15px !important;
       text-shadow: 1px 1px 2px #ffcb05;
+      letter-spacing: 1.25px;
       letter-spacing: 1.25px;
     }
     .cards-container {
@@ -271,8 +272,7 @@ class PokemonBinder extends HTMLElement {
     this._leftFlipInner = this._leftFlipLeaf.querySelector('.leaf-inner');
     this._rightFlipInner = this._rightFlipLeaf.querySelector('.leaf-inner');
     this.pagesData = new Map();
-
-    this.currentIndex = 1;
+    this.currentIndex = 0; // this holds the "current page number" (1-based)
 
     this.flipping = false;
 
@@ -295,28 +295,56 @@ class PokemonBinder extends HTMLElement {
       pagesMap.get(page)[slot] = card.imgUrl;
     }
     this.pagesData = pagesMap;
-    if (this.currentIndex < 1) this.currentIndex = 1;
+
+    // 3) Set currentIndex to the smallest pageNumber, or 1 if none
+    if (pagesMap.size > 1) {
+      const minKey = Math.min(...pagesMap.keys());
+      // If minKey is odd, use minKey; if it's even, subtract 1
+      this.currentIndex = (minKey % 2 === 1) ? minKey : (minKey - 1);
+    } else {
+      this.currentIndex = 1;
+    }
+
+    // 4) Re-render
     this._renderFaces();
   }
 
   /**
-   * @private
-   * @description Updates the four visible pages on the binder leaves according to currentIndex.
-   * @returns {void}
+   * @description Renders the four visible "faces" of the binder (two pages on each leaf).
+   *              Uses page numbers relative to this.currentIndex.
    */
   _renderFaces() {
+    // For each "face," fetch the array of imgURLs from the Map (or undefined if missing)
     const leftFrontData = this.pagesData.get(this.currentIndex);
     const leftBackData = this.pagesData.get(this.currentIndex - 1);
     const rightFrontData = this.pagesData.get(this.currentIndex + 1);
     const rightBackData = this.pagesData.get(this.currentIndex + 2);
 
-    this._loadFace(this._leftBackLeaf.querySelector('.page.front'), this.pagesData.get(this.currentIndex - 2), this.currentIndex - 2);
-    this._loadFace(this._rightBackLeaf.querySelector('.page.front'), this.pagesData.get(this.currentIndex + 3), this.currentIndex + 3);
+    // Left leaf: front face shows page "currentIndex"
+    this._loadFace(
+      this._leftLeaf.querySelector(".front"),
+      leftFrontData,
+      this.currentIndex
+    );
+    // Left leaf: back face shows page "currentIndex – 1"
+    this._loadFace(
+      this._leftLeaf.querySelector(".back"),
+      leftBackData,
+      this.currentIndex - 1
+    );
 
-    this._loadFace(this._leftFlipLeaf.querySelector('.page.front'), leftFrontData, this.currentIndex);
-    this._loadFace(this._leftFlipLeaf.querySelector('.page.back'), leftBackData, this.currentIndex - 1);
-    this._loadFace(this._rightFlipLeaf.querySelector('.page.front'), rightFrontData, this.currentIndex + 1);
-    this._loadFace(this._rightFlipLeaf.querySelector('.page.back'), rightBackData, this.currentIndex + 2);
+    // Right leaf: front face shows page "currentIndex + 1"
+    this._loadFace(
+      this._rightLeaf.querySelector(".front"),
+      rightFrontData,
+      this.currentIndex + 1
+    );
+    // Right leaf: back face shows page "currentIndex + 2"
+    this._loadFace(
+      this._rightLeaf.querySelector(".back"),
+      rightBackData,
+      this.currentIndex + 2
+    );
   }
 
   /**
