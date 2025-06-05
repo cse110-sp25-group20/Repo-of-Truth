@@ -2,7 +2,6 @@
  * @jest-environment jsdom
  */
 
-// Use relative path with .js extension
 import { jest, describe, test, expect } from '@jest/globals';
 import '../source/components/collection/collection-view.js' 
 
@@ -83,7 +82,6 @@ describe('PokemonCollection Web Component', () => {
     ];
     localStorage.setItem(COLLECTION_KEY, JSON.stringify(initialCards));
     element.render();
-    // Simulate removal of cards
     localStorage.removeItem(COLLECTION_KEY);
     element.render();
     const message = element.shadowRoot.querySelector('p');
