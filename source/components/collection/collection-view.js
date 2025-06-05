@@ -40,12 +40,28 @@ class PokemonCollection extends HTMLElement {
           border: 2.5px solid #2a75bb;
         }
         .collection-list {
-          display: grid;
-          grid-template-columns: repeat(4, 1fr);
+          display: flex;
+          flex-wrap: wrap;
           gap: 18px 28px;
           width: 100%;
-          justify-items: center;
+          justify-content: center;
+          align-items: center;
           min-height: 220px;
+        }
+        .collection-list.has-cards {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+        }
+        .empty-message {
+          text-align: center;
+          font-family: 'Luckiest Guy', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+          color: #2a75bb;
+          font-size: 1.5rem;
+          padding: 2rem;
+          text-shadow: 1px 1px 2px #ffcb05;
+          margin: auto;
+          letter-spacing: 1px;
+          max-width: 80%;
         }
         .collection-card {
           display: flex;
@@ -137,9 +153,11 @@ class PokemonCollection extends HTMLElement {
     container.innerHTML = '';
     const collection = this.getCollection();
     if (collection.length === 0) {
-      container.innerHTML = '<p style="width:100%;text-align:center;">No cards in your collection yet.</p>';
+      container.classList.remove('has-cards');
+      container.innerHTML = '<p class="empty-message">No cards in your collection yet!</p>';
       return;
     }
+    container.classList.add('has-cards');
     collection.forEach(card => {
       const cardDiv = document.createElement('div');
       cardDiv.className = 'collection-card';
