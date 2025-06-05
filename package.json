@@ -9,7 +9,7 @@
   },
   "scripts": {
     "docs": "jsdoc -c jsdoc.json",
-    "test-esm": "node --experimental-vm-modules node_modules/.bin/jest --coverage --coverageThreshold='{\"global\": {\"branches\": 70, \"functions\": 70, \"lines\": 70, \"statements\": 70}}' --"
+    "test": "node --experimental-vm-modules node_modules/.bin/jest --coverage --coverageThreshold='{\"global\": {\"branches\": 70, \"functions\": 70, \"lines\": 70, \"statements\": 70}}' --"
   },
   "repository": {
     "type": "git",
