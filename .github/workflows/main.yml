@@ -10,4 +10,4 @@ jobs: # the things being executed
       - name: Install Dependencies
         run: npm install
       - name: Unit Test
-        run: npm test ./tests/unit.test.js # the actual testing line
+        run: npm test # the actual testing line
