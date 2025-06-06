@@ -163,9 +163,6 @@ button:active {
     color: #fff;
 }
 .controls {
-    position: absolute;
-    top: 180px;
-    right: 5vw;
     display: flex;
     gap: 10px;
     z-index: 100;
@@ -173,15 +170,30 @@ button:active {
     border-radius: 0;
     box-shadow: none;
     padding: 0;
+    position: absolute;
 }
 
-.controls.binder-spacing {
-    margin-top: 32px;
+/* Top right for collection view */
+.collection-controls {
+    position: absolute;
+    top: 320px;
+    right: 5vw;
+    left: auto;
+    justify-content: flex-end;
+    width: auto;
+    margin-bottom: 48px;
 }
 
-.controls.collection-spacing {
-    top: 220px !important;
-    right: 2vw;
+/* Bottom center for binder view - place below the binder, not overlapping */
+.binder-controls {
+    position: static;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    margin: 32px auto 0 auto;
+    bottom: auto;
+    top: auto;
 }
 
 /* =========================
@@ -394,10 +406,21 @@ button:active {
         width: 95% !important;
     }
     .controls {
-        right: 2vw;
-        top: 170px;
         flex-direction: column;
         align-items: flex-end;
+        width: 98vw;
+        margin: 0 auto 8px auto;
+    }
+    .collection-controls #addCard{
+        top: 230px;
+        right: 2vw;
+        margin-bottom: 32px;
+        margin-left: 32px !important;
+    }
+    .binder-controls {
+        flex-direction: column;
+        gap: 12px;
+        margin-top: 16px;
     }
     button {
         margin: 5px 0;
@@ -443,6 +466,12 @@ button:active {
     .modal-details li {
       font-size: 1rem;
     }
+}
+.collection-controls{
+  top: 230px;
+  right: 2vw;
+  margin-bottom: 32px;
+  margin-left: 32px;
 }
 
 /* =========================
