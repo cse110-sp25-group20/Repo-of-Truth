@@ -103,4 +103,64 @@ describe("PokemonBinder", () => {
     expect(binder.currentIndex).toBe(1);
     expect(spyRender).not.toHaveBeenCalled();
   });
+  test("_loadFace fills slots with images and page number label", () => {
+  const face = document.createElement("div");
+  face.innerHTML = `
+    <div class="page-number"></div>
+    <div class="cards-container"></div>
+  `;
+  const cardUrls = Array(9).fill("card.png");
+  binder._loadFace(face, cardUrls, 5);
+
+  const pageNum = face.querySelector(".page-number").textContent;
+  const slots = face.querySelectorAll(".card-slot");
+  const images = face.querySelectorAll("img");
+
+  expect(pageNum).toBe("Page 5");
+  expect(slots.length).toBe(9);
+  expect(images.length).toBe(9);
+  expect(images[0].src).toContain("card.png");
+});
+
+test("_loadFace handles empty or undefined cardUrls", () => {
+  const face = document.createElement("div");
+  face.innerHTML = `
+    <div class="page-number"></div>
+    <div class="cards-container"></div>
+  `;
+
+  binder._loadFace(face, undefined, 0);
+  const slots = face.querySelectorAll(".card-slot");
+  expect(slots.length).toBe(9); // still renders 9 slots
+  expect(face.querySelector(".page-number").textContent).toBe(""); // blank label
+});
+
+test("showModal adds modal with correct image", () => {
+  binder.showModal("test-card.png");
+  const modal = document.getElementById("global-pokemon-modal");
+  const modalImg = modal.querySelector("img.modal-card");
+
+  expect(modal).not.toBeNull();
+  expect(modalImg.src).toContain("test-card.png");
+
+  // Cleanup
+  modal.remove();
+});
+
+test("toggleModal removes existing modal", () => {
+  const modal = document.createElement("div");
+  modal.id = "global-pokemon-modal";
+  document.body.appendChild(modal);
+
+  expect(document.getElementById("global-pokemon-modal")).not.toBeNull();
+
+  binder.toggleModal();
+
+  expect(document.getElementById("global-pokemon-modal")).toBeNull();
+});
+
+test("setPages defaults currentIndex to 1 when pagesMap is empty", () => {
+  binder.setPages([]);
+  expect(binder.currentIndex).toBe(1);
+});
 });
