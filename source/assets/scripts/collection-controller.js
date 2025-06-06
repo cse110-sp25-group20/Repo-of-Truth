@@ -1,108 +1,89 @@
 // collection-controller.js
 
 import "../../components/collection/collection-view.js";
-import { getCardsByPage } from "../../demos/api-search/api/pokemonAPI.js";
 import { showAddCardModal } from './addCardModal.js';
-import { showOfflineAddCardModal } from './offline-add-card-modal.js';
 
 const COLLECTION_KEY = 'pokemonCollection';
 
 /**
  * Shows the collection view and hides the binder view.
- * Modifies control bar classes and visibility of navigation buttons accordingly.
  * @returns {void}
  */
 function showCollection() {
   document.querySelector('pokemon-collection').style.display = 'flex';
   document.querySelector('pokemon-binder').style.display = 'none';
-  const controls = document.querySelector('.controls');
-  controls.style.display = 'flex';
-  controls.classList.add('collection-controls');
-  controls.classList.remove('binder-controls');
+  document.getElementById('addCardBinder').style.display = 'inline-block';
   document.getElementById('turnPageLeft').style.display = 'none';
   document.getElementById('turnPageRight').style.display = 'none';
-  document.getElementById('addCard').style.display = 'inline-block';
+  // Move controls above collection container
+  const controls = document.querySelector('.controls');
+  const main = document.body;
+  main.insertBefore(controls, document.querySelector('pokemon-binder'));
+  controls.style.position = 'absolute';
+  controls.style.top = '180px';
+  controls.classList.remove('binder-spacing');
+  controls.classList.add('collection-spacing');
 }
 
 /**
  * Shows the binder view and hides the collection view.
- * Adjusts navigation and control elements to suit the binder layout.
  * @returns {void}
  */
 function showBinder() {
   document.querySelector('pokemon-collection').style.display = 'none';
   document.querySelector('pokemon-binder').style.display = '';
-  const controls = document.querySelector('.controls');
-  controls.style.display = 'flex';
-  controls.classList.remove('collection-controls');
-  controls.classList.add('binder-controls');
+  document.getElementById('addCardBinder').style.display = 'inline-block';
   document.getElementById('turnPageLeft').style.display = 'inline-block';
   document.getElementById('turnPageRight').style.display = 'inline-block';
-  document.getElementById('addCard').style.display = 'inline-block';
+  // Move controls below binder container
+  const controls = document.querySelector('.controls');
+  const binder = document.querySelector('pokemon-binder');
+  binder.parentNode.insertBefore(controls, binder.nextSibling);
+  controls.style.position = 'static';
+  controls.style.top = '';
+  controls.classList.add('binder-spacing');
+  controls.classList.remove('collection-spacing');
 }
 
 // Navigation event listeners
-
 /**
- * Handles navigation click to show the collection view.
- * @param {MouseEvent} e - Click event from the navigation link.
+ * Handles navigation to the collection view.
+ * @param {Event} e -  click event.
  * @returns {void}
  */
 document.getElementById('navCollection').addEventListener('click', e => {
   e.preventDefault();
-  document.getElementById('navBinder').classList.remove('active');
-  document.getElementById('navCollection').classList.add('active');
   showCollection();
 });
 
 /**
- * Handles navigation click to show the binder view.
- * @param {MouseEvent} e - Click event from the navigation link.
+ * Handles navigation to the binder view.
+ * @param {Event} e -  click event.
  * @returns {void}
  */
 document.getElementById('navBinder').addEventListener('click', e => {
   e.preventDefault();
-  document.getElementById('navCollection').classList.remove('active');
-  document.getElementById('navBinder').classList.add('active');
   showBinder();
 });
 
 /**
- * Adds a card to the user's collection if it's not already present.
- * Stores the card data in localStorage under a defined key.
- * 
- * @param {Object} card - Card object returned from the API.
- * @param {string} card.id - Unique identifier of the card.
- * @param {string} card.name - Name of the card.
- * @param {Object} card.images - Image object for the card.
- * @param {string} card.images.small - URL for the small-sized image.
+ * Adds a card to the user's collection in localStorage if it does not exist.
+ * @param {Object} card - The card stores image  
  * @returns {void}
  */
 window.addCardToCollection = function(card) {
   const collection = document.querySelector("pokemon-collection").getCollection();
   if (!collection.some(c => c.imgUrl === card.imgUrl)) {
-    collection.push({
-      id: card.id,
-      name: card.name,
-      imgUrl: card.images.small
-    });
+    collection.push(card);
     localStorage.setItem(COLLECTION_KEY, JSON.stringify(collection));
   }
-};
+}
 
-// Initial UI setup
-
-/**
- * Event listener for initial page load.
- * - Displays the collection view by default.
- * - Hides pagination buttons if the binder is not active.
- * - Attaches a click handler to the "Add Card" button, which:
- *   - Tries to check online API availability.
- *   - Shows the appropriate modal depending on network status and active view.
- */
+// On initial load, hide prev/next buttons if collection is visible
 window.addEventListener('DOMContentLoaded', () => {
+  // Always show collection view on load
   showCollection();
-
+  // Hide prev/next buttons if collection is visible
   const collectionVisible =
     document.querySelector('pokemon-collection').style.display !== 'none';
   if (collectionVisible) {
@@ -110,20 +91,9 @@ window.addEventListener('DOMContentLoaded', () => {
     document.getElementById('turnPageRight').style.display = 'none';
   }
 
-  document.getElementById('addCard')?.addEventListener('click', async () => {
+  // Add Card button logic for both views
+  document.getElementById('addCardBinder')?.addEventListener('click', () => {
     const isBinderView = document.querySelector('pokemon-binder').style.display !== 'none';
-
-    const ping = getCardsByPage(1, 1);
-    const timer = new Promise((_, reject) =>
-      setTimeout(() => reject(new Error("timeout")), 3000)
-    );
-
-    try {
-      await Promise.race([ping, timer]);
-      showAddCardModal(isBinderView ? 'binder' : 'collection');
-    } catch (err) {
-      console.warn("API ping failed:", err);
-      showOfflineAddCardModal(isBinderView ? 'binder' : 'collection');
-    }
+    showAddCardModal(isBinderView ? 'binder' : 'collection');
   });
-});
+}); 
