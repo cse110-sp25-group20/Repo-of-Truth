@@ -27,7 +27,10 @@ function updateBinder() {
 /**
  * Tells the binder component to flip forward two pages.
  */
+import { showAssignCardModal } from "./assign-card-modal.js";
 function turnPageRight() {
+  showAssignCardModal(1,5);
+  showAddCardModal
   const binder = document.querySelector("pokemon-binder");
   if (binder) {
     binder.flipForward();
