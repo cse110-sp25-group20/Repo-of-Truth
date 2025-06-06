@@ -70,11 +70,13 @@ template.innerHTML = `
       visibility: visible;
     }
     .page-number {
+      font-family: 'Luckiest Guy', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
       font-weight: bold;
       color: #2a75bb;
       font-size: 18px !important;
       margin-bottom: 15px !important;
       text-shadow: 1px 1px 2px #ffcb05;
+      letter-spacing: 1.25px;
     }
     .cards-container {
       flex: 1;
@@ -253,7 +255,7 @@ class PokemonBinder extends HTMLElement {
 
     // pagesData is now a Map<pageNumber, Array<9 imgUrls>>
     this.pagesData = new Map();
-    this.currentIndex = 0; // this holds the “current page number” (1-based)
+    this.currentIndex = 0; // this holds the "current page number" (1-based)
 
     this._leftLeaf = this.shadowRoot.querySelector(".left-leaf");
     this._rightLeaf = this.shadowRoot.querySelector(".right-leaf");
@@ -303,7 +305,7 @@ class PokemonBinder extends HTMLElement {
     // 3) Set currentIndex to the smallest pageNumber, or 1 if none
     if (pagesMap.size > 1) {
       const minKey = Math.min(...pagesMap.keys());
-      // If minKey is odd, use minKey; if it’s even, subtract 1
+      // If minKey is odd, use minKey; if it's even, subtract 1
       this.currentIndex = (minKey % 2 === 1) ? minKey : (minKey - 1);
     } else {
       this.currentIndex = 1;
@@ -314,36 +316,36 @@ class PokemonBinder extends HTMLElement {
   }
 
   /**
-   * @description Renders the four visible “faces” of the binder (two pages on each leaf).
+   * @description Renders the four visible "faces" of the binder (two pages on each leaf).
    *              Uses page numbers relative to this.currentIndex.
    */
   _renderFaces() {
-    // For each “face,” fetch the array of imgURLs from the Map (or undefined if missing)
+    // For each "face," fetch the array of imgURLs from the Map (or undefined if missing)
     const leftFrontData = this.pagesData.get(this.currentIndex);
     const leftBackData = this.pagesData.get(this.currentIndex - 1);
     const rightFrontData = this.pagesData.get(this.currentIndex + 1);
     const rightBackData = this.pagesData.get(this.currentIndex + 2);
 
-    // Left leaf: front face shows page “currentIndex”
+    // Left leaf: front face shows page "currentIndex"
     this._loadFace(
       this._leftLeaf.querySelector(".front"),
       leftFrontData,
       this.currentIndex
     );
-    // Left leaf: back face shows page “currentIndex – 1”
+    // Left leaf: back face shows page "currentIndex – 1"
     this._loadFace(
       this._leftLeaf.querySelector(".back"),
       leftBackData,
       this.currentIndex - 1
     );
 
-    // Right leaf: front face shows page “currentIndex + 1”
+    // Right leaf: front face shows page "currentIndex + 1"
     this._loadFace(
       this._rightLeaf.querySelector(".front"),
       rightFrontData,
       this.currentIndex + 1
     );
-    // Right leaf: back face shows page “currentIndex + 2”
+    // Right leaf: back face shows page "currentIndex + 2"
     this._loadFace(
       this._rightLeaf.querySelector(".back"),
       rightBackData,
