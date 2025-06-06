@@ -524,154 +524,6 @@ class PokemonBinder extends HTMLElement {
     const modal = document.getElementById("global-pokemon-modal");
     if (modal) modal.remove();
   }
-
-  /**
-   * @description Opens a search modal to look up cards from the API and add them.
-   */
-  showAddCardModal() {
-    const oldModal = document.getElementById("global-pokemon-modal");
-    if (oldModal) oldModal.remove();
-
-    const modal = document.createElement("div");
-    modal.className = "card-modal";
-    modal.id = "global-pokemon-modal";
-    modal.innerHTML = `
-      &lt;style>
-        .card.selected {
-          border: 2px solid #2a75bb !important;
-          box-shadow: 0 0 12px #2a75bb !important;
-          background-color: #e0f7ff !important;
-          transform: scale(1.05);
-        }
-      &lt;/style>
-      &lt;section class="modal-content" role="dialog" aria-modal="true">
-        &lt;article class="modal-info" style="flex: 1;">
-          &lt;h2 class="modal-name">Add a Pokémon Card&lt;/h2>
-          &lt;input id="cardSearchInput" type="text" placeholder="Enter Pokemon name" style="padding: 8px; width: 100%; box-sizing: border-box;" />
-          &lt;div id="cardSearchResult" style="
-            margin-top: 16px; 
-            display: grid; 
-            grid-template-columns: repeat(3, 1fr); 
-            gap: 50px;
-            max-height:60vh;
-            overflow-y: auto;">
-          &lt;/div>
-          &lt;button id="confirmAddCardBtn" style="display: none; margin-top: 10px; padding: 8px 12px; background: #ffcb05; color: black; border: none; border-radius: 5px; font-weight: bold; cursor: pointer;">Add to Binder&lt;/button>
-        &lt;/article>
-      &lt;/section>
-    `;
-
-    document.body.appendChild(modal);
-    modal.addEventListener("click", (e) => {
-      if (e.target === modal) modal.remove();
-    });
-
-    const input = modal.querySelector("#cardSearchInput");
-    const resultBox = modal.querySelector("#cardSearchResult");
-    const confirmBtn = modal.querySelector("#confirmAddCardBtn");
-    let selectedCard = null;
-
-    confirmBtn.addEventListener("click", () => {
-      if (selectedCard &amp;&amp; selectedCard.images?.small) {
-        // Add to collection in localStorage or your data store
-        if (window.addCardToCollection) {
-          window.addCardToCollection({
-            name: selectedCard.name,
-            imgUrl: selectedCard.images.small,
-            // You might assign default page/slot here or leave that to your binder-controller logic
-          });
-        }
-        // Add to binder using binder-controller helper
-        handleAddCard(selectedCard.images.small);
-        // Refresh binder view
-        const binderEl = document.querySelector("pokemon-binder");
-        if (binderEl &amp;&amp; window.getBinderPages) {
-          binderEl.setPages(window.getBinderPages());
-        }
-        // If you have a separate collection component, refresh that too
-        const collEl = document.querySelector("pokemon-collection");
-        if (collEl &amp;&amp; typeof collEl.render === "function") {
-          collEl.render();
-        }
-        document.getElementById("global-pokemon-modal")?.remove();
-      }
-    });
-
-    input.addEventListener("input", async (e) => {
-      const query = e.target.value.trim();
-      resultBox.innerHTML = '&lt;p style="text-align:center;">Loading...&lt;/p>';
-
-      try {
-        const cards = await getCardsByName(query);
-        resultBox.innerHTML = "";
-
-        if (!cards.length) {
-          resultBox.innerHTML = "&lt;p>No cards found.&lt;/p>";
-          return;
-        }
-
-        cards.forEach((card) => {
-          const cardDiv = document.createElement("div");
-          cardDiv.className = "card";
-          Object.assign(cardDiv.style, {
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            padding: "10px",
-            //border: "1px solid #ccc",
-            borderRadius: "8px",
-            backgroundColor: "#fff",
-            boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
-            cursor: "pointer",
-            transition: "transform 0.2s ease, border 0.2s ease",
-            maxWidth: "110px",
-            margin: "auto",
-          });
-
-          cardDiv.addEventListener("mouseover", () => {
-            cardDiv.style.transform = "scale(1.05)";
-          });
-          cardDiv.addEventListener("mouseout", () => {
-            cardDiv.style.transform = "scale(1)";
-          });
-          cardDiv.addEventListener("click", () => {
-            resultBox
-              .querySelectorAll(".card.selected")
-              .forEach((el) => el.classList.remove("selected"));
-            cardDiv.classList.add("selected");
-            selectedCard = card;
-            confirmBtn.style.display = "block";
-          });
-
-          const img = document.createElement("img");
-          img.src = card.images.small;
-          img.alt = card.name;
-          Object.assign(img.style, {
-            width: "100%",
-            borderRadius: "6px",
-          });
-
-          const nameEl = document.createElement("div");
-          nameEl.className = "card-name";
-          nameEl.textContent = card.name;
-          Object.assign(nameEl.style, {
-            marginTop: "8px",
-            fontWeight: "bold",
-            fontSize: "12px",
-            textAlign: "center",
-            wordBreak: "break-word",
-          });
-
-          cardDiv.appendChild(img);
-          cardDiv.appendChild(nameEl);
-          resultBox.appendChild(cardDiv);
-        });
-      } catch (err) {
-        resultBox.innerHTML = `&lt;p>Error: ${err.message}&lt;/p>`;
-      }
-    });
-  }
 }
 
 customElements.define("pokemon-binder", PokemonBinder);
@@ -685,13 +537,13 @@ customElements.define("pokemon-binder", PokemonBinder);
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-PokemonBinder.html">PokemonBinder</a></li></ul><h3>Classes</h3><ul><li><a href="PokemonCollection.html">PokemonCollection</a></li></ul><h3>Global</h3><ul><li><a href="global.html#COLLECTION_KEY">COLLECTION_KEY</a></li><li><a href="global.html#getAllSets">getAllSets</a></li><li><a href="global.html#getCardById">getCardById</a></li><li><a href="global.html#getCardsByName">getCardsByName</a></li><li><a href="global.html#getCardsByNameAndNumber">getCardsByNameAndNumber</a></li><li><a href="global.html#getCardsBySet">getCardsBySet</a></li><li><a href="global.html#showBinder">showBinder</a></li><li><a href="global.html#showCollection">showCollection</a></li><li><a href="global.html#turnPageLeft">turnPageLeft</a></li><li><a href="global.html#turnPageRight">turnPageRight</a></li><li><a href="global.html#updateBinder">updateBinder</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-PokemonBinder.html">PokemonBinder</a></li></ul><h3>Classes</h3><ul><li><a href="PokemonCollection.html">PokemonCollection</a></li></ul><h3>Global</h3><ul><li><a href="global.html#COLLECTION_KEY">COLLECTION_KEY</a></li><li><a href="global.html#getAllSets">getAllSets</a></li><li><a href="global.html#getCardById">getCardById</a></li><li><a href="global.html#getCardsByName">getCardsByName</a></li><li><a href="global.html#getCardsByNameAndNumber">getCardsByNameAndNumber</a></li><li><a href="global.html#getCardsBySet">getCardsBySet</a></li><li><a href="global.html#showAddCardModal">showAddCardModal</a></li><li><a href="global.html#showBinder">showBinder</a></li><li><a href="global.html#showCollection">showCollection</a></li><li><a href="global.html#turnPageLeft">turnPageLeft</a></li><li><a href="global.html#turnPageRight">turnPageRight</a></li><li><a href="global.html#updateBinder">updateBinder</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Fri Jun 06 2025 07:28:04 GMT+0000 (Coordinated Universal Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Fri Jun 06 2025 08:08:46 GMT+0000 (Coordinated Universal Time)
 </footer>
 
 <script> prettyPrint(); </script>
