@@ -12,17 +12,13 @@ const COLLECTION_KEY = 'pokemonCollection';
 function showCollection() {
   document.querySelector('pokemon-collection').style.display = 'flex';
   document.querySelector('pokemon-binder').style.display = 'none';
-  document.getElementById('addCardBinder').style.display = 'inline-block';
+  const controls = document.querySelector('.controls');
+  controls.style.display = 'flex';
+  controls.classList.add('collection-controls');
+  controls.classList.remove('binder-controls');
   document.getElementById('turnPageLeft').style.display = 'none';
   document.getElementById('turnPageRight').style.display = 'none';
-  // Move controls above collection container
-  const controls = document.querySelector('.controls');
-  const main = document.body;
-  main.insertBefore(controls, document.querySelector('pokemon-binder'));
-  controls.style.position = 'absolute';
-  controls.style.top = '180px';
-  controls.classList.remove('binder-spacing');
-  controls.classList.add('collection-spacing');
+  document.getElementById('addCard').style.display = 'inline-block';
 }
 
 /**
@@ -32,17 +28,13 @@ function showCollection() {
 function showBinder() {
   document.querySelector('pokemon-collection').style.display = 'none';
   document.querySelector('pokemon-binder').style.display = '';
-  document.getElementById('addCardBinder').style.display = 'inline-block';
+  const controls = document.querySelector('.controls');
+  controls.style.display = 'flex';
+  controls.classList.remove('collection-controls');
+  controls.classList.add('binder-controls');
   document.getElementById('turnPageLeft').style.display = 'inline-block';
   document.getElementById('turnPageRight').style.display = 'inline-block';
-  // Move controls below binder container
-  const controls = document.querySelector('.controls');
-  const binder = document.querySelector('pokemon-binder');
-  binder.parentNode.insertBefore(controls, binder.nextSibling);
-  controls.style.position = 'static';
-  controls.style.top = '';
-  controls.classList.add('binder-spacing');
-  controls.classList.remove('collection-spacing');
+  document.getElementById('addCard').style.display = 'inline-block';
 }
 
 // Navigation event listeners
@@ -92,7 +84,7 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 
   // Add Card button logic for both views
-  document.getElementById('addCardBinder')?.addEventListener('click', () => {
+  document.getElementById('addCard')?.addEventListener('click', () => {
     const isBinderView = document.querySelector('pokemon-binder').style.display !== 'none';
     showAddCardModal(isBinderView ? 'binder' : 'collection');
   });
