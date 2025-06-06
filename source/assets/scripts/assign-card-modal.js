@@ -153,15 +153,13 @@ export function showAssignCardModal(pageIndex, slotIndex) {
         page: pageIndex,
         slot: slotIndex,
       };
-
-      // Save changes
-      localStorage.setItem(COLLECTION_STORAGE_KEY, JSON.stringify(collection));
-
-      // Refresh binder view
-      const binder = document.querySelector("pokemon-binder");
-      if (binder) {
-        binder.setPages(collection);
-      }
+      // Persist changes
+        localStorage.setItem(COLLECTION_STORAGE_KEY, JSON.stringify(collection));
+      
+        const binder = document.querySelector("pokemon-binder");
+        if (binder) {
+            binder.setPages(collection);
+        }
 
       // Close modal
       document.getElementById('assign-card-modal')?.remove();
