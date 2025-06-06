@@ -164,10 +164,36 @@ button:active {
 }
 .controls {
     display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
+    gap: 10px;
+    z-index: 100;
+    background: none;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 0;
+    position: absolute;
+}
+
+/* Top right for collection view */
+.collection-controls {
+    position: absolute;
+    top: 320px;
+    right: 5vw;
+    left: auto;
+    justify-content: flex-end;
+    width: auto;
+    margin-bottom: 48px;
+}
+
+/* Bottom center for binder view - place below the binder, not overlapping */
+.binder-controls {
+    position: static;
+    display: flex;
     justify-content: center;
-    margin-top: 20px;
+    align-items: center;
+    width: 100vw;
+    margin: 32px auto 0 auto;
+    bottom: auto;
+    top: auto;
 }
 
 /* =========================
@@ -380,8 +406,21 @@ button:active {
         width: 95% !important;
     }
     .controls {
-        align-items: center;
         flex-direction: column;
+        align-items: flex-end;
+        width: 98vw;
+        margin: 0 auto 8px auto;
+    }
+    .collection-controls #addCard{
+        top: 230px;
+        right: 2vw;
+        margin-bottom: 32px;
+        margin-left: 32px !important;
+    }
+    .binder-controls {
+        flex-direction: column;
+        gap: 12px;
+        margin-top: 16px;
     }
     button {
         margin: 5px 0;
@@ -428,6 +467,12 @@ button:active {
       font-size: 1rem;
     }
 }
+.collection-controls{
+  top: 230px;
+  right: 2vw;
+  margin-bottom: 32px;
+  margin-left: 32px;
+}
 
 /* =========================
    ANIMATIONS
@@ -452,6 +497,7 @@ button:active {
     min-height: 400px;
     max-height: 70vh;
     overflow-y: auto;
+    margin-right: 120px;
 }
 .collection-card {
     display: flex;

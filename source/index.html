@@ -22,14 +22,18 @@
             </ul>
         </nav>
     </header>
-    <pokemon-binder style="display:none;"></pokemon-binder>
+    <section class="binder-container">
+        <pokemon-binder style="display:none;"></pokemon-binder>
+    </section>
+    <!-- Collection view (shown by default, hidden in binder mode) -->
     <pokemon-collection></pokemon-collection>
+    <!-- Controls for navigation and Add Card (used for both views) -->
     <section class="controls">
         <button id="turnPageLeft">Previous Page</button>
         <button id="addCard">Add Card</button>
         <button id="turnPageRight">Next Page</button>
     </section>
-
+    
     <script type="module" src="./assets/scripts/binder-controller.js"></script>
     <script type="module" src="./assets/scripts/collection-controller.js"></script>
     <script type="module" src="./toggleMode.js"></script>

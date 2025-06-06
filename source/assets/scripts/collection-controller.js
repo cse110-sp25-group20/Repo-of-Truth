@@ -1,6 +1,7 @@
 // collection-controller.js
 
 import "../../components/collection/collection-view.js";
+import { showAddCardModal } from './addCardModal.js';
 
 const COLLECTION_KEY = 'pokemonCollection';
 
@@ -11,8 +12,13 @@ const COLLECTION_KEY = 'pokemonCollection';
 function showCollection() {
   document.querySelector('pokemon-collection').style.display = 'flex';
   document.querySelector('pokemon-binder').style.display = 'none';
+  const controls = document.querySelector('.controls');
+  controls.style.display = 'flex';
+  controls.classList.add('collection-controls');
+  controls.classList.remove('binder-controls');
   document.getElementById('turnPageLeft').style.display = 'none';
   document.getElementById('turnPageRight').style.display = 'none';
+  document.getElementById('addCard').style.display = 'inline-block';
 }
 
 /**
@@ -22,8 +28,13 @@ function showCollection() {
 function showBinder() {
   document.querySelector('pokemon-collection').style.display = 'none';
   document.querySelector('pokemon-binder').style.display = '';
+  const controls = document.querySelector('.controls');
+  controls.style.display = 'flex';
+  controls.classList.remove('collection-controls');
+  controls.classList.add('binder-controls');
   document.getElementById('turnPageLeft').style.display = 'inline-block';
   document.getElementById('turnPageRight').style.display = 'inline-block';
+  document.getElementById('addCard').style.display = 'inline-block';
 }
 
 // Navigation event listeners
@@ -62,10 +73,19 @@ window.addCardToCollection = function(card) {
 
 // On initial load, hide prev/next buttons if collection is visible
 window.addEventListener('DOMContentLoaded', () => {
+  // Always show collection view on load
+  showCollection();
+  // Hide prev/next buttons if collection is visible
   const collectionVisible =
     document.querySelector('pokemon-collection').style.display !== 'none';
   if (collectionVisible) {
     document.getElementById('turnPageLeft').style.display = 'none';
     document.getElementById('turnPageRight').style.display = 'none';
   }
+
+  // Add Card button logic for both views
+  document.getElementById('addCard')?.addEventListener('click', () => {
+    const isBinderView = document.querySelector('pokemon-binder').style.display !== 'none';
+    showAddCardModal(isBinderView ? 'binder' : 'collection');
+  });
 }); 
