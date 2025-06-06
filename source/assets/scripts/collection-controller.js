@@ -1,6 +1,7 @@
 // collection-controller.js
 
 import "../../components/collection/collection-view.js";
+import { showAddCardModal } from './addCardModal.js';
 
 const COLLECTION_KEY = 'pokemonCollection';
 
@@ -11,8 +12,17 @@ const COLLECTION_KEY = 'pokemonCollection';
 function showCollection() {
   document.querySelector('pokemon-collection').style.display = 'flex';
   document.querySelector('pokemon-binder').style.display = 'none';
+  document.getElementById('addCardBinder').style.display = 'inline-block';
   document.getElementById('turnPageLeft').style.display = 'none';
   document.getElementById('turnPageRight').style.display = 'none';
+  // Move controls above collection container
+  const controls = document.querySelector('.controls');
+  const main = document.body;
+  main.insertBefore(controls, document.querySelector('pokemon-binder'));
+  controls.style.position = 'absolute';
+  controls.style.top = '180px';
+  controls.classList.remove('binder-spacing');
+  controls.classList.add('collection-spacing');
 }
 
 /**
@@ -22,8 +32,17 @@ function showCollection() {
 function showBinder() {
   document.querySelector('pokemon-collection').style.display = 'none';
   document.querySelector('pokemon-binder').style.display = '';
+  document.getElementById('addCardBinder').style.display = 'inline-block';
   document.getElementById('turnPageLeft').style.display = 'inline-block';
   document.getElementById('turnPageRight').style.display = 'inline-block';
+  // Move controls below binder container
+  const controls = document.querySelector('.controls');
+  const binder = document.querySelector('pokemon-binder');
+  binder.parentNode.insertBefore(controls, binder.nextSibling);
+  controls.style.position = 'static';
+  controls.style.top = '';
+  controls.classList.add('binder-spacing');
+  controls.classList.remove('collection-spacing');
 }
 
 // Navigation event listeners
@@ -62,10 +81,19 @@ window.addCardToCollection = function(card) {
 
 // On initial load, hide prev/next buttons if collection is visible
 window.addEventListener('DOMContentLoaded', () => {
+  // Always show collection view on load
+  showCollection();
+  // Hide prev/next buttons if collection is visible
   const collectionVisible =
     document.querySelector('pokemon-collection').style.display !== 'none';
   if (collectionVisible) {
     document.getElementById('turnPageLeft').style.display = 'none';
     document.getElementById('turnPageRight').style.display = 'none';
   }
+
+  // Add Card button logic for both views
+  document.getElementById('addCardBinder')?.addEventListener('click', () => {
+    const isBinderView = document.querySelector('pokemon-binder').style.display !== 'none';
+    showAddCardModal(isBinderView ? 'binder' : 'collection');
+  });
 }); 
