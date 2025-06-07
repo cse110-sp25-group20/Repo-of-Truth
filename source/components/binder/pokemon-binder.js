@@ -159,27 +159,6 @@ template.innerHTML = `
       margin: auto;
       flex-shrink: 1;
     }
-    .modal-image {
-      flex: 0 1 140px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: linear-gradient(135deg, #ffcb05 0%, #fff 100%);
-      border-radius: 16px;
-      box-shadow: 0 2px 8px #2a75bb33;
-      padding: 12px;
-      min-width: 100px;
-      min-height: 120px;
-      margin: 0;
-      flex-shrink: 1;
-    }
-    .modal-card {
-      max-width: 100px;
-      max-height: 120px;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px #2a75bb33;
-      background: #fff;
-    }
     .modal-info {
       display: flex;
       flex-direction: column;
