@@ -185,9 +185,12 @@ class PokemonCollection extends HTMLElement {
       try {
         const collection = this.getCollection();
         const cardMatch = collection.find(c => c.imgUrl === imgSrc);
-        if (cardMatch?.name) {
-          const results = await getCardsByName(cardMatch.name);
-          fullCard = results.find(c => c.images?.small === imgSrc || c.name === cardMatch.name);
+
+        const { getCardById } = await import('../../demos/api-search/api/pokemonAPI.js');
+        
+        if (cardMatch?.id) {
+          fullCard = await getCardById(cardMatch.id);
+        
         }
       } catch (err) {
         console.error('Error fetching card data for modal:', err);
