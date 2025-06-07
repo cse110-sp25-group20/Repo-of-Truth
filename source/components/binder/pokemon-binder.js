@@ -376,6 +376,10 @@ _loadFace(faceEl, cardUrls, pageNumber) {
       const img = document.createElement("img");
       img.src = urls[i];
       img.alt = "Pokemon card";
+      img.onerror = () => {
+        img.onerror = null; // prevent infinite loop if fallback also missing
+        img.src = 'assets/images/card-back.png';
+      };
       img.addEventListener("click", () => this.showModal(img.src));
       slot.appendChild(img);
     } else {

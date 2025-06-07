@@ -1,15 +1,12 @@
 // assign-card-modal.js
 
 /**
- * Displays a modal popup listing existing cards from localStorage for assignment to a binder slot.
- * Allows the user to pick a card from the collection and assign it to a specific page and slot in the binder.
- * Updates localStorage and re-renders the binder.
- * 
- * @param {number} pageIndex - The index of the binder page to assign the card to.
- * @param {number} slotIndex - The index of the slot on the page where the card should go.
+ * Displays a modal popup listing existing cards from localStorage for assignment.
+ * @param {number} pageIndex - The index of the binder page.
+ * @param {number} slotIndex - The index of the slot on the binder page.
  */
 export function showAssignCardModal(pageIndex, slotIndex) {
-  // Remove any existing modal
+  // Remove any previous instance
   const oldModal = document.getElementById('assign-card-modal');
   if (oldModal) oldModal.remove();
 
@@ -51,30 +48,21 @@ export function showAssignCardModal(pageIndex, slotIndex) {
 
   document.body.appendChild(modal);
 
-  /** Closes modal if background area is clicked */
+  // Close on backdrop click
   modal.addEventListener('click', (e) => {
     if (e.target === modal) modal.remove();
   });
 
-  /** @type {HTMLElement} */
   const resultBox = modal.querySelector('#assignCardResult');
-
-  /** @type {HTMLButtonElement} */
   const confirmBtn = modal.querySelector('#confirmAssignCardBtn');
-
-  /** @type {Object|null} */
   let selectedCard = null;
-
-  /** @type {number|null} */
   let selectedIndex = null;
 
-  /** Load the current card collection from localStorage */
+  // Load collection from localStorage
   const COLLECTION_STORAGE_KEY = 'pokemonCollection';
   const collection = JSON.parse(localStorage.getItem(COLLECTION_STORAGE_KEY)) || [];
 
-  /**
-   * Renders each card from the collection as a clickable option
-   */
+  // Render existing cards as selectable thumbnails
   collection.forEach((card, idx) => {
     const cardDiv = document.createElement('div');
     cardDiv.className = 'card';
@@ -89,11 +77,11 @@ export function showAssignCardModal(pageIndex, slotIndex) {
       boxShadow: '0 2px 6px rgba(0,0,0,0.1)',
       cursor: 'pointer',
       transition: 'transform 0.2s ease, border 0.2s ease',
-      maxWidth: '90px',
+      maxWidth: '110px',
       margin: 'auto',
     });
 
-    // Hover effect
+    // Hover scaling
     cardDiv.addEventListener('mouseover', () => {
       cardDiv.style.transform = 'scale(1.05)';
     });
@@ -101,7 +89,7 @@ export function showAssignCardModal(pageIndex, slotIndex) {
       cardDiv.style.transform = 'scale(1)';
     });
 
-    // Selection logic
+    // Selection handling
     cardDiv.addEventListener('click', () => {
       resultBox.querySelectorAll('.card.selected').forEach(el => el.classList.remove('selected'));
       cardDiv.classList.add('selected');
@@ -110,20 +98,20 @@ export function showAssignCardModal(pageIndex, slotIndex) {
       confirmBtn.style.display = 'block';
     });
 
-    // Card image
+    // Thumbnail image
     const img = document.createElement('img');
     img.src = card.imgUrl || card.images?.small;
     img.alt = card.name;
     img.onerror = () => {
-      img.onerror = null;
-      img.src = 'assets/images/card-back.png';
-    };
+        img.onerror = null; // prevent infinite loop if fallback also missing
+        img.src = 'assets/images/card-back.png';
+      };
     Object.assign(img.style, {
       width: '100%',
       borderRadius: '6px',
     });
 
-    // Card name
+    // Name label
     const nameEl = document.createElement('div');
     nameEl.className = 'card-name';
     nameEl.textContent = card.name;
@@ -140,14 +128,10 @@ export function showAssignCardModal(pageIndex, slotIndex) {
     resultBox.appendChild(cardDiv);
   });
 
-  /**
-   * Handles confirming the card assignment to the selected page and slot.
-   * Updates the card object with page and slot, updates localStorage,
-   * and triggers re-render of the binder.
-   */
+  // Confirm assignment
   confirmBtn.addEventListener('click', () => {
     if (selectedCard !== null && selectedIndex !== null) {
-      // Tag card with its new position
+      // Update the selected card's page and slot indices
       collection[selectedIndex] = {
         ...collection[selectedIndex],
         page: pageIndex,
