@@ -18,13 +18,46 @@ template.innerHTML = `
       border: 2px solid #333;
       background: #f9f9f9;
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      perspective: 1000px;
+      perspective: 2000px;
     }
     .binder {
       display: flex;
       width: 100%;
       height: 100%;
       position: relative;
+      align-items: stretch;
+      transform-style: preserve-3d;
+    }
+    .spine {
+      width: 40px;
+      position: relative;
+      background: #f0f0f0;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 10px 0;
+      z-index: 3;
+      border-left: 1px solid #ddd;
+      border-right: 1px solid #ddd;
+    }
+    .ring {
+      width: 100%;
+      height: 20px;
+      position: relative;
+      margin: 5px 0;
+    }
+    .ring::before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 35px;
+      height: 10px;
+      border: 2px solid #999;
+      border-radius: 10px;
+      background: linear-gradient(to bottom, #e8e8e8, #d0d0d0);
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.2), 0 1px 2px rgba(255,255,255,0.8);
     }
     .leaf {
       flex: 1;
@@ -33,6 +66,16 @@ template.innerHTML = `
       transition: transform 0.3s ease;
       overflow: hidden;
       z-index: 1;
+      background: #fff;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .left-leaf {
+      border-right: none;
+      transform-origin: right center;
+    }
+    .right-leaf {
+      border-left: none;
+      transform-origin: left center;
     }
     .leaf.flip-forward,
     .leaf.flip-back {
@@ -40,11 +83,11 @@ template.innerHTML = `
     }
     .leaf.flip-forward {
       transform-origin: left center;
-      transform: rotateY(-180deg);
+      transform: rotateY(-175deg);
     }
     .leaf.flip-back {
       transform-origin: right center;
-      transform: rotateY(180deg);
+      transform: rotateY(175deg);
     }
     .page {
       position: absolute;
@@ -56,8 +99,10 @@ template.innerHTML = `
       flex-direction: column;
       backface-visibility: hidden;
       box-sizing: border-box;
-      padding: 10px;
+      padding: 20px;
       background: #fff;
+      transform-style: preserve-3d;
+      border: 1px solid #ddd;
     }
     .page.back {
       transform: rotateY(180deg);
@@ -235,6 +280,16 @@ template.innerHTML = `
         <div class="page-number"></div>
         <div class="cards-container"></div>
       </div>
+    </div>
+    <div class="spine">
+      <div class="ring"></div>
+      <div class="ring"></div>
+      <div class="ring"></div>
+      <div class="ring"></div>
+      <div class="ring"></div>
+      <div class="ring"></div>
+      <div class="ring"></div>
+      <div class="ring"></div>
     </div>
     <div class="leaf right-leaf">
       <div class="page front">
