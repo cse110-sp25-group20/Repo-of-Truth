@@ -7,6 +7,7 @@
 import { getCardsByName } from "../../demos/api-search/api/pokemonAPI.js";
 import { handleAddCard } from "../../assets/scripts/binder-controller.js";
 import { showAssignCardModal } from "../../assets/scripts/assign-card-modal.js";
+import { getCardById } from "../../demos/api-search/api/pokemonAPI.js";
 
 const template = document.createElement("template");
 template.innerHTML = `
@@ -459,10 +460,29 @@ _loadFace(faceEl, cardUrls, pageNumber) {
    * @description Displays a modal with a larger view of the clicked card and offers a remove from binder option.
    * @param {string} imgSrc
    */
-  showModal(imgSrc) {
+  async showModal(imgSrc) {
     const oldModal = document.getElementById("global-pokemon-modal");
     if (oldModal) oldModal.remove();
 
+    const raw = localStorage.getItem("pokemonCollection");
+    let fullCard = null;
+    try {
+      if (raw) {
+        const collection = JSON.parse(raw);
+        const match = collection.find(c => c.imgUrl === imgSrc);
+        if (match?.id) {
+          const { getCardById } = await import("../../demos/api-search/api/pokemonAPI.js");
+          fullCard = await getCardById(match.id);
+        }
+      }
+    } catch (err) {
+      console.error("Failed to load full card info:", err);
+    }
+    const name = fullCard?.name || "Unknown";
+    const type = fullCard?.types?.[0] || "Unknown";
+    const hp = fullCard?.hp || "--";
+    const rarity = fullCard?.rarity || "Unknown";
+    const set = fullCard?.set?.name || "--";
     const modal = document.createElement("div");
     modal.className = "card-modal";
     modal.id = "global-pokemon-modal";
@@ -472,14 +492,14 @@ _loadFace(faceEl, cardUrls, pageNumber) {
           <img class="modal-card" src="${imgSrc}" alt="Pokemon Card">
         </figure>
         <article class="modal-info">
-          <h2 class="modal-name">Pikachu</h2>
+          <h2 class="modal-name">${name}</h2>
           <ul class="modal-details">
-            <li class="modal-type">Type: Electric</li>
-            <li class="modal-hp">HP: 60</li>
-            <li class="modal-rarity">Rarity: Common</li>
-            <li class="modal-set">Set: Base</li>
+            <li class="modal-type">Type: ${type}</li>
+            <li class="modal-hp">HP: ${hp}</li>
+            <li class="modal-rarity">Rarity: ${rarity}</li>
+            <li class="modal-set">Set: ${set}</li>
           </ul>
-          <button id="removeBinderBtn" style="margin-top: 12px; padding: 8px 12px; background: crimson; color: white; border: none; border-radius: 5px; font-weight: bold; cursor: pointer;"> Remove from Binder
+          <button id="removeBinderBtn" style="margin-top: 12px; padding: 8px 12px; background: red; color: white; border: none; border-radius: 5px; font-weight: bold; cursor: pointer;"> Remove from Binder
           </button>
         </article>
       </section>
