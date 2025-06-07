@@ -68,7 +68,11 @@ document.getElementById('navBinder').addEventListener('click', e => {
 window.addCardToCollection = function(card) {
   const collection = document.querySelector("pokemon-collection").getCollection();
   if (!collection.some(c => c.imgUrl === card.imgUrl)) {
-    collection.push(card);
+    collection.push({
+      id: card.id,
+      name: card.name,
+      imgUrl: card.images.small
+    });
     localStorage.setItem(COLLECTION_KEY, JSON.stringify(collection));
   }
 }

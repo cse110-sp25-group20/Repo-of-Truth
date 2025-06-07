@@ -2,6 +2,7 @@
 
 import "../../components/binder/pokemon-binder.js";
 
+
 /**
  * Reads the flat collection array from localStorage (key: "pokemonCollection"),
  * parses it, and hands it to <pokemon-binder> to re-render.
