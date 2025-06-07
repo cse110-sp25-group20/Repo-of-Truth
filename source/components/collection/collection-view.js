@@ -170,8 +170,77 @@ class PokemonCollection extends HTMLElement {
       cardDiv.appendChild(img);
       cardDiv.appendChild(nameEl);
       container.appendChild(cardDiv);
+
+      img.addEventListener('click', () => {
+        this.showCardModal(card.imgUrl);
+      })
     });
   }
+
+    async showCardModal(imgSrc) {
+      const oldModal = document.getElementById('global-pokemon-modal');
+      if (oldModal) oldModal.remove();
+
+      let fullCard = null;
+      try {
+        const collection = this.getCollection();
+        const cardMatch = collection.find(c => c.imgUrl === imgSrc);
+        if (cardMatch?.name) {
+          const results = await getCardsByName(cardMatch.name);
+          fullCard = results.find(c => c.images?.small === imgSrc || c.name === cardMatch.name);
+        }
+      } catch (err) {
+        console.error('Error fetching card data for modal:', err);
+      }
+
+      const name = fullCard?.name || 'Unknown';
+      const hp = fullCard?.hp || '--';
+      const type = fullCard?.types?.[0] || 'Unknown';
+      const rarity = fullCard?.rarity || 'Unknown';
+      const set = fullCard?.set?.name || '--';
+
+      const modal = document.createElement('div');
+      modal.className = 'card-modal';
+      modal.id = 'global-pokemon-modal';
+
+      modal.innerHTML = `
+        <section class="modal-content" role="dialog" aria-modal="true">
+          <figure class="modal-image">
+            <img class="modal-card" src="${imgSrc}" alt="Pokemon Card">
+          </figure>
+          <article class="modal-info">
+            <h2 class="modal-name">${name}</h2>
+            <ul class="modal-details">
+              <li class="modal-type">Type: ${type}</li>
+              <li class="modal-hp">HP: ${hp}</li>
+              <li class="modal-rarity">Rarity: ${rarity}</li>
+              <li class="modal-set">Set: ${set}</li>
+            </ul>
+            <button id="deleteCardBtn" style="margin-top: 12px; padding: 8px 12px; background: red; color: white; border: none; border-radius: 5px; font-weight: bold; cursor: pointer;">
+              Remove from Collection
+            </button>
+          </article>
+        </section>
+      `;
+
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) modal.remove();
+      });
+
+      setTimeout(() => {
+        const deleteBtn = modal.querySelector('#deleteCardBtn');
+        deleteBtn.addEventListener('click', () => {
+          const updated = this.getCollection().filter(c => c.imgUrl !== imgSrc);
+          localStorage.setItem('pokemonCollection', JSON.stringify(updated));
+          this.render();
+          modal.remove();
+        });
+      }, 0);
+
+      document.body.appendChild(modal);
+      setTimeout(() => { modal.classList.remove('hidden'); }, 10);
+    }
+
 }
 
 customElements.define('pokemon-collection', PokemonCollection);
