@@ -28,7 +28,7 @@ export function showAddCardModal() {
         <article class="modal-info" style="flex: 1;">
           <h2 class="modal-name">Add a Pokémon Card</h2>
           <input id="cardSearchInputName" type="text" placeholder="Enter Pokémon name" style="padding: 8px; width: 100%; box-sizing: border-box;" />
-          <input id="cardSearchInputNum" type="text" placeholder="Enter Pokémon number" style="padding: 8px; width: 100%; box-sizing: border-box;" />
+          <input id="cardSearchInputNum" type="text" placeholder="Enter Pokémon number (name required)" style="padding: 8px; width: 100%; box-sizing: border-box;" />
           <button id="cardSearchSubmit">Search</button>
 
 
@@ -114,6 +114,7 @@ export function showAddCardModal() {
 
         resultBox.innerHTML = '';
         
+        
         if (cards.length === 0) {
           resultBox.innerHTML = '<p>No cards found.</p>';
           return;
@@ -185,8 +186,14 @@ export function showAddCardModal() {
         resultBox.appendChild(cardDiv);
       });
 
-    } catch (err) {
-      resultBox.innerHTML = `<p>Error: ${err.message}</p>`;
-    }
+      } catch (err) {
+        if (err instanceof TypeError) {
+          resultBox.innerHTML = `<p>Please enter a non-empty string in name.</p>`;
+          console.error('TypeError occurred:', err);
+        } else {
+          resultBox.innerHTML = `<p>Error: ${err.message}</p>`;
+          console.error('Error fetching cards:', err);
+        }
+      }
     })
   }
