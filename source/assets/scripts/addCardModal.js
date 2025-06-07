@@ -27,8 +27,8 @@ export function showAddCardModal() {
       <section class="modal-content" role="dialog" aria-modal="true">
         <article class="modal-info" style="flex: 1;">
           <h2 class="modal-name">Add a Pokémon Card</h2>
-          <input id="cardSearchInputName" type="text" placeholder="Enter Pokemon name" style="padding: 8px; width: 100%; box-sizing: border-box;" />
-          <input id="cardSearchInputNum" type="text" placeholder="Enter Pokemon number" style="padding: 8px; width: 100%; box-sizing: border-box;" />
+          <input id="cardSearchInputName" type="text" placeholder="Enter Pokémon name" style="padding: 8px; width: 100%; box-sizing: border-box;" />
+          <input id="cardSearchInputNum" type="text" placeholder="Enter Pokémon number" style="padding: 8px; width: 100%; box-sizing: border-box;" />
           <button id="cardSearchSubmit">Search</button>
 
 
