@@ -107,7 +107,7 @@ export function showOfflineAddCardModal(context) {
     if (!selected) return;
     const collectionKey = 'pokemonCollection';
     const stored = JSON.parse(localStorage.getItem(collectionKey)) || [];
-    stored.push({ name: selected.name, imgUrl: selected.imgPath, type: selected.types[0], rarity: selected.rarity, set: selected.set.name, hp: selected.hp }); // how it's stored in localStorage
+    stored.push({ name: selected.name, imgUrl: selected.imgPath });
     localStorage.setItem(collectionKey, JSON.stringify(stored));
 
     // Invoke existing handlers

@@ -95,12 +95,12 @@ export function showAddCardModal() {
       inputNum = modal.querySelector("#cardSearchInputNum");
 
       const name = inputName.value.trim();
-      const num = inputNum.value.trim();
+      const num = inputNum.value.trim();      
       let cards;
       try {
         const { getCardsByName, getCardsByNameAndNumber } = await import('../../demos/api-search/api/pokemonAPI.js');
         resultBox.innerHTML = '<p style="text-align:center;">Loading...</p>';
-
+        
         if (name && !num) {
           cards = await getCardsByName(name);
         }
@@ -110,10 +110,10 @@ export function showAddCardModal() {
         else {
           resultBox.innerHTML = '<p style="text-align:center;">Please enter a Pokemon name.</p>';
         }
-
+        
 
         resultBox.innerHTML = '';
-
+        
         if (cards.length === 0) {
           resultBox.innerHTML = '<p>No cards found.</p>';
           return;
