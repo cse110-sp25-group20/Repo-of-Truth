@@ -1,5 +1,3 @@
-import { formatMarketPrice } from '../../assets/scripts/priceHelper.js';
-
 /**
  * @constant {string} COLLECTION_KEY
  * @description The key used in local storage to store and retrieve the cards in the collection.
@@ -26,8 +24,20 @@ class PokemonCollection extends HTMLElement {
           justify-content: center;
           align-items: flex-start;
           width: 100%;
-          min-height: 200px;
-          margin-bottom: 20px;
+          min-height: 400px;
+        }
+        .collection-outer {
+          background: #fff;
+          border-radius: 20px;
+          box-shadow: 0 4px 24px 0 rgba(34,34,34,0.10), 0 0 0 4px #2a75bb22;
+          padding: 24px 16px 32px 16px;
+          margin: 32px 0;
+          max-width: 900px;
+          width: 100%;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          border: 2.5px solid #2a75bb;
         }
         .collection-list {
           display: flex;
@@ -57,42 +67,40 @@ class PokemonCollection extends HTMLElement {
           display: flex;
           flex-direction: column;
           align-items: center;
-          transition: box-shadow 0.2s, border-color 0.2s, transform 0.15s ease-in-out;
-        }
-        .collection-card:hover {
-          cursor: pointer;
-          transform: scale(1.02);
-          transition: transform 0.15s ease-in-out;
+          background: linear-gradient(135deg, #fff 60%, #ffcb05 100%);
+          border: 2px solid #2a75bb;
+          border-radius: 12px;
+          box-shadow: 0 2px 8px rgba(34,34,34,0.10);
+          padding: 16px 10px 12px 10px;
+          width: 140px;
+          min-height: 200px;
+          margin: 0;
+          transition: box-shadow 0.2s, border-color 0.2s;
         }
         .collection-card img {
+          width: 100px;
+          height: 140px;
+          object-fit: contain;
+          border-radius: 8px;
+          background: #f0f0f0;
           margin-bottom: 12px;
         }
         .collection-card .card-name {
           font-weight: bold;
           font-size: 1.1rem;
+          color: #2a75bb;
           text-align: center;
           margin-top: 4px;
           word-break: break-word;
         }
-        @media (max-width: 1150px) {
-          .collection-list.has-cards {
-            grid-template-columns: repeat(3, 1fr);
+        @media (max-width: 800px) {
+          .collection-outer {
+            max-width: 98vw;
+            padding: 10px 2vw;
           }
-        }
-        @media (max-width: 850px) {
-          .collection-list.has-cards {
+          .collection-list {
+            gap: 10px 8px;
             grid-template-columns: repeat(2, 1fr);
-          }
-        }
-        @media (max-width: 550px) {
-        .collection-list {
-          gap: 15px 15px;
-        }  
-        .collection-card {
-            width: 150px;
-          }
-          .collection-card img {
-            width: 100%;
           }
         }
       </style>
@@ -156,12 +164,6 @@ class PokemonCollection extends HTMLElement {
       const img = document.createElement('img');
       img.src = card.imgUrl;
       img.alt = card.name;
-      // Fallback to card-back.png if the image fails to load
-      img.onerror = () => {
-        img.onerror = null; // prevent infinite loop if fallback also missing
-        img.src = 'assets/images/card-back.png';
-      };
-
       const nameEl = document.createElement('div');
       nameEl.className = 'card-name';
       nameEl.textContent = card.name;
@@ -169,7 +171,7 @@ class PokemonCollection extends HTMLElement {
       cardDiv.appendChild(nameEl);
       container.appendChild(cardDiv);
 
-      cardDiv.addEventListener('click', () => {
+      img.addEventListener('click', () => {
         this.showCardModal(card.imgUrl);
       })
     });
@@ -183,23 +185,19 @@ class PokemonCollection extends HTMLElement {
       try {
         const collection = this.getCollection();
         const cardMatch = collection.find(c => c.imgUrl === imgSrc);
-
-        const { getCardById } = await import('../../demos/api-search/api/pokemonAPI.js');
-        
-        if (cardMatch?.id) {
-          fullCard = await getCardById(cardMatch.id);
-        
+        if (cardMatch?.name) {
+          const results = await getCardsByName(cardMatch.name);
+          fullCard = results.find(c => c.images?.small === imgSrc || c.name === cardMatch.name);
         }
       } catch (err) {
         console.error('Error fetching card data for modal:', err);
       }
 
       const name = fullCard?.name || 'Unknown';
-      const price = formatMarketPrice(fullCard);
+      const hp = fullCard?.hp || '--';
+      const type = fullCard?.types?.[0] || 'Unknown';
       const rarity = fullCard?.rarity || 'Unknown';
       const set = fullCard?.set?.name || '--';
-      const number = fullCard?.number || '-';
-      const setSize = fullCard?.set?.printedTotal || '-';
 
       const modal = document.createElement('div');
       modal.className = 'card-modal';
@@ -213,10 +211,10 @@ class PokemonCollection extends HTMLElement {
           <article class="modal-info">
             <h2 class="modal-name">${name}</h2>
             <ul class="modal-details">
-              <li class="modal-set">Set: ${set}</li>
-              <li class="modal-type">Number: ${number}/${setSize}</li>
+              <li class="modal-type">Type: ${type}</li>
+              <li class="modal-hp">HP: ${hp}</li>
               <li class="modal-rarity">Rarity: ${rarity}</li>
-              <li class="modal-hp">Price: ${price}</li>
+              <li class="modal-set">Set: ${set}</li>
             </ul>
             <button id="deleteCardBtn" style="margin-top: 12px; padding: 8px 12px; background: red; color: white; border: none; border-radius: 5px; font-weight: bold; cursor: pointer;">
               Remove from Collection
@@ -246,4 +244,3 @@ class PokemonCollection extends HTMLElement {
 }
 
 customElements.define('pokemon-collection', PokemonCollection);
-
