@@ -164,6 +164,12 @@ class PokemonCollection extends HTMLElement {
       const img = document.createElement('img');
       img.src = card.imgUrl;
       img.alt = card.name;
+      // Fallback to card-back.png if the image fails to load
+      img.onerror = () => {
+        img.onerror = null; // prevent infinite loop if fallback also missing
+        img.src = 'assets/images/card-back.png';
+      };
+
       const nameEl = document.createElement('div');
       nameEl.className = 'card-name';
       nameEl.textContent = card.name;

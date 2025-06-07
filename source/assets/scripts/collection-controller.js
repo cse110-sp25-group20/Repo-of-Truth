@@ -2,6 +2,8 @@
 
 import "../../components/collection/collection-view.js";
 import { showAddCardModal } from './addCardModal.js';
+import { showOfflineAddCardModal } from './offline-add-card-modal.js';
+import { getCardsByPage } from "../../demos/api-search/api/pokemonAPI.js";
 
 const COLLECTION_KEY = 'pokemonCollection';
 
@@ -88,8 +90,21 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 
   // Add Card button logic for both views
-  document.getElementById('addCard')?.addEventListener('click', () => {
+  document.getElementById('addCard')?.addEventListener('click', async () => {
+    // taking this out until detecting whether online or offline
+
     const isBinderView = document.querySelector('pokemon-binder').style.display !== 'none';
-    showAddCardModal(isBinderView ? 'binder' : 'collection');
+
+    const ping = getCardsByPage(1, 1);
+    const timer = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error("timeout")), 3000)
+    );
+    try {
+      await Promise.race([ping, timer]);
+      showAddCardModal(isBinderView ? 'binder' : 'collection');
+    } catch (err) {
+      console.warn("API ping failed:", err);
+      showOfflineAddCardModal(isBinderView ? 'binder' : 'collection');
+    }
   });
 }); 
