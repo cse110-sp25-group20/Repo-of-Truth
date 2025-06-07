@@ -2,6 +2,7 @@
 
 import "../../components/collection/collection-view.js";
 import { showAddCardModal } from './addCardModal.js';
+import { showOfflineAddCardModal } from './offline-add-card-modal.js';
 
 const COLLECTION_KEY = 'pokemonCollection';
 
@@ -90,6 +91,8 @@ window.addEventListener('DOMContentLoaded', () => {
   // Add Card button logic for both views
   document.getElementById('addCard')?.addEventListener('click', () => {
     const isBinderView = document.querySelector('pokemon-binder').style.display !== 'none';
-    showAddCardModal(isBinderView ? 'binder' : 'collection');
+    // taking this out until detecting whether online or offline
+    // showAddCardModal(isBinderView ? 'binder' : 'collection');
+    showOfflineAddCardModal(isBinderView ? 'binder' : 'collection');
   });
 }); 

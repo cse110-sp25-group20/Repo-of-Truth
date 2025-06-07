@@ -1,26 +1,25 @@
 // assets/scripts/offlineAddCardModal.js
 
-import { offlineCards } from "../offline/offline-cards.js";
-
 /**
  * Displays a modal popup listing offline card subset to add to collection or binder.
- * 
- * - Allows user to choose from pre-defined offline cards.
- * - Supports selection, preview, and confirmation to add.
- * - Persists selection to localStorage and updates collection/binder views.
- * 
- * @param {('binder'|'collection')} context - Determines whether the selected card is added to the binder or the collection.
- * @returns {void}
+ * @param {('binder'|'collection')} context - Determines add-to behavior.
  */
-export function showOfflineAddCardModal(context) {
-  // Remove any existing modal from the DOM
+export async function showOfflineAddCardModal(context) {
+  // Remove any existing modal
   const old = document.getElementById('offline-pokemon-modal');
   if (old) old.remove();
 
-  // Validate and fetch offline cards
-  const cards = Array.isArray(offlineCards) ? offlineCards : [];
+  // Fetch offline card list
+  let cards = [];
+  try {
+    const resp = await fetch('./assets/offline/offline-cards.json');
+    cards = await resp.json();
+  } catch (err) {
+    console.error('Failed to load offline cards:', err);
+    cards = [];
+  }
 
-  // Create modal container and structure
+  // Create modal container
   const modal = document.createElement('div');
   modal.className = 'card-modal';
   modal.id = 'offline-pokemon-modal';
@@ -58,8 +57,6 @@ export function showOfflineAddCardModal(context) {
     </section>
   `;
   document.body.appendChild(modal);
-
-  // Dismiss modal on background click
   modal.addEventListener('click', e => {
     if (e.target === modal) modal.remove();
   });
@@ -68,10 +65,7 @@ export function showOfflineAddCardModal(context) {
   const confirmBtn = modal.querySelector('#confirmOfflineAddBtn');
   let selected = null;
 
-  /**
-   * Renders the list of offline cards for selection.
-   * Each card is selectable, displaying its image and name.
-   */
+  // Render offline cards
   cards.forEach(card => {
     const div = document.createElement('div');
     div.className = 'card';
@@ -88,23 +82,20 @@ export function showOfflineAddCardModal(context) {
       maxWidth: '100px',
       margin: 'auto',
     });
-
-    // Thumbnail image
+    // Thumbnail (back-view placeholder if no image)
     const img = document.createElement('img');
     img.src = card.imgPath;
     img.alt = card.name;
     Object.assign(img.style, { width: '100%', borderRadius: '6px' });
-
     // Name label
     const label = document.createElement('div');
     label.textContent = card.name;
     Object.assign(label.style, {
       marginTop: '6px', fontWeight: 'bold', fontSize: '12px', textAlign: 'center', wordBreak: 'break-word'
     });
-
     div.append(img, label);
 
-    // Handle selection
+    // Selection handling
     div.addEventListener('click', () => {
       listEl.querySelectorAll('.card.selected').forEach(el => el.classList.remove('selected'));
       div.classList.add('selected');
@@ -115,21 +106,15 @@ export function showOfflineAddCardModal(context) {
     listEl.appendChild(div);
   });
 
-  /**
-   * Finalizes adding the selected offline card to localStorage.
-   * Updates collection or binder based on current context.
-   */
+  // Confirm adding offline card
   confirmBtn.addEventListener('click', () => {
     if (!selected) return;
-
     const collectionKey = 'pokemonCollection';
     const stored = JSON.parse(localStorage.getItem(collectionKey)) || [];
-
-    // Store card in localStorage
     stored.push({ name: selected.name, imgUrl: selected.imgPath });
     localStorage.setItem(collectionKey, JSON.stringify(stored));
 
-    // Optionally trigger global card handling hooks
+    // Invoke existing handlers
     if (window.addCardToCollection) {
       window.addCardToCollection({ name: selected.name, imgUrl: selected.imgPath });
     }
@@ -137,13 +122,11 @@ export function showOfflineAddCardModal(context) {
       window.handleAddCard(selected.imgPath);
     }
 
-    // Refresh UI views
+    // Refresh views
     const collEl = document.querySelector('pokemon-collection');
     if (collEl?.render) collEl.render();
     const binderEl = document.querySelector('pokemon-binder');
-    if (binderEl?.setPages && window.getBinderPages) {
-      binderEl.setPages(window.getBinderPages());
-    }
+    if (binderEl?.setPages && window.getBinderPages) binderEl.setPages(window.getBinderPages());
 
     modal.remove();
   });
