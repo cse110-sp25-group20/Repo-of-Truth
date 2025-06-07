@@ -456,7 +456,7 @@ _loadFace(faceEl, cardUrls, pageNumber) {
   }
 
   /**
-   * @description Displays a modal with a larger view of the clicked card.
+   * @description Displays a modal with a larger view of the clicked card and offers a remove from binder option.
    * @param {string} imgSrc
    */
   showModal(imgSrc) {
@@ -479,18 +479,39 @@ _loadFace(faceEl, cardUrls, pageNumber) {
             <li class="modal-rarity">Rarity: Common</li>
             <li class="modal-set">Set: Base</li>
           </ul>
+          <button id="removeBinderBtn" style="margin-top: 12px; padding: 8px 12px; background: crimson; color: white; border: none; border-radius: 5px; font-weight: bold; cursor: pointer;"> Remove from Binder
+          </button>
         </article>
       </section>
     `;
     modal.addEventListener("click", (e) => {
       if (e.target === modal) modal.remove();
     });
+    
     setTimeout(() => {
-      const modalCard = modal.querySelector(".modal-card");
-      if (modalCard) {
-        modalCard.addEventListener("click", () => this.toggleModal());
+      const removeBtn = modal.querySelector("#removeBinderBtn");
+      if (removeBtn) {
+        removeBtn.addEventListener("click", () => {
+        const raw = localStorage.getItem("pokemonCollection");
+        if (!raw) return;
+        try {
+          const collection = JSON.parse(raw);
+          const updated = collection.map(card => {
+            if (card.imgUrl === imgSrc) {
+              return { ...card, page: null, slot: null };
+            }
+            return card;
+          });
+          localStorage.setItem("pokemonCollection", JSON.stringify(updated));
+          this.setPages(updated);
+          } catch (err) {
+            console.error("Failed to remove card from binder:", err);
+          }
+          modal.remove();
+        });
       }
     }, 0);
+
     document.body.appendChild(modal);
     setTimeout(() => {
       modal.classList.remove("hidden");
