@@ -6,6 +6,7 @@
 
 import { getCardsByName } from "../../demos/api-search/api/pokemonAPI.js";
 import { handleAddCard } from "../../assets/scripts/binder-controller.js";
+import { showAssignCardModal } from "../../assets/scripts/assign-card-modal.js";
 
 const template = document.createElement("template");
 template.innerHTML = `
@@ -29,7 +30,7 @@ template.innerHTML = `
       flex: 1;
       position: relative;
       transform-style: preserve-3d;
-      transition: transform 0.6s ease;
+      transition: transform 0.3s ease;
       overflow: hidden;
       z-index: 1;
     }
@@ -86,6 +87,7 @@ template.innerHTML = `
       gap: 10px;
     }
     .card-slot {
+      cursor: pointer;
       width: 100%;
       background: #eaeaea;
       border: 1px dashed #bbb;
@@ -303,11 +305,7 @@ class PokemonBinder extends HTMLElement {
     this.pagesData = pagesMap;
 
     // 3) Set currentIndex to the smallest pageNumber, or 1 if none
-    if (pagesMap.size > 1) {
-      const minKey = Math.min(...pagesMap.keys());
-      // If minKey is odd, use minKey; if it's even, subtract 1
-      this.currentIndex = (minKey % 2 === 1) ? minKey : (minKey - 1);
-    } else {
+    if (this.currentIndex<1) {
       this.currentIndex = 1;
     }
 
@@ -360,36 +358,43 @@ class PokemonBinder extends HTMLElement {
    * @param {Array<string>|undefined} cardUrls
    * @param {number} pageNumber
    */
-  _loadFace(faceEl, cardUrls, pageNumber) {
-    const pageLabel = faceEl.querySelector(".page-number");
-    pageLabel.textContent = pageNumber > 0 ? `Page ${pageNumber}` : "";
+_loadFace(faceEl, cardUrls, pageNumber) {
+  const pageLabel = faceEl.querySelector(".page-number");
+  pageLabel.textContent = pageNumber > 0 ? `Page ${pageNumber}` : "";
 
-    const container = faceEl.querySelector(".cards-container");
-    container.innerHTML = "";
+  const container = faceEl.querySelector(".cards-container");
+  container.innerHTML = "";
 
-    // Normalize to array (or empty array)
-    const urls = Array.isArray(cardUrls) ? cardUrls : [];
+  const urls = Array.isArray(cardUrls) ? cardUrls : [];
 
-    for (let i = 0; i < 9; i++) {
-      const slot = document.createElement("div");
-      slot.className = "card-slot";
+  for (let i = 0; i < 9; i++) {
+    const slot = document.createElement("div");
+    slot.className = "card-slot";
 
-      if (urls[i]) {
-        const img = document.createElement("img");
-        img.src = urls[i];
-        img.alt = "Pokemon card";
-        img.addEventListener("click", () => this.showModal(img.src));
-        slot.appendChild(img);
-      }
-      container.appendChild(slot);
+    if (urls[i]) {
+      const img = document.createElement("img");
+      img.src = urls[i];
+      img.alt = "Pokemon card";
+      img.addEventListener("click", () => this.showModal(img.src));
+      slot.appendChild(img);
+    } else {
+      // Empty slot: open the assign-card modal
+      slot.addEventListener("click", () => showAssignCardModal(pageNumber, i));
     }
+
+    container.appendChild(slot);
   }
+}
+
 
   /**
    * @description Flip two pages forward (from currentIndex & currentIndex+1 to currentIndex+2 & +3)
    */
   flipForward() {
     // Preload the back face of the right leaf (which will become visible mid-flip)
+    if (this.flipping==true) return;
+    this.flipping = true;
+
     const nextBackData = this.pagesData.get(this.currentIndex + 2);
     this._loadFace(
       this._rightLeaf.querySelector(".back"),
@@ -411,6 +416,7 @@ class PokemonBinder extends HTMLElement {
         // Force reflow then restore transition
         void this._rightLeaf.offsetWidth;
         this._rightLeaf.style.transition = prevTransition;
+        this.flipping=false;
       },
       { once: true }
     );
@@ -420,7 +426,8 @@ class PokemonBinder extends HTMLElement {
    * @description Flip two pages backward (from currentIndex & currentIndex−1 to currentIndex−2 & −3)
    */
   flipBackward() {
-    if (this.currentIndex < 2) return; // nothing to flip if we're at page 0 or 1
+    if (this.currentIndex < 2 || this.flipping==true) return; // nothing to flip if we're at page 0 or 1
+    this.flipping = true;
 
     // Preload the back face of the left leaf (which reveals currentIndex−1)
     const prevBackData = this.pagesData.get(this.currentIndex - 1);
@@ -442,6 +449,7 @@ class PokemonBinder extends HTMLElement {
         this._renderFaces();
         void this._leftLeaf.offsetWidth;
         this._leftLeaf.style.transition = prevTransition;
+        this.flipping=false;
       },
       { once: true }
     );
