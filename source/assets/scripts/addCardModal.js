@@ -63,7 +63,7 @@ export function showAddCardModal() {
   confirmBtn.addEventListener('click', () => {
     if (selectedCard && selectedCard.images?.small) {
       const COLLECTION_KEY = 'pokemonCollection';
-      const cardData = { name: selectedCard.name, imgUrl: selectedCard.images.small };
+      const cardData = { name: selectedCard.name, imgUrl: selectedCard.images.small, id: selectedCard.id };
 
       // Save to localStorage
       let collection = JSON.parse(localStorage.getItem(COLLECTION_KEY)) || [];
