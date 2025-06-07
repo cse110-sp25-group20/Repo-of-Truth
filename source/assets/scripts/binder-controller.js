@@ -1,6 +1,7 @@
 // binder-controller.js
 
 import "../../components/binder/pokemon-binder.js";
+import { showAddCardModal } from './addCardModal.js';
 
 
 /**
@@ -47,10 +48,6 @@ function turnPageLeft() {
 
 document.addEventListener("DOMContentLoaded", () => {
   updateBinder();
-
-  document.getElementById("addCard")?.addEventListener("click", () => {
-    document.querySelector("pokemon-binder")?.showAddCardModal();
-  });
 
   document
     .getElementById("turnPageRight")
