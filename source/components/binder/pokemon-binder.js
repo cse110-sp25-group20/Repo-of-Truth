@@ -27,23 +27,27 @@ template.innerHTML = `
     .leaf {
       flex: 1;
       position: relative;
-      transform-style: preserve-3d;
-      transition: transform 0.3s ease;
-      overflow: hidden;
       z-index: 1;
     }
+      .leaf-inner {
+      position: relative;
+      width: 100%;
+     height: 100%;
+      transform-style: preserve-3d;
+      transition: transform 1s ease;
+    }
+
+    /* pivot on correct edge */
+    .left-leaf  .leaf-inner { transform-origin: right center; }
+    .right-leaf .leaf-inner { transform-origin: left center; }
+
     .leaf.flip-forward,
     .leaf.flip-back {
       z-index: 2;
     }
-    .leaf.flip-forward {
-      transform-origin: left center;
-      transform: rotateY(-180deg);
-    }
-    .leaf.flip-back {
-      transform-origin: right center;
-      transform: rotateY(180deg);
-    }
+    /* now flip the inner container, not the leaf */
+    .leaf.flip-forward .leaf-inner { transform: rotateY(-180deg); }
+    .leaf.flip-back    .leaf-inner { transform: rotateY( 180deg); }
     .page {
       position: absolute;
       top: 0;
@@ -61,7 +65,6 @@ template.innerHTML = `
       transform: rotateY(180deg);
     }
     .page.back .page-number {
-      transform: rotateY(180deg);
       visibility: hidden;
     }
     .leaf.flip-forward .page.back .page-number,
@@ -203,17 +206,8 @@ template.innerHTML = `
     }
   </style>
   <div class="binder">
-    <div class="leaf left-leaf">
-      <div class="page front">
-        <div class="page-number"></div>
-        <div class="cards-container"></div>
-      </div>
-      <div class="page back">
-        <div class="page-number"></div>
-        <div class="cards-container"></div>
-      </div>
-    </div>
-    <div class="leaf right-leaf">
+  <div class="leaf left-leaf">
+    <div class="leaf-inner">
       <div class="page front">
         <div class="page-number"></div>
         <div class="cards-container"></div>
@@ -224,6 +218,19 @@ template.innerHTML = `
       </div>
     </div>
   </div>
+  <div class="leaf right-leaf">
+    <div class="leaf-inner">
+      <div class="page front">
+        <div class="page-number"></div>
+        <div class="cards-container"></div>
+      </div>
+      <div class="page back">
+        <div class="page-number"></div>
+        <div class="cards-container"></div>
+      </div>
+    </div>
+  </div>
+</div>
 `;
 
 class PokemonBinder extends HTMLElement {
