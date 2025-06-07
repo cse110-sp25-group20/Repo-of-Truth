@@ -1,23 +1,18 @@
 // assets/scripts/offlineAddCardModal.js
 
+import { offlineCards } from "../offline/offline-cards.js";
+
 /**
  * Displays a modal popup listing offline card subset to add to collection or binder.
  * @param {('binder'|'collection')} context - Determines add-to behavior.
  */
-export async function showOfflineAddCardModal(context) {
+export function showOfflineAddCardModal(context) {
   // Remove any existing modal
   const old = document.getElementById('offline-pokemon-modal');
   if (old) old.remove();
 
-  // Fetch offline card list
-  let cards = [];
-  try {
-    const resp = await fetch('./assets/offline/offline-cards.json');
-    cards = await resp.json();
-  } catch (err) {
-    console.error('Failed to load offline cards:', err);
-    cards = [];
-  }
+  // Use the imported offlineCards array
+  const cards = Array.isArray(offlineCards) ? offlineCards : [];
 
   // Create modal container
   const modal = document.createElement('div');
@@ -82,11 +77,12 @@ export async function showOfflineAddCardModal(context) {
       maxWidth: '100px',
       margin: 'auto',
     });
-    // Thumbnail (back-view placeholder if no image)
+    // Thumbnail image
     const img = document.createElement('img');
     img.src = card.imgPath;
     img.alt = card.name;
     Object.assign(img.style, { width: '100%', borderRadius: '6px' });
+
     // Name label
     const label = document.createElement('div');
     label.textContent = card.name;
