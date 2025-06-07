@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">4.65% </span>
+                <span class="strong">25.58% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>2/43</span>
+                <span class='fraction'>11/43</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">17.94% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/39</span>
+                <span class='fraction'>7/39</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">37.5% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/8</span>
+                <span class='fraction'>3/8</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">4.65% </span>
+                <span class="strong">25.58% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>2/43</span>
+                <span class='fraction'>11/43</span>
             </div>
         
             
@@ -227,35 +227,23 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -266,10 +254,22 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -374,18 +374,18 @@ function <span class="fstat-no" title="function not covered" >defaultHeaders(</s
 }
 &nbsp;
 // Helper to do GET requests and parse JSON (not to be exported)
-async function <span class="fstat-no" title="function not covered" >_fetchJson(</span>endpoint, params = <span class="branch-0 cbranch-no" title="branch not covered" >{})</span> {
+async function _fetchJson(endpoint, params = <span class="branch-0 cbranch-no" title="branch not covered" >{})</span> {
   // endpoint is a string like "/cards" or "/cards/{id}"
-  const url = <span class="cstat-no" title="statement not covered" >new URL(BASE_URL + endpoint);</span>
+  const url = new URL(BASE_URL + endpoint);
 &nbsp;
   // If params = { q: 'name:pikachu' }, this turns into ?q=name:pikachu
-<span class="cstat-no" title="statement not covered" >  Object.keys(params).forEach(<span class="fstat-no" title="function not covered" >(k</span>ey) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >    if (params[key] !== undefined &amp;&amp; params[key] !== null) {</span>
-<span class="cstat-no" title="statement not covered" >      url.searchParams.append(key, params[key]);</span>
+  Object.keys(params).forEach((key) =&gt; {
+    <span class="missing-if-branch" title="else path not taken" >E</span>if (params[key] !== undefined &amp;&amp; params[key] !== null) {
+      url.searchParams.append(key, params[key]);
     }
   });
 &nbsp;
-  const response = <span class="cstat-no" title="statement not covered" >await fetch(url.toString(), {</span>
+  const response = await fetch(url.toString(), {
     method: "GET",
     headers: defaultHeaders(),
   });
@@ -408,17 +408,17 @@ async function <span class="fstat-no" title="function not covered" >_fetchJson(<
  * @param {string} name  - e.g. "pikachu" or "charizard".
  * @returns {Promise&lt;Array&lt;object&gt;&gt;}  - Resolves to an array of card objects, or [] if none.
  */
-export async function <span class="fstat-no" title="function not covered" >getCardsByName(</span>name) {
-<span class="cstat-no" title="statement not covered" >  if (!name || typeof name !== "string") {</span>
-<span class="cstat-no" title="statement not covered" >    throw new Error("getCardsByName: name must be a non-empty string.");</span>
+export async function getCardsByName(name) {
+  if (!name || typeof name !== "string") {
+    throw new Error("getCardsByName: name must be a non-empty string.");
   }
 &nbsp;
   // According to the Pokémon TCG docs, to search by name you do:
   // GET /v2/cards?q=name:[searchTerm]
-  const query = <span class="cstat-no" title="statement not covered" >`name:*${encodeURIComponent(name)}*`;</span>
+  const query = `name:*${encodeURIComponent(name)}*`;
 &nbsp;
   // _fetchJson returns an object { data: [ …card objects… ], page, pageSize, count, … }
-  const result = <span class="cstat-no" title="statement not covered" >await _fetchJson("/cards", { q: query });</span>
+  const result = await _fetchJson("/cards", { q: query });
 &nbsp;
   // result.data might be undefined or not an array if something goes wrong
 <span class="cstat-no" title="statement not covered" >  return Array.isArray(result.data) ? result.data : [];</span>
@@ -517,7 +517,7 @@ export async function <span class="fstat-no" title="function not covered" >getCa
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-06-06T05:14:05.248Z
+                at 2025-06-07T05:39:10.872Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>
