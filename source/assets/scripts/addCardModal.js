@@ -90,7 +90,7 @@ export function showAddCardModal() {
   });
 
 
-    cardSearchSubmit.addEventListener('click', async (e) => {
+    cardSearchSubmit.addEventListener('click', async () => {
       inputName = modal.querySelector("#cardSearchInputName");
       inputNum = modal.querySelector("#cardSearchInputNum");
 
