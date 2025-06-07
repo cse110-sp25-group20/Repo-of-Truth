@@ -102,6 +102,10 @@ export function showAssignCardModal(pageIndex, slotIndex) {
     const img = document.createElement('img');
     img.src = card.imgUrl || card.images?.small;
     img.alt = card.name;
+    img.onerror = () => {
+        img.onerror = null; // prevent infinite loop if fallback also missing
+        img.src = 'assets/images/card-back.png';
+      };
     Object.assign(img.style, {
       width: '100%',
       borderRadius: '6px',
