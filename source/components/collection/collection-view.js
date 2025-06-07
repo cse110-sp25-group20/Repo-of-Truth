@@ -189,39 +189,24 @@ class PokemonCollection extends HTMLElement {
 
       let fullCard = null;
       try {
-        console.log('[Modal] Starting modal for image:', imgSrc);
-
-
         const collection = this.getCollection();
-        console.log('[Modal] Got collection:', collection);
-
         const cardMatch = collection.find(c => c.imgUrl === imgSrc);
-        console.log('[Modal] Matching card from collection:', cardMatch);
-
-        if (!cardMatch) {
-          console.warn('[Modal] No matching card found for imgSrc:', imgSrc);
-        }
 
         const { getCardById } = await import('../../demos/api-search/api/pokemonAPI.js');
         
         if (cardMatch?.id) {
           fullCard = await getCardById(cardMatch.id);
+        
         }
       } catch (err) {
         console.error('Error fetching card data for modal:', err);
       }
 
-      // extra call so that i can grab the cardMatch if it exists
-      const collection = this.getCollection();
-      const cardMatch = collection.find(c => c.imgUrl === imgSrc);
-
-      const name = fullCard?.name || cardMatch?.name || 'Unknown';
-      const hp = fullCard?.hp || cardMatch?.hp || '--';
-      const type = fullCard?.types?.[0] || cardMatch?.type || 'Unknown';
-      const rarity = fullCard?.rarity || cardMatch?.rarity || 'Unknown';
-      const set = fullCard?.set?.name || cardMatch?.set || '--';
-
-
+      const name = fullCard?.name || 'Unknown';
+      const hp = fullCard?.hp || '--';
+      const type = fullCard?.types?.[0] || 'Unknown';
+      const rarity = fullCard?.rarity || 'Unknown';
+      const set = fullCard?.set?.name || '--';
 
       const modal = document.createElement('div');
       modal.className = 'card-modal';
