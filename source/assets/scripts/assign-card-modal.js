@@ -139,7 +139,7 @@ export function showAssignCardModal(pageIndex, slotIndex) {
       };
       // Persist changes
         localStorage.setItem(COLLECTION_STORAGE_KEY, JSON.stringify(collection));
-      
+
         const binder = document.querySelector("pokemon-binder");
         if (binder) {
             binder.setPages(collection);

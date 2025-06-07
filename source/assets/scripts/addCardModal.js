@@ -27,8 +27,8 @@ export function showAddCardModal() {
       <section class="modal-content" role="dialog" aria-modal="true">
         <article class="modal-info" style="flex: 1;">
           <h2 class="modal-name">Add a Pokémon Card</h2>
-          <input id="cardSearchInputName" type="text" placeholder="Enter Pokémon name" style="padding: 8px; width: 100%; box-sizing: border-box;" />
-          <input id="cardSearchInputNum" type="text" placeholder="Enter Pokémon number (name required)" style="padding: 8px; width: 100%; box-sizing: border-box;" />
+          <input id="cardSearchInputName" type="text" placeholder="Enter Pokemon name" style="padding: 8px; width: 100%; box-sizing: border-box;" />
+          <input id="cardSearchInputNum" type="text" placeholder="Enter Pokemon number" style="padding: 8px; width: 100%; box-sizing: border-box;" />
           <button id="cardSearchSubmit">Search</button>
 
 
@@ -95,12 +95,12 @@ export function showAddCardModal() {
       inputNum = modal.querySelector("#cardSearchInputNum");
 
       const name = inputName.value.trim();
-      const num = inputNum.value.trim();      
+      const num = inputNum.value.trim();
       let cards;
       try {
         const { getCardsByName, getCardsByNameAndNumber } = await import('../../demos/api-search/api/pokemonAPI.js');
         resultBox.innerHTML = '<p style="text-align:center;">Loading...</p>';
-        
+
         if (name && !num) {
           cards = await getCardsByName(name);
         }
@@ -110,11 +110,10 @@ export function showAddCardModal() {
         else {
           resultBox.innerHTML = '<p style="text-align:center;">Please enter a Pokemon name.</p>';
         }
-        
+
 
         resultBox.innerHTML = '';
-        
-        
+
         if (cards.length === 0) {
           resultBox.innerHTML = '<p>No cards found.</p>';
           return;
@@ -186,14 +185,8 @@ export function showAddCardModal() {
         resultBox.appendChild(cardDiv);
       });
 
-      } catch (err) {
-        if (err instanceof TypeError) {
-          resultBox.innerHTML = `<p>Please enter a non-empty string in name.</p>`;
-          console.error('TypeError occurred:', err);
-        } else {
-          resultBox.innerHTML = `<p>Error: ${err.message}</p>`;
-          console.error('Error fetching cards:', err);
-        }
-      }
+    } catch (err) {
+      resultBox.innerHTML = `<p>Error: ${err.message}</p>`;
+    }
     })
   }
