@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: assets/scripts/assign-card-modal.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: assets/scripts/assign-card-modal.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>// assign-card-modal.js
+
+/**
+ * Displays a modal popup listing existing cards from localStorage for assignment.
+ * @param {number} pageIndex - The index of the binder page.
+ * @param {number} slotIndex - The index of the slot on the binder page.
+ */
+export function showAssignCardModal(pageIndex, slotIndex) {
+  // Remove any previous instance
+  const oldModal = document.getElementById('assign-card-modal');
+  if (oldModal) oldModal.remove();
+
+  // Create modal container
+  const modal = document.createElement('div');
+  modal.className = 'card-modal';
+  modal.id = 'assign-card-modal';
+  modal.innerHTML = `
+    &lt;style>
+      .card.selected {
+        border: 2px solid #2a75bb;
+        box-shadow: 0 0 10px rgba(42, 117, 187, 0.6);
+      }
+      .modal-content {
+        overflow: hidden !important;
+        box-sizing: border-box;
+        max-height: 98vh !important;
+      }
+      .modal-name {
+        margin-top: 16px;
+      }
+    &lt;/style>
+    &lt;section class="modal-content" role="dialog" aria-modal="true">
+      &lt;article class="modal-info" style="flex: 1;">
+        &lt;h2 class="modal-name">Assign Card to Slot&lt;/h2>
+        &lt;div id="assignCardResult" style="
+          margin-top: 16px; 
+          display: grid; 
+          grid-template-columns: repeat(3, 1fr); 
+          gap: 50px;
+          max-height:60vh;
+          overflow-y: auto;
+          padding: 10px;
+        ">&lt;/div>
+        &lt;button id="confirmAssignCardBtn" style="display: none; margin-top: 10px; padding: 8px 12px; background: #ffcb05; color: black; border: none; border-radius: 5px; font-weight: bold; cursor: pointer;">Add to Slot&lt;/button>
+      &lt;/article>
+    &lt;/section>
+  `;
+
+  document.body.appendChild(modal);
+
+  // Close on backdrop click
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) modal.remove();
+  });
+
+  const resultBox = modal.querySelector('#assignCardResult');
+  const confirmBtn = modal.querySelector('#confirmAssignCardBtn');
+  let selectedCard = null;
+  let selectedIndex = null;
+
+  // Load collection from localStorage
+  const COLLECTION_STORAGE_KEY = 'pokemonCollection';
+  const collection = JSON.parse(localStorage.getItem(COLLECTION_STORAGE_KEY)) || [];
+
+  // Render existing cards as selectable thumbnails
+  collection.forEach((card, idx) => {
+    const cardDiv = document.createElement('div');
+    cardDiv.className = 'card';
+    Object.assign(cardDiv.style, {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: '10px',
+      borderRadius: '8px',
+      backgroundColor: '#fff',
+      boxShadow: '0 2px 6px rgba(0,0,0,0.1)',
+      cursor: 'pointer',
+      transition: 'transform 0.2s ease, border 0.2s ease',
+      maxWidth: '110px',
+      margin: 'auto',
+    });
+
+    // Hover scaling
+    cardDiv.addEventListener('mouseover', () => {
+      cardDiv.style.transform = 'scale(1.05)';
+    });
+    cardDiv.addEventListener('mouseout', () => {
+      cardDiv.style.transform = 'scale(1)';
+    });
+
+    // Selection handling
+    cardDiv.addEventListener('click', () => {
+      resultBox.querySelectorAll('.card.selected').forEach(el => el.classList.remove('selected'));
+      cardDiv.classList.add('selected');
+      selectedCard = card;
+      selectedIndex = idx;
+      confirmBtn.style.display = 'block';
+    });
+
+    // Thumbnail image
+    const img = document.createElement('img');
+    img.src = card.imgUrl || card.images?.small;
+    img.alt = card.name;
+    Object.assign(img.style, {
+      width: '100%',
+      borderRadius: '6px',
+    });
+
+    // Name label
+    const nameEl = document.createElement('div');
+    nameEl.className = 'card-name';
+    nameEl.textContent = card.name;
+    Object.assign(nameEl.style, {
+      marginTop: '8px',
+      fontWeight: 'bold',
+      fontSize: '12px',
+      textAlign: 'center',
+      wordBreak: 'break-word',
+    });
+
+    cardDiv.appendChild(img);
+    cardDiv.appendChild(nameEl);
+    resultBox.appendChild(cardDiv);
+  });
+
+  // Confirm assignment
+  confirmBtn.addEventListener('click', () => {
+    if (selectedCard !== null &amp;&amp; selectedIndex !== null) {
+      // Update the selected card's page and slot indices
+      collection[selectedIndex] = {
+        ...collection[selectedIndex],
+        page: pageIndex,
+        slot: slotIndex,
+      };
+      // Persist changes
+        localStorage.setItem(COLLECTION_STORAGE_KEY, JSON.stringify(collection));
+      
+        const binder = document.querySelector("pokemon-binder");
+        if (binder) {
+            binder.setPages(collection);
+        }
+
+      // Close modal
+      document.getElementById('assign-card-modal')?.remove();
+    }
+  });
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-PokemonBinder.html">PokemonBinder</a></li></ul><h3>Classes</h3><ul><li><a href="PokemonCollection.html">PokemonCollection</a></li></ul><h3>Global</h3><ul><li><a href="global.html#COLLECTION_KEY">COLLECTION_KEY</a></li><li><a href="global.html#getAllSets">getAllSets</a></li><li><a href="global.html#getCardById">getCardById</a></li><li><a href="global.html#getCardsByName">getCardsByName</a></li><li><a href="global.html#getCardsByNameAndNumber">getCardsByNameAndNumber</a></li><li><a href="global.html#getCardsBySet">getCardsBySet</a></li><li><a href="global.html#showAddCardModal">showAddCardModal</a></li><li><a href="global.html#showAssignCardModal">showAssignCardModal</a></li><li><a href="global.html#showBinder">showBinder</a></li><li><a href="global.html#showCollection">showCollection</a></li><li><a href="global.html#turnPageLeft">turnPageLeft</a></li><li><a href="global.html#turnPageRight">turnPageRight</a></li><li><a href="global.html#updateBinder">updateBinder</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Sat Jun 07 2025 06:58:49 GMT+0000 (Coordinated Universal Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
