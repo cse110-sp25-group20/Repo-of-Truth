@@ -62,7 +62,7 @@ document.getElementById('navBinder').addEventListener('click', e => {
 
 /**
  * Adds a card to the user's collection in localStorage if it does not exist.
- * @param {Object} card - The card stores image
+ * @param {Object} card - The card stores image  
  * @returns {void}
  */
 window.addCardToCollection = function(card) {
