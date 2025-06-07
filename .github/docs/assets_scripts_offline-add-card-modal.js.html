@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: assets/scripts/offline-add-card-modal.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: assets/scripts/offline-add-card-modal.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>// assets/scripts/offlineAddCardModal.js
+
+import { offlineCards } from "../offline/offline-cards.js";
+
+/**
+ * Displays a modal popup listing offline card subset to add to collection or binder.
+ * @param {('binder'|'collection')} context - Determines add-to behavior.
+ */
+export function showOfflineAddCardModal(context) {
+  // Remove any existing modal
+  const old = document.getElementById('offline-pokemon-modal');
+  if (old) old.remove();
+
+  // Use the imported offlineCards array
+  const cards = Array.isArray(offlineCards) ? offlineCards : [];
+
+  // Create modal container
+  const modal = document.createElement('div');
+  modal.className = 'card-modal';
+  modal.id = 'offline-pokemon-modal';
+  modal.innerHTML = `
+    &lt;style>
+      .card.selected {
+        border: 2px solid #2a75bb;
+        box-shadow: 0 0 10px rgba(42, 117, 187, 0.6);
+      }
+      .modal-content {
+        overflow: hidden !important;
+        box-sizing: border-box;
+        max-height: 98vh !important;
+      }
+      .modal-name {
+        margin-top: 16px;
+      }
+    &lt;/style>
+    &lt;section class="modal-content" role="dialog" aria-modal="true">
+      &lt;article class="modal-info" style="flex:1;">
+        &lt;h2 class="modal-name">Add an Offline Card&lt;/h2>
+        &lt;div id="offlineCardList" style="
+          margin-top: 16px;
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 20px;
+          max-height: 60vh;
+          overflow-y: auto;
+          padding: 10px;
+        ">&lt;/div>
+        &lt;button id="confirmOfflineAddBtn" style="display:none; margin-top:10px; padding:8px 12px; background:#ffcb05; color:black; border:none; border-radius:5px; font-weight:bold; cursor:pointer;">
+          Add Card
+        &lt;/button>
+      &lt;/article>
+    &lt;/section>
+  `;
+  document.body.appendChild(modal);
+  modal.addEventListener('click', e => {
+    if (e.target === modal) modal.remove();
+  });
+
+  const listEl = modal.querySelector('#offlineCardList');
+  const confirmBtn = modal.querySelector('#confirmOfflineAddBtn');
+  let selected = null;
+
+  // Render offline cards
+  cards.forEach(card => {
+    const div = document.createElement('div');
+    div.className = 'card';
+    Object.assign(div.style, {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: '8px',
+      borderRadius: '8px',
+      backgroundColor: '#fff',
+      boxShadow: '0 2px 6px rgba(0,0,0,0.1)',
+      cursor: 'pointer',
+      maxWidth: '100px',
+      margin: 'auto',
+    });
+    // Thumbnail image
+    const img = document.createElement('img');
+    img.src = card.imgPath;
+    img.alt = card.name;
+    Object.assign(img.style, { width: '100%', borderRadius: '6px' });
+
+    // Name label
+    const label = document.createElement('div');
+    label.textContent = card.name;
+    Object.assign(label.style, {
+      marginTop: '6px', fontWeight: 'bold', fontSize: '12px', textAlign: 'center', wordBreak: 'break-word'
+    });
+    div.append(img, label);
+
+    // Selection handling
+    div.addEventListener('click', () => {
+      listEl.querySelectorAll('.card.selected').forEach(el => el.classList.remove('selected'));
+      div.classList.add('selected');
+      selected = card;
+      confirmBtn.style.display = 'block';
+    });
+
+    listEl.appendChild(div);
+  });
+
+  // Confirm adding offline card
+  confirmBtn.addEventListener('click', () => {
+    if (!selected) return;
+    const collectionKey = 'pokemonCollection';
+    const stored = JSON.parse(localStorage.getItem(collectionKey)) || [];
+    stored.push({ name: selected.name, imgUrl: selected.imgPath });
+    localStorage.setItem(collectionKey, JSON.stringify(stored));
+
+    // Invoke existing handlers
+    if (window.addCardToCollection) {
+      window.addCardToCollection({ name: selected.name, imgUrl: selected.imgPath });
+    }
+    if (context === 'binder' &amp;&amp; window.handleAddCard) {
+      window.handleAddCard(selected.imgPath);
+    }
+
+    // Refresh views
+    const collEl = document.querySelector('pokemon-collection');
+    if (collEl?.render) collEl.render();
+    const binderEl = document.querySelector('pokemon-binder');
+    if (binderEl?.setPages &amp;&amp; window.getBinderPages) binderEl.setPages(window.getBinderPages());
+
+    modal.remove();
+  });
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-PokemonBinder.html">PokemonBinder</a></li></ul><h3>Classes</h3><ul><li><a href="PokemonCollection.html">PokemonCollection</a></li></ul><h3>Global</h3><ul><li><a href="global.html#COLLECTION_KEY">COLLECTION_KEY</a></li><li><a href="global.html#getAllSets">getAllSets</a></li><li><a href="global.html#getCardById">getCardById</a></li><li><a href="global.html#getCardsByName">getCardsByName</a></li><li><a href="global.html#getCardsByNameAndNumber">getCardsByNameAndNumber</a></li><li><a href="global.html#getCardsByPage">getCardsByPage</a></li><li><a href="global.html#getCardsBySet">getCardsBySet</a></li><li><a href="global.html#showAddCardModal">showAddCardModal</a></li><li><a href="global.html#showAssignCardModal">showAssignCardModal</a></li><li><a href="global.html#showBinder">showBinder</a></li><li><a href="global.html#showCollection">showCollection</a></li><li><a href="global.html#showOfflineAddCardModal">showOfflineAddCardModal</a></li><li><a href="global.html#turnPageLeft">turnPageLeft</a></li><li><a href="global.html#turnPageRight">turnPageRight</a></li><li><a href="global.html#updateBinder">updateBinder</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Sat Jun 07 2025 21:46:29 GMT+0000 (Coordinated Universal Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
