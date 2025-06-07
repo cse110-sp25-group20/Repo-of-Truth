@@ -53,34 +53,12 @@ export async function getCardsByName(name) {
   // According to the Pokémon TCG docs, to search by name you do:
   // GET /v2/cards?q=name:[searchTerm]
   const trimmed = name.trim(); 
-  const query = `name:*${trimmed}*`;
- // Using Pokemon TCG API syntax allowing for words with spaces
+  const query = `name:"${trimmed}"`; // Using Pokemon TCG API syntax allowing for words with spaces
 
   // _fetchJson returns an object { data: [ …card objects… ], page, pageSize, count, … }
   const result = await _fetchJson("/cards", { q: query });
 
   // result.data might be undefined or not an array if something goes wrong
-  return Array.isArray(result.data) ? result.data : [];
-}
-
-/**
- * Fetches a specific page of Pokémon cards from the TCG API.
- * @param {number} [page=1] - 1-indexed page number (must be ≥ 1).
- * @param {number} [pageSize=20] - Number of cards per page (must be ≥ 1).
- * @returns {Promise<Array>} Array of card objects for the given page.
- */
-export async function getCardsByPage(page = 1, pageSize = 20) {
-  if (!Number.isInteger(page) || page < 1) {
-    throw new Error("getCardsByPage: page must be a positive integer.");
-  }
-  if (!Number.isInteger(pageSize) || pageSize < 1) {
-    throw new Error("getCardsByPage: pageSize must be a positive integer.");
-  }
-
-  // _fetchJson calls your API at `/cards` with the given query params
-  const result = await _fetchJson("/cards", { page, pageSize });
-
-  // Return just the array of cards (or empty array if something went wrong)
   return Array.isArray(result.data) ? result.data : [];
 }
 
