@@ -1,10 +1,5 @@
 // Configuration: base URL and API key
 const BASE_URL = "https://api.pokemontcg.io/v2";
-// require('dotenv').config();
-// const API_KEY = process.env.API_KEY;
-// if (!API_KEY) {
-//   throw new Error("Missing API_KEY - check your .env or environment");
-// }
 const API_KEY = "__API_KEY__";
 export default API_KEY;
 
