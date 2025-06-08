@@ -38,7 +38,7 @@ export function showAddCardModal() {
         <input id="cardSearchInputName" type="text" placeholder="Enter Pokémon name" />
         <input id="cardSearchInputNum" type="text" placeholder="Enter the card number within its set (found on the card, usually at the bottom, e.g., 17/102)" />
         <button id="cardSearchSubmit">Search</button>
-        <div id="cardSearchResult" style="margin-top: 16px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 50px; max-height: 40vh; overflow-y: auto;"></div>
+        <div id="cardSearchResult" style="margin-top: 16px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; max-height: 40vh; overflow-y: auto;"></div>
         <button id="confirmAddCardBtn" style="display: none; margin-top: 10px;">Add to Collection</button>
       </article>
     </section>
@@ -140,11 +140,13 @@ export function showAddCardModal() {
         cardDiv.style.alignItems = 'center';
         cardDiv.style.justifyContent = 'center';
         cardDiv.style.padding = '10px';
+        cardDiv.style.border = '1px solid #ccc';
         cardDiv.style.borderRadius = '8px';
+        cardDiv.style.backgroundColor = '#fff';
         cardDiv.style.boxShadow = '0 2px 6px rgba(0,0,0,0.1)';
         cardDiv.style.cursor = 'pointer';
         cardDiv.style.transition = 'transform 0.2s ease, border 0.2s ease';
-        cardDiv.style.maxWidth = '110px';
+        cardDiv.style.maxWidth = '100px';
         cardDiv.style.margin = 'auto';
 
         cardDiv.addEventListener('mouseover', () => {
