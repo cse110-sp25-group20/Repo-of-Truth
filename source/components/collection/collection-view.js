@@ -27,7 +27,7 @@ class PokemonCollection extends HTMLElement {
           min-height: 400px;
         }
         .collection-outer {
-          background: rgba(255, 255, 255, 1);
+          background: #fff;
           border-radius: 20px;
           box-shadow: 0 4px 24px 0 rgba(34,34,34,0.10), 0 0 0 4px #2a75bb22;
           padding: 24px 16px 32px 16px;
@@ -109,7 +109,7 @@ class PokemonCollection extends HTMLElement {
           }
         }
       </style>
-      <div class="collection-outer" part="collection-outer">
+      <div class="collection-outer">
         <div class="collection-list" id="collection-list"></div>
       </div>
     `;
@@ -159,14 +159,13 @@ class PokemonCollection extends HTMLElement {
     const collection = this.getCollection();
     if (collection.length === 0) {
       container.classList.remove('has-cards');
-      container.innerHTML = '<p class="empty-message" part="empty-message">No cards in your collection yet!</p>';
+      container.innerHTML = '<p class="empty-message">No cards in your collection yet!</p>';
       return;
     }
     container.classList.add('has-cards');
     collection.forEach(card => {
       const cardDiv = document.createElement('div');
       cardDiv.className = 'collection-card';
-      cardDiv.part = 'collection-card';
       const img = document.createElement('img');
       img.src = card.imgUrl;
       img.alt = card.name;
@@ -178,7 +177,6 @@ class PokemonCollection extends HTMLElement {
 
       const nameEl = document.createElement('div');
       nameEl.className = 'card-name';
-      nameEl.part = 'card-name';
       nameEl.textContent = card.name;
       cardDiv.appendChild(img);
       cardDiv.appendChild(nameEl);
