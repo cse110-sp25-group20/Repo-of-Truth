@@ -43,7 +43,7 @@ header {
     align-items: center;
     display: flex;
     flex-direction: column;
-    margin-bottom: 8px;
+    margin-bottom: 28px;
     width: 100%;
 }
 
@@ -429,15 +429,19 @@ body.dark-mode::before {
     }
     .controls {
         flex-direction: column;
-        align-items: flex-end;
-        width: 98vw;
-        margin: 0 auto 8px auto;
+        align-items: center;
+        width: 100%;
+        margin: 20px 0;
     }
-    .collection-controls #addCard{
-        top: 230px;
-        right: 2vw;
-        margin-bottom: 32px;
-        margin-left: 32px !important;
+    .collection-controls {
+        position: static;
+        justify-content: center;
+        margin-top: 20px;
+    }
+    .collection-controls #addCard {
+        position: static;
+        width: 200px;
+        margin: 0;
     }
     .binder-controls {
         flex-direction: column;
@@ -448,8 +452,8 @@ body.dark-mode::before {
         margin: 5px 0;
         width: 80%;
     }
-    h1 {
-        font-size: 2rem;
+    header .logo {
+        width: 500px;
     }
     .navbar {
         gap: 8px;
@@ -489,6 +493,10 @@ body.dark-mode::before {
     .modal-info {
       gap: 10px;
       min-width: 0;
+      align-items: center;
+    }
+    .modal-info * {
+      width: 100%;
     }
     .modal-name {
       font-size: 1.5rem;
@@ -498,11 +506,17 @@ body.dark-mode::before {
       font-size: 1rem;
     }
 }
+@media (max-width: 550px) {
+  header .logo {
+    width: 300px;
+  }
+  /* .collection-controls {
+    top: 230px;
+  } */
+}
 .collection-controls{
   top: 230px;
   right: 2vw;
-  margin-bottom: 32px;
-  margin-left: 32px;
 }
 
 /* =========================
