@@ -1,3 +1,5 @@
+import { formatMarketPrice } from '../../assets/scripts/priceHelper.js';
+
 /**
  * @constant {string} COLLECTION_KEY
  * @description The key used in local storage to store and retrieve the cards in the collection.
@@ -181,10 +183,11 @@ class PokemonCollection extends HTMLElement {
       }
 
       const name = fullCard?.name || 'Unknown';
-      const hp = fullCard?.hp || '--';
-      const type = fullCard?.types?.[0] || 'Unknown';
+      const price = formatMarketPrice(fullCard);
       const rarity = fullCard?.rarity || 'Unknown';
       const set = fullCard?.set?.name || '--';
+      const number = fullCard?.number || '-';
+      const setSize = fullCard?.set?.total || '-';
 
       const modal = document.createElement('div');
       modal.className = 'card-modal';
@@ -198,10 +201,10 @@ class PokemonCollection extends HTMLElement {
           <article class="modal-info">
             <h2 class="modal-name">${name}</h2>
             <ul class="modal-details">
-              <li class="modal-type">Type: ${type}</li>
-              <li class="modal-hp">HP: ${hp}</li>
-              <li class="modal-rarity">Rarity: ${rarity}</li>
               <li class="modal-set">Set: ${set}</li>
+              <li class="modal-type">Number: ${number}/${setSize}</li>
+              <li class="modal-rarity">Rarity: ${rarity}</li>
+              <li class="modal-hp">Price: ${price}</li>
             </ul>
             <button id="deleteCardBtn" style="margin-top: 12px; padding: 8px 12px; background: red; color: white; border: none; border-radius: 5px; font-weight: bold; cursor: pointer;">
               Remove from Collection
