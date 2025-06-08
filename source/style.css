@@ -58,10 +58,13 @@ h1 {
 h1::before, h1::after {
     background: url('assets/images/pokemon-ball.png') no-repeat center/contain;
     content: '';
-    display: inline-block;
-    height: 48px;
-    margin-right: 8px;
-    width: 48px;
+    display: inline-flex;
+    align-self: center;
+    height: 52px;
+    width: 52px;
+    margin: 0 8px;
+    position: relative;
+    top: -3px;
 }
 
 nav {
