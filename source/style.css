@@ -108,7 +108,14 @@ nav {
     transition: background 0.2s, color 0.2s, box-shadow 0.2s;
 }
 
-.navbar a:hover, .navbar a:focus {
+.navbar a:hover {
+    background: #ee1515;
+    box-shadow: 0 4px 16px #ee151533;
+    color: #fff;
+    outline: none;
+}
+
+.navbar a.active {
     background: #ee1515;
     box-shadow: 0 4px 16px #ee151533;
     color: #fff;
