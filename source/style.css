@@ -110,7 +110,14 @@ nav {
     user-select: none;
 }
 
-.navbar a:hover, .navbar a:focus {
+.navbar a:hover {
+    background: linear-gradient(90deg, #ee1515 60%, #ffcb05 100%);
+    box-shadow: 0 4px 16px #ee151533;
+    color: #fff;
+    outline: none;
+}
+
+.navbar a.active {
     background: linear-gradient(90deg, #ee1515 60%, #ffcb05 100%);
     box-shadow: 0 4px 16px #ee151533;
     color: #fff;
@@ -396,8 +403,7 @@ button:active {
   width: 14px;
   z-index: 2;
 }
-#darkModeToggle:hover .pokeball-toggle,
-#darkModeToggle:focus .pokeball-toggle {
+#darkModeToggle:hover .pokeball-toggle {
   box-shadow: 0 0 0 4px #ffcb05aa;
 }
 
