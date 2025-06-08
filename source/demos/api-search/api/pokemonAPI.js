@@ -1,6 +1,12 @@
-// Configuration: base URL and API key (move to env)
+// Configuration: base URL and API key
 const BASE_URL = "https://api.pokemontcg.io/v2";
-const API_KEY  = "29d15cf4-7669-4b3d-9d25-d1aad76e4e10";
+// require('dotenv').config();
+// const API_KEY = process.env.API_KEY;
+// if (!API_KEY) {
+//   throw new Error("Missing API_KEY - check your .env or environment");
+// }
+const API_KEY = "__API_KEY__";
+export default API_KEY;
 
 // Build a headers object that all requests share
 function defaultHeaders() {

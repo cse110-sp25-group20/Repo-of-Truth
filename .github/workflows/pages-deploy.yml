@@ -1,0 +1,67 @@
+# name: Deploy to GitHub Pages
+
+# on:
+#   push:
+#     branches:
+#       - main
+
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
+#     env:
+#       API_KEY: ${{ secrets.API_KEY }}
+
+#     steps:
+#       - name: Check out code
+#         uses: actions/checkout@v3
+
+#       - name: Configure Pages
+#         uses: actions/configure-pages@v3
+
+#       - name: Upload artifact
+#         uses: actions/upload-pages-artifact@v1
+#         with:
+#           path: 'source'
+
+#       - name: Deploy to Pages
+#         uses: actions/deploy-pages@v1
+
+name: Deploy site to GitHub Pages
+on:
+  push:
+    branches: [ api-refactor ]
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # 1. Grab your code
+      - uses: actions/checkout@v3
+
+      # 2. Inject the secret into your JS
+      - name: Inject API key
+        run: |
+          sed -i 's|__API_KEY__|'"${{ secrets.API_KEY }}"'|g' source/demos/api-search/api/pokemonAPI.js
+
+      - name: Verify injection worked
+        run: |
+          if grep -q '__API_KEY__' source/demos/api-search/api/pokemonAPI.js; then
+            echo "❌ Placeholder still there" && exit 1
+          else
+            echo "✅ Key was injected"
+          fi  
+
+      # 3. Tell GitHub we’re using Pages via Actions
+      - uses: actions/configure-pages@v3
+
+      # 4. Upload the contents of your `source/` folder
+      - name: Upload site
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: source
+
+      # 5. Deploy to Pages
+      - name: Deploy to Pages
+        if: github.ref == 'refs/heads/main'
+        uses: actions/deploy-pages@v1
