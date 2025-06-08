@@ -47,6 +47,8 @@ function showBinder() {
  */
 document.getElementById('navCollection').addEventListener('click', e => {
   e.preventDefault();
+  document.getElementById('navBinder').classList.remove('active');
+  document.getElementById('navCollection').classList.add('active');
   showCollection();
 });
 
@@ -57,6 +59,8 @@ document.getElementById('navCollection').addEventListener('click', e => {
  */
 document.getElementById('navBinder').addEventListener('click', e => {
   e.preventDefault();
+  document.getElementById('navCollection').classList.remove('active');
+  document.getElementById('navBinder').classList.add('active');
   showBinder();
 });
 
