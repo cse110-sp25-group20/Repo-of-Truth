@@ -10,7 +10,9 @@
   "scripts": {
     "docs": "jsdoc -c jsdoc.json",
     "test:unit": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --testMatch '**.unit.test.js' --coverage --coverageThreshold='{\"global\": {\"branches\": 60, \"functions\": 60, \"lines\": 60, \"statements\": 60}}' --",
-    "test:e2e": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --testMatch '**.e2e.test.js' --"
+    "start:dev": "live-server source --port=5000 --no-browser",
+    "jest": "jest",
+    "test:e2e": "start-server-and-test start:dev http://localhost:5000 \"npm run jest -- tests/e2e\""
   },
   "repository": {
     "type": "git",
@@ -31,7 +33,14 @@
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^30.0.0-beta.3",
     "jest-puppeteer": "^10.1.4",
+<<<<<<< HEAD
     "jsdoc": "^4.0.4"
+=======
+    "jsdoc": "^4.0.4",
+    "live-server": "^1.2.2",
+    "puppeteer": "^22.15.0",
+    "start-server-and-test": "^2.0.12"
+>>>>>>> f982cb4 (added e2e testing)
   },
   "dependencies": {
     "dotenv": "^16.5.0",
@@ -39,7 +48,7 @@
   },
   "jest": {
     "rootDir": "tests",
-    "testEnvironment": "jest-environment-jsdom",
+    "preset": "jest-puppeteer",
     "collectCoverage": true,
     "transform": {},
     "globals": {
