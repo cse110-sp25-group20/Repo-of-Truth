@@ -42,11 +42,11 @@ jobs:
       # 2. Inject the secret into your JS
       - name: Inject API key
         run: |
-          sed -i 's|__API_KEY__|'"${{ secrets.API_KEY }}"'|g' source/demos/api-search/api/pokemonAPI.js
+          sed -i 's|__API_KEY__|'"${{ secrets.API_KEY }}"'|g' source/api/pokemonAPI.js
 
       - name: Verify injection worked
         run: |
-          if grep -q '__API_KEY__' source/demos/api-search/api/pokemonAPI.js; then
+          if grep -q '__API_KEY__' source/api/pokemonAPI.js; then
             echo "❌ Placeholder still there" && exit 1
           else
             echo "✅ Key was injected"
