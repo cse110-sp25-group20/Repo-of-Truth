@@ -526,7 +526,7 @@ flipBackward() {
         const collection = JSON.parse(raw);
         const match = collection.find(c => c.imgUrl === imgSrc);
         if (match?.id) {
-          const { getCardById } = await import("../../demos/api-search/api/pokemonAPI.js");
+          const { getCardById } = await import("../../api/pokemonAPI.js");
           fullCard = await getCardById(match.id);
         }
       }

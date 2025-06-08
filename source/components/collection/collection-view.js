@@ -192,7 +192,7 @@ class PokemonCollection extends HTMLElement {
         const collection = this.getCollection();
         const cardMatch = collection.find(c => c.imgUrl === imgSrc);
 
-        const { getCardById } = await import('../../demos/api-search/api/pokemonAPI.js');
+        const { getCardById } = await import('../../api/pokemonAPI.js');
         
         if (cardMatch?.id) {
           fullCard = await getCardById(cardMatch.id);

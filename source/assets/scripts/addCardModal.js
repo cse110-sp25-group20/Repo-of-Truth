@@ -112,7 +112,7 @@ export function showAddCardModal() {
     let cards;
 
     try {
-      const { getCardsByName, getCardsByNameAndNumber } = await import('../../demos/api-search/api/pokemonAPI.js');
+      const { getCardsByName, getCardsByNameAndNumber } = await import('../../api/pokemonAPI.js');
       resultBox.innerHTML = '<p style="text-align:center;">Loading...</p>';
 
       if (name && !num) {
