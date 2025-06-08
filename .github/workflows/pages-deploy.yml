@@ -1,7 +1,7 @@
 name: Deploy site to GitHub Pages
 on:
   push:
-    branches: [ api-refactor ]
+    branches: [ main ]
   workflow_dispatch:
 
 permissions:
@@ -35,5 +35,5 @@ jobs:
           path: source
 
       - name: Deploy to Pages
-        if: github.ref == 'refs/heads/api-refactor'
+        if: github.ref == 'refs/heads/main'
         uses: actions/deploy-pages@v4
