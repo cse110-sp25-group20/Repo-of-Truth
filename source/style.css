@@ -115,7 +115,7 @@ nav {
 }
 
 .navbar a:hover {
-    background: linear-gradient(90deg, #ee1515 60%, #ffcb05 100%);
+    background: #ee1515;
     box-shadow: 0 4px 16px #ee151533;
     color: #fff;
     outline: none;
