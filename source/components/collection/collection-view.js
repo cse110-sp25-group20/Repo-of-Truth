@@ -182,7 +182,7 @@ class PokemonCollection extends HTMLElement {
       cardDiv.appendChild(nameEl);
       container.appendChild(cardDiv);
 
-      img.addEventListener('click', () => {
+      cardDiv.addEventListener('click', () => {
         this.showCardModal(card.imgUrl);
       })
     });
