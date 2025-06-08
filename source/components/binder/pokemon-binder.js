@@ -4,10 +4,7 @@
  * @module PokemonBinder
  */
 
-import { getCardsByName } from "../../demos/api-search/api/pokemonAPI.js";
-import { handleAddCard } from "../../assets/scripts/binder-controller.js";
 import { showAssignCardModal } from "../../assets/scripts/assign-card-modal.js";
-import { getCardById } from "../../demos/api-search/api/pokemonAPI.js";
 
 const template = document.createElement("template");
 template.innerHTML = `
