@@ -26,19 +26,6 @@ class PokemonCollection extends HTMLElement {
           width: 100%;
           min-height: 400px;
         }
-        .collection-outer {
-          background: #fff;
-          border-radius: 20px;
-          box-shadow: 0 4px 24px 0 rgba(34,34,34,0.10), 0 0 0 4px #2a75bb22;
-          padding: 24px 16px 32px 16px;
-          margin: 32px 0;
-          max-width: 900px;
-          width: 100%;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          border: 2.5px solid #2a75bb;
-        }
         .collection-list {
           display: flex;
           flex-wrap: wrap;
