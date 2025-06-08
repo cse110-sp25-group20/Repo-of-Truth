@@ -2,7 +2,7 @@
    DARK MODE: GLOBAL & BODY
    ========================= */
 body.dark-mode {
-  background: linear-gradient(135deg, #23272f 0%, #2a2a3a 60%, #1a1a22 100%);
+  background: linear-gradient(135deg, #1b2b49 0%, #2a2a3a 60%, #1a1a22 100%);
   color: #f3f3f3;
 }
 body.dark-mode::before {
@@ -26,7 +26,7 @@ body.dark-mode .navbar a {
   color: #ffcb05;
 }
 body.dark-mode .navbar a:hover, body.dark-mode .navbar a:focus {
-  background: linear-gradient(90deg, #2a75bb 60%, #ee1515 100%);
+  background: #2a75bb;
   color: #fff;
   box-shadow: 0 4px 16px #2a75bb33;
 }
@@ -84,27 +84,18 @@ body.dark-mode .card-slot:hover {
    DARK MODE: BUTTONS
    ========================= */
 body.dark-mode button {
-  background: linear-gradient(90deg, #2a75bb 60%, #ee1515 100%);
-  color: #fff;
-  border: 2px solid #ffcb05;
+  background: #2a75bb;
+  color: #ffcb05;
+  border: 2px solid #4180bb;
   box-shadow: 0 4px 12px #2a75bb33;
 }
 body.dark-mode button:hover {
-  background: linear-gradient(90deg, #ee1515 60%, #2a75bb 100%);
+  background:#2a75bb;
   color: #ffcb05;
   box-shadow: 0 8px 24px #ffcb0533;
 }
 body.dark-mode button:active {
   box-shadow: 0 2px 6px #2a75bb33;
-}
-body.dark-mode #addCard {
-  background: linear-gradient(90deg, #43a047 60%, #2a75bb 100%);
-  color: #fff;
-  border-color: #ffcb05;
-}
-body.dark-mode #addCard:hover {
-  background: linear-gradient(90deg, #2a75bb 60%, #43a047 100%);
-  color: #ffcb05;
 }
 
 /* =========================

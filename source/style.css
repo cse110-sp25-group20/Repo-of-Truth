@@ -3,12 +3,17 @@
    ========================= */
 @import url('https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap');
 
+:root {
+  --body-bg-light: url('assets/images/bodyBackgroundLight.png');
+  --body-bg-dark: url('assets/images/bodyBackgroundDark.png');
+}
+
 /* =========================
    BODY & BACKGROUND
    ========================= */
 body {
     align-items: center;
-    background: linear-gradient(135deg, #ffcb05 0%, #fff 60%, #2a75bb 100%);
+    background: linear-gradient(135deg, #c3dcf3 20%, #4180bb 80%);
     color: #222;
     display: flex;
     flex-direction: column;
@@ -20,7 +25,7 @@ body {
     position: relative;
 }
 body::before {
-    background-image: url('assets/images/bodyBackground.png');
+    background-image: var(--body-bg-light);
     content: '';
     height: 100vh;
     left: 0;
@@ -55,7 +60,6 @@ h1 {
     text-shadow: 2px 2px 0 #ffcb05, 4px 4px 0 #2a75bb;
 }
 h1::before, h1::after {
-    background: url('assets/images/pokemon-ball.png') no-repeat center/contain;
     content: '';
     display: inline-block;
     height: 48px;
@@ -71,8 +75,8 @@ nav {
 }
 
 .navbar {
-    background: rgba(255, 203, 5, 0.85);
-    border: 2px solid #2a75bb;
+    background: rgba(247, 202, 25, 0.85);
+    border: 2px solid #3B4CCA;
     border-radius: 32px;
     box-shadow: 0 2px 12px #2a75bb33;
     display: grid;
@@ -93,7 +97,7 @@ nav {
 
 .navbar a {
     border-radius: 24px;
-    color: #2a75bb;
+    color: #3B4CCA;
     display: block;
     font-family: 'Luckiest Guy', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     font-size: 1.1rem;
@@ -105,7 +109,7 @@ nav {
 }
 
 .navbar a:hover, .navbar a:focus {
-    background: linear-gradient(90deg, #ee1515 60%, #ffcb05 100%);
+    background: #ee1515;
     box-shadow: 0 4px 16px #ee151533;
     color: #fff;
     outline: none;
@@ -116,7 +120,7 @@ nav {
    ========================= */
 pokemon-binder {
     background: #fff;
-    border: 4px solid #2a75bb;
+    border: 4px solid #3B4CCA;
     border-radius: 18px;
     box-shadow: 0 12px 36px rgba(34, 34, 34, 0.25), 0 0 0 6px #ee1515;
     margin: 24px auto 0 auto;
@@ -127,11 +131,11 @@ pokemon-binder {
    BUTTONS & CONTROLS
    ========================= */
 button {
-    background: linear-gradient(90deg, #ffcb05 60%, #ee1515 100%);
-    border: 2px solid #2a75bb;
+    background: #fff;
+    border: 2px solid #4180bb;
     border-radius: 50px;
     box-shadow: 0 4px 12px rgba(34, 34, 34, 0.12);
-    color: #222;
+    color: #ee1515;
     cursor: pointer;
     font-family: 'Luckiest Guy', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     font-size: 18px;
@@ -144,7 +148,7 @@ button {
     transition: all 0.2s cubic-bezier(.4,2,.6,1);
 }
 button:hover {
-    background: linear-gradient(90deg, #ee1515 60%, #ffcb05 100%);
+    background: #ee1515;
     box-shadow: 0 8px 24px rgba(34, 34, 34, 0.18);
     color: #fff;
     transform: translateY(-3px) scale(1.05);
@@ -154,13 +158,12 @@ button:active {
     transform: translateY(0) scale(1);
 }
 #addCard {
-    background: linear-gradient(90deg, #4caf50 60%, #ffcb05 100%);
-    border-color: #388e3c;
-    color: #fff;
+    background: #ffcb05;
+    color: #2a75bb;
 }
 #addCard:hover {
-    background: linear-gradient(90deg, #388e3c 60%, #ffcb05 100%);
-    color: #fff;
+    background: #ffcb05;
+    color: #2a75bb;
 }
 .controls {
     display: flex;
@@ -207,7 +210,6 @@ button:active {
     transition: box-shadow 0.3s, border-color 0.3s;
 }
 .card-slot:empty::after {
-    background: url('assets/images/pokemon-ball.png') no-repeat center/contain;
     content: '';
     display: block;
     height: 60%;
@@ -393,7 +395,17 @@ button:active {
 #darkModeToggle:focus .pokeball-toggle {
   box-shadow: 0 0 0 4px #ffcb05aa;
 }
-
+body.dark-mode::before {
+  background-image: var(--body-bg-dark);
+  content: '';
+  height: 100vh;
+  left: 0;
+  opacity: 0.12;
+  position: fixed;
+  top: 0;
+  width: 100vw;
+  z-index: -1;
+}
 .card.selected {
   border: 2px solid #2a75bb;
   box-shadow: 0 0 10px rgba(42, 117, 187, 0.6);
@@ -492,52 +504,4 @@ button:active {
 @keyframes pageTurn {
     0% { transform: rotateY(0); }
     100% { transform: rotateY(-180deg); }
-}
-
-#collection-view {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 24px;
-    justify-content: flex-start;
-    align-items: flex-start;
-    max-width: 1200px;
-    margin: 32px auto;
-    padding: 24px;
-    background: rgba(255,255,255,0.95);
-    border-radius: 18px;
-    box-shadow: 0 8px 32px rgba(34,34,34,0.10);
-    min-height: 400px;
-    max-height: 70vh;
-    overflow-y: auto;
-    margin-right: 120px;
-}
-.collection-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background: linear-gradient(135deg, #fff 60%, #ffcb05 100%);
-    border: 2px solid #2a75bb;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(34,34,34,0.10);
-    padding: 16px;
-    width: 140px;
-    min-height: 220px;
-    margin: 0;
-    transition: box-shadow 0.2s, border-color 0.2s;
-}
-.collection-card img {
-    width: 100px;
-    height: 140px;
-    object-fit: contain;
-    border-radius: 8px;
-    background: #f0f0f0;
-    margin-bottom: 12px;
-}
-.collection-card .card-name {
-    font-weight: bold;
-    font-size: 1.1rem;
-    color: #2a75bb;
-    text-align: center;
-    margin-top: 4px;
-    word-break: break-word;
 }
