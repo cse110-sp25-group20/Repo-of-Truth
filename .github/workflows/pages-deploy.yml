@@ -57,11 +57,11 @@ jobs:
 
       # 4. Upload the contents of your `source/` folder
       - name: Upload site
-        uses: actions/upload-pages-artifact@v1
+        uses: actions/upload-pages-artifact@v3
         with:
           path: source
 
       # 5. Deploy to Pages
       - name: Deploy to Pages
         if: github.ref == 'refs/heads/main'
-        uses: actions/deploy-pages@v1
+        uses: actions/deploy-pages@v4
