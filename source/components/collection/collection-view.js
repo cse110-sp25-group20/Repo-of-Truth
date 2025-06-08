@@ -87,7 +87,7 @@ class PokemonCollection extends HTMLElement {
           gap: 15px 15px;
         }  
         .collection-card {
-            width: 175px;
+            width: 150px;
           }
           .collection-card img {
             width: 100%;
