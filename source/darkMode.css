@@ -36,12 +36,12 @@ body.dark-mode .navbar a {
   color: #ffcb05;
 }
 body.dark-mode .navbar a:hover {
-  background: linear-gradient(90deg, #2a75bb 60%, #ee1515 100%);
+  background: #2a75bb;
   color: #fff;
   box-shadow: 0 4px 16px #2a75bb33;
 }
 body.dark-mode .navbar a.active {
-  background: linear-gradient(90deg, #2a75bb 60%, #ee1515 100%);
+  background: #2a75bb;
   color: #fff;
   box-shadow: 0 4px 16px #2a75bb33;
 }
