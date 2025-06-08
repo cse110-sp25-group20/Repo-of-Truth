@@ -262,60 +262,18 @@ class PokemonBinder extends HTMLElement {
     super();
     this.attachShadow({ mode: "open" });
     this.shadowRoot.appendChild(template.content.cloneNode(true));
-
-    /**
-     * @private @type {HTMLElement} Container for left-side leaves
-     */
     this._leftLeafContainer = this.shadowRoot.querySelector('.left-leaf');
-
-    /**
-     * @private @type {HTMLElement} Container for right-side leaves
-     */
     this._rightLeafContainer = this.shadowRoot.querySelector('.right-leaf');
-
-    /**
-     * @private @type {HTMLElement} Static backing leaf on the left
-     */
     this._leftBackLeaf = this._leftLeafContainer.querySelector('.leaf-back');
-
-    /**
-     * @private @type {HTMLElement} Animated flip leaf on the left
-     */
     this._leftFlipLeaf = this._leftLeafContainer.querySelector('.leaf-flip');
-
-    /**
-     * @private @type {HTMLElement} Static backing leaf on the right
-     */
     this._rightBackLeaf = this._rightLeafContainer.querySelector('.leaf-back');
-
-    /**
-     * @private @type {HTMLElement} Animated flip leaf on the right
-     */
     this._rightFlipLeaf = this._rightLeafContainer.querySelector('.leaf-flip');
-
-    /**
-     * @private @type {HTMLElement} Inner element of left flip leaf for CSS transforms
-     */
     this._leftFlipInner = this._leftFlipLeaf.querySelector('.leaf-inner');
-
-    /**
-     * @private @type {HTMLElement} Inner element of right flip leaf for CSS transforms
-     */
     this._rightFlipInner = this._rightFlipLeaf.querySelector('.leaf-inner');
-
-    /**
-     * @type {Map<number, (string|undefined)[]>} Map from page number to up to 9 card image URLs
-     */
     this.pagesData = new Map();
 
-    /**
-     * @type {number} Current left-front page index
-     */
     this.currentIndex = 1;
 
-    /**
-     * @type {boolean} Flag indicating if a page-flip animation is in progress
-     */
     this.flipping = false;
 
     this._renderFaces();
