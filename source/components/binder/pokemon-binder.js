@@ -91,6 +91,11 @@ template.innerHTML = `
       padding: 10px;
       background: #fff;
     }
+
+    :host-context(body.dark-mode) .page {
+      background: #2a2a2a;
+      color: #fff;
+    }
     .page.back {
       transform: rotateY(180deg);
     }
@@ -131,12 +136,27 @@ template.innerHTML = `
       align-items: center;
       justify-content: center;
       aspect-ratio: 1 / 1.4;
+      transition: background 0.3s, border-color 0.3s;
+    }
+
+    :host-context(body.dark-mode) .card-slot {
+      background: #3a3a3a;
+      border: 1px dashed #666;
+    }
+
+    :host-context(body.dark-mode) .card-slot:hover {
+      border-color: #4180bb !important;
+      box-shadow: 0 4px 16px #4180bb66;
     }
     .card-slot img {
       max-width: 100%;
       max-height: 100%;
       object-fit: contain;
       cursor: pointer;
+    }
+    .card-slot:hover {
+      border-color: #2a75bb !important;
+      box-shadow: 0 4px 16px #2a75bb33;
     }
     .pokemon-card {
       width: 100%;
