@@ -5,6 +5,7 @@
  */
 
 import { showAssignCardModal } from "../../assets/scripts/assign-card-modal.js";
+import { formatMarketPrice } from '../../assets/scripts/priceHelper.js';
 
 const template = document.createElement("template");
 template.innerHTML = `
@@ -462,11 +463,12 @@ class PokemonBinder extends HTMLElement {
     } catch (err) {
       console.error("Failed to load full card info:", err);
     }
-    const name = fullCard?.name || "Unknown";
-    const type = fullCard?.types?.[0] || "Unknown";
-    const hp = fullCard?.hp || "--";
-    const rarity = fullCard?.rarity || "Unknown";
-    const set = fullCard?.set?.name || "--";
+    const name = fullCard?.name || 'Unknown';
+    const price = formatMarketPrice(fullCard);
+    const rarity = fullCard?.rarity || 'Unknown';
+    const set = fullCard?.set?.name || '--';
+    const number = fullCard?.number || '-';
+    const setSize = fullCard?.set?.printedTotal || '-';
     const modal = document.createElement("div");
     modal.className = "card-modal";
     modal.id = "global-pokemon-modal";
@@ -478,10 +480,10 @@ class PokemonBinder extends HTMLElement {
         <article class="modal-info">
           <h2 class="modal-name">${name}</h2>
           <ul class="modal-details">
-            <li class="modal-type">Type: ${type}</li>
-            <li class="modal-hp">HP: ${hp}</li>
-            <li class="modal-rarity">Rarity: ${rarity}</li>
             <li class="modal-set">Set: ${set}</li>
+            <li class="modal-type">Number: ${number}/${setSize}</li>
+            <li class="modal-rarity">Rarity: ${rarity}</li>
+            <li class="modal-hp">Price: ${price}</li>
           </ul>
           <button id="removeBinderBtn" style="margin-top: 12px; padding: 8px 12px; background: red; color: white; border: none; border-radius: 5px; font-weight: bold; cursor: pointer;"> Remove from Binder
           </button>
