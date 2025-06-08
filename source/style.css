@@ -64,7 +64,6 @@ h1::before, h1::after {
     width: 52px;
     margin: 0 8px;
     position: relative;
-    top: -3px;
 }
 
 nav {
