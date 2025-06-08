@@ -26,7 +26,8 @@ class PokemonCollection extends HTMLElement {
           justify-content: center;
           align-items: flex-start;
           width: 100%;
-          min-height: 400px;
+          min-height: 200px;
+          margin-bottom: 20px;
         }
         .collection-list {
           display: flex;
@@ -88,14 +89,25 @@ class PokemonCollection extends HTMLElement {
           margin-top: 4px;
           word-break: break-word;
         }
-        @media (max-width: 800px) {
-          .collection-outer {
-            max-width: 98vw;
-            padding: 10px 2vw;
+        @media (max-width: 1150px) {
+          .collection-list.has-cards {
+            grid-template-columns: repeat(3, 1fr);
           }
-          .collection-list {
-            gap: 10px 8px;
+        }
+        @media (max-width: 850px) {
+          .collection-list.has-cards {
             grid-template-columns: repeat(2, 1fr);
+          }
+        }
+        @media (max-width: 550px) {
+        .collection-list {
+          gap: 15px 15px;
+        }  
+        .collection-card {
+            width: 175px;
+          }
+          .collection-card img {
+            width: 100%;
           }
         }
       </style>
