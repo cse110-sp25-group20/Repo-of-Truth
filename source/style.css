@@ -11,6 +11,11 @@
 /* =========================
    BODY & BACKGROUND
    ========================= */
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
 body {
     align-items: center;
     background: linear-gradient(135deg, #c3dcf3 20%, #4180bb 80%);
@@ -78,7 +83,7 @@ nav {
 }
 
 .navbar {
-    background: rgba(247, 202, 25, 0.85);
+    background: #ffcb05;
     border: 2px solid #3B4CCA;
     border-radius: 32px;
     box-shadow: 0 2px 12px #2a75bb33;
@@ -171,12 +176,15 @@ button:active {
     transform: translateY(0) scale(1);
 }
 #addCard {
+    max-width: 240px;
+    width: auto;
+    padding: 14px 32px;
     background: #ffcb05;
-    color: #2a75bb;
+    color: #3B4CCA;
 }
 #addCard:hover {
     background: #ffcb05;
-    color: #2a75bb;
+    color: #3B4CCA;
 }
 .controls {
     display: flex;
