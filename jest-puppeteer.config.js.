@@ -1,0 +1,6 @@
+module.exports = {
+  launch: {
+    headless: false, // Shows browser window
+    slowMo: 25       // Slows down actions for visibility
+  }
+}
