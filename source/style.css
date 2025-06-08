@@ -11,6 +11,11 @@
 /* =========================
    BODY & BACKGROUND
    ========================= */
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
 body {
     align-items: center;
     background: linear-gradient(135deg, #c3dcf3 20%, #4180bb 80%);
@@ -43,7 +48,7 @@ header {
     align-items: center;
     display: flex;
     flex-direction: column;
-    margin-bottom: 28px;
+    margin-bottom: 8px;
     width: 100%;
 }
 
@@ -78,7 +83,7 @@ nav {
 }
 
 .navbar {
-    background: rgba(247, 202, 25, 0.85);
+    background: #ffcb05;
     border: 2px solid #3B4CCA;
     border-radius: 32px;
     box-shadow: 0 2px 12px #2a75bb33;
@@ -171,12 +176,15 @@ button:active {
     transform: translateY(0) scale(1);
 }
 #addCard {
+    max-width: 240px;
+    width: auto;
+    padding: 14px 32px;
     background: #ffcb05;
-    color: #2a75bb;
+    color: #3B4CCA;
 }
 #addCard:hover {
     background: #ffcb05;
-    color: #2a75bb;
+    color: #3B4CCA;
 }
 .controls {
     display: flex;
@@ -268,7 +276,7 @@ button:active {
 }
 .modal-content {
   display: flex;
-  align-items: center;
+  flex-direction: row;
   background: #fff;
   border: 4px solid #2a75bb;
   border-radius: 20px;
@@ -280,7 +288,7 @@ button:active {
   align-items: center;
   justify-content: space-between;
   gap: 24px;
-  margin: auto;
+  overflow: hidden;
 }
 .modal-image {
   flex: 0 1 320px;
@@ -298,9 +306,8 @@ button:active {
 }
 
 .modal-card {
-  width: 100%;
-  height: auto;
-  object-fit: contain;
+  max-width: 260px;
+  max-height: 340px;
   border-radius: 16px;
   box-shadow: 0 4px 12px #2a75bb33;
   background: #fff;
@@ -436,19 +443,15 @@ body.dark-mode::before {
     }
     .controls {
         flex-direction: column;
-        align-items: center;
-        width: 100%;
-        margin: 20px 0;
+        align-items: flex-end;
+        width: 98vw;
+        margin: 0 auto 8px auto;
     }
-    .collection-controls {
-        position: static;
-        justify-content: center;
-        margin-top: 20px;
-    }
-    .collection-controls #addCard {
-        position: static;
-        width: 200px;
-        margin: 0;
+    .collection-controls #addCard{
+        top: 230px;
+        right: 2vw;
+        margin-bottom: 32px;
+        margin-left: 32px !important;
     }
     .binder-controls {
         flex-direction: column;
@@ -459,8 +462,8 @@ body.dark-mode::before {
         margin: 5px 0;
         width: 80%;
     }
-    header .logo {
-        width: 500px;
+    h1 {
+        font-size: 2rem;
     }
     .navbar {
         gap: 8px;
@@ -471,54 +474,49 @@ body.dark-mode::before {
         padding: 10px 12px;
     }
     .modal-content {
-      flex-direction: column;
+      display: flex;
+      flex-direction: row;
+      background: #fff;
+      border: 4px solid #2a75bb;
+      border-radius: 20px;
+      box-shadow: 0 8px 32px #2a75bb44;
       padding: 20px;
-      max-width: 400px;
+      max-width: 90vw;
       width: 100%;
-      
-      /* justify-content: center; */
-
-      /* overflow-wrap: break-word; */
-      /* margin: auto; */
-      /* flex-wrap: wrap; */
+      box-sizing: border-box;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      overflow-wrap: break-word;
+      margin: auto;
+      flex-wrap: wrap;
     }
     .modal-image {
-
+      min-height: 80px;
       min-width: 80px;
-      height: auto;
-      width: auto;
-      padding: 16px;
-
-      flex-shrink: 1;
+      padding: 8px;
     }
-    
+    .modal-card {
+      max-height: 80px;
+      max-width: 80px;
+    }
     .modal-info {
       gap: 10px;
       min-width: 0;
-      align-items: center;
-    }
-    .modal-info * {
-      width: 100%;
     }
     .modal-name {
-      font-size: 2rem;
+      font-size: 1.5rem;
       margin-bottom: 8px;
     }
     .modal-details li {
       font-size: 1rem;
     }
 }
-@media (max-width: 550px) {
-  header .logo {
-    width: 300px;
-  }
-  /* .collection-controls {
-    top: 230px;
-  } */
-}
 .collection-controls{
   top: 230px;
   right: 2vw;
+  margin-bottom: 32px;
+  margin-left: 32px;
 }
 
 /* =========================
