@@ -32,10 +32,7 @@
  * @module PokemonBinder
  */
 
-import { getCardsByName } from "../../demos/api-search/api/pokemonAPI.js";
-import { handleAddCard } from "../../assets/scripts/binder-controller.js";
 import { showAssignCardModal } from "../../assets/scripts/assign-card-modal.js";
-import { getCardById } from "../../demos/api-search/api/pokemonAPI.js";
 
 const template = document.createElement("template");
 template.innerHTML = `
@@ -55,26 +52,60 @@ template.innerHTML = `
       height: 100%;
       position: relative;
     }
-    .leaf {
-      flex: 1;
-      position: relative;
-      transform-style: preserve-3d;
-      transition: transform 0.3s ease;
-      overflow: hidden;
-      z-index: 1;
-    }
-    .leaf.flip-forward,
-    .leaf.flip-back {
-      z-index: 2;
-    }
-    .leaf.flip-forward {
-      transform-origin: left center;
-      transform: rotateY(-180deg);
-    }
-    .leaf.flip-back {
-      transform-origin: right center;
-      transform: rotateY(180deg);
-    }
+    /* Container for each side’s backing + flipping leaves */
+.leaf-container {
+  flex: 1;
+  position: relative;
+}
+
+/* Both leaves sit exactly on top of each other */
+.leaf-back,
+.leaf-flip {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Backing leaf is underneath */
+.leaf-back {
+  z-index: 1;
+}
+/* Hide any back‐page on the static leaf */
+.leaf-back .page.back {
+  display: none;
+}
+
+/* Flipping leaf sits above */
+.leaf-flip {
+  z-index: 2;
+}
+
+/* Only the flipping leaf’s inner container actually animates */
+.leaf-flip .leaf-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.3s ease;
+}
+
+/* Correct pivot for left vs. right sides */
+.left-leaf .leaf-flip .leaf-inner {
+  transform-origin: right center;
+}
+.right-leaf .leaf-flip .leaf-inner {
+  transform-origin: left center;
+}
+
+/* Trigger the 180° turn */
+.leaf-flip.flip-forward .leaf-inner {
+  transform: rotateY(-180deg);
+}
+.leaf-flip.flip-back    .leaf-inner {
+  transform: rotateY( 180deg);
+}
     .page {
       position: absolute;
       top: 0;
@@ -88,17 +119,24 @@ template.innerHTML = `
       padding: 10px;
       background: #fff;
     }
+
+    :host-context(body.dark-mode) .page {
+      background: #2a2a2a;
+      color: #fff;
+    }
     .page.back {
       transform: rotateY(180deg);
     }
     .page.back .page-number {
-      transform: rotateY(180deg);
       visibility: hidden;
     }
     .leaf.flip-forward .page.back .page-number,
     .leaf.flip-back .page.back .page-number {
       visibility: visible;
     }
+      .leaf-inner.instant {
+  transition: none !important;
+}
     .page-number {
       font-family: 'Luckiest Guy', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
       font-weight: bold;
@@ -126,12 +164,27 @@ template.innerHTML = `
       align-items: center;
       justify-content: center;
       aspect-ratio: 1 / 1.4;
+      transition: background 0.3s, border-color 0.3s;
+    }
+
+    :host-context(body.dark-mode) .card-slot {
+      background: #3a3a3a;
+      border: 1px dashed #666;
+    }
+
+    :host-context(body.dark-mode) .card-slot:hover {
+      border-color: #4180bb !important;
+      box-shadow: 0 4px 16px #4180bb66;
     }
     .card-slot img {
       max-width: 100%;
       max-height: 100%;
       object-fit: contain;
       cursor: pointer;
+    }
+    .card-slot:hover {
+      border-color: #2a75bb !important;
+      box-shadow: 0 4px 16px #2a75bb33;
     }
     .pokemon-card {
       width: 100%;
@@ -234,46 +287,79 @@ template.innerHTML = `
     }
   &lt;/style>
   &lt;div class="binder">
-    &lt;div class="leaf left-leaf">
+  &lt;!-- Left side with a static “backing” leaf underneath a flip leaf -->
+  &lt;div class="leaf-container left-leaf">
+    &lt;!-- Static backing leaf (shows the next page after flip) -->
+    &lt;div class="leaf leaf-back">
       &lt;div class="page front">
-        &lt;div class="page-number">&lt;/div>
-        &lt;div class="cards-container">&lt;/div>
-      &lt;/div>
-      &lt;div class="page back">
         &lt;div class="page-number">&lt;/div>
         &lt;div class="cards-container">&lt;/div>
       &lt;/div>
     &lt;/div>
-    &lt;div class="leaf right-leaf">
-      &lt;div class="page front">
-        &lt;div class="page-number">&lt;/div>
-        &lt;div class="cards-container">&lt;/div>
-      &lt;/div>
-      &lt;div class="page back">
-        &lt;div class="page-number">&lt;/div>
-        &lt;div class="cards-container">&lt;/div>
+    &lt;!-- Animated flip leaf -->
+    &lt;div class="leaf leaf-flip">
+      &lt;div class="leaf-inner">
+        &lt;div class="page front">
+          &lt;div class="page-number">&lt;/div>
+          &lt;div class="cards-container">&lt;/div>
+        &lt;/div>
+        &lt;div class="page back">
+          &lt;div class="page-number">&lt;/div>
+          &lt;div class="cards-container">&lt;/div>
+        &lt;/div>
       &lt;/div>
     &lt;/div>
   &lt;/div>
+
+  &lt;!-- Right side with its own backing + flip leaves -->
+  &lt;div class="leaf-container right-leaf">
+    &lt;div class="leaf leaf-back">
+      &lt;div class="page front">
+        &lt;div class="page-number">&lt;/div>
+        &lt;div class="cards-container">&lt;/div>
+      &lt;/div>
+    &lt;/div>
+    &lt;div class="leaf leaf-flip">
+      &lt;div class="leaf-inner">
+        &lt;div class="page front">
+          &lt;div class="page-number">&lt;/div>
+          &lt;div class="cards-container">&lt;/div>
+        &lt;/div>
+        &lt;div class="page back">
+          &lt;div class="page-number">&lt;/div>
+          &lt;div class="cards-container">&lt;/div>
+        &lt;/div>
+      &lt;/div>
+    &lt;/div>
+  &lt;/div>
+&lt;/div>
 `;
 
 class PokemonBinder extends HTMLElement {
   constructor() {
-    super();
-    this.attachShadow({ mode: "open" });
-    this.shadowRoot.appendChild(template.content.cloneNode(true));
+  super();
+  this.attachShadow({ mode: "open" });
+  this.shadowRoot.appendChild(template.content.cloneNode(true));
 
-    // pagesData is now a Map&lt;pageNumber, Array&lt;9 imgUrls>>
-    this.pagesData = new Map();
-    this.currentIndex = 0; // this holds the "current page number" (1-based)
+  // --- NEW: get both containers and their two leaves each ---
+  this._leftLeafContainer  = this.shadowRoot.querySelector('.left-leaf');
+  this._rightLeafContainer = this.shadowRoot.querySelector('.right-leaf');
 
-    this._leftLeaf = this.shadowRoot.querySelector(".left-leaf");
-    this._rightLeaf = this.shadowRoot.querySelector(".right-leaf");
-    this.modal = this.shadowRoot.querySelector(".card-modal");
-    this.modalCard = this.shadowRoot.querySelector(".modal-card");
+  this._leftBackLeaf   = this._leftLeafContainer .querySelector('.leaf-back');
+  this._leftFlipLeaf   = this._leftLeafContainer .querySelector('.leaf-flip');
+  this._rightBackLeaf  = this._rightLeafContainer.querySelector('.leaf-back');
+  this._rightFlipLeaf  = this._rightLeafContainer.querySelector('.leaf-flip');
 
-    this._renderFaces();
-  }
+  this._leftFlipInner  = this._leftFlipLeaf .querySelector('.leaf-inner');
+  this._rightFlipInner = this._rightFlipLeaf.querySelector('.leaf-inner');
+
+  // your existing state
+  this.pagesData    = new Map();
+  this.currentIndex = 1;
+  this.flipping     = false;
+
+  this._renderFaces();
+}
 
   /**
    * @description Takes a flat collection of { name, imgUrl, page, slot } objects,
@@ -326,38 +412,50 @@ class PokemonBinder extends HTMLElement {
    *              Uses page numbers relative to this.currentIndex.
    */
   _renderFaces() {
-    // For each "face," fetch the array of imgURLs from the Map (or undefined if missing)
-    const leftFrontData = this.pagesData.get(this.currentIndex);
-    const leftBackData = this.pagesData.get(this.currentIndex - 1);
-    const rightFrontData = this.pagesData.get(this.currentIndex + 1);
-    const rightBackData = this.pagesData.get(this.currentIndex + 2);
+  // … your existing code to compute:
+  const leftFrontData  = this.pagesData.get(this.currentIndex);
+  const leftBackData   = this.pagesData.get(this.currentIndex - 1);
+  const rightFrontData = this.pagesData.get(this.currentIndex + 1);
+  const rightBackData  = this.pagesData.get(this.currentIndex + 2);
 
-    // Left leaf: front face shows page "currentIndex"
-    this._loadFace(
-      this._leftLeaf.querySelector(".front"),
-      leftFrontData,
-      this.currentIndex
-    );
-    // Left leaf: back face shows page "currentIndex – 1"
-    this._loadFace(
-      this._leftLeaf.querySelector(".back"),
-      leftBackData,
-      this.currentIndex - 1
-    );
+  // —— STATIC BACKING LEAFS ——  
+  // LEFT side: show the *page before* the flip-back for a backward turn
+  this._loadFace(
+    this._leftBackLeaf.querySelector('.page.front'),
+    this.pagesData.get(this.currentIndex - 2),
+    this.currentIndex - 2
+  );
+  this._loadFace(
+    this._rightBackLeaf.querySelector('.page.front'),
+    this.pagesData.get(this.currentIndex + 3),
+    this.currentIndex + 3
+  );
 
-    // Right leaf: front face shows page "currentIndex + 1"
-    this._loadFace(
-      this._rightLeaf.querySelector(".front"),
-      rightFrontData,
-      this.currentIndex + 1
-    );
-    // Right leaf: back face shows page "currentIndex + 2"
-    this._loadFace(
-      this._rightLeaf.querySelector(".back"),
-      rightBackData,
-      this.currentIndex + 2
-    );
-  }
+  // —— FLIPPING LEAFS ——  
+  // (unchanged)
+  this._loadFace(
+    this._leftFlipLeaf.querySelector('.page.front'),
+    leftFrontData,
+    this.currentIndex
+  );
+  this._loadFace(
+    this._leftFlipLeaf.querySelector('.page.back'),
+    leftBackData,
+    this.currentIndex - 1
+  );
+  this._loadFace(
+    this._rightFlipLeaf.querySelector('.page.front'),
+    rightFrontData,
+    this.currentIndex + 1
+  );
+  this._loadFace(
+    this._rightFlipLeaf.querySelector('.page.back'),
+    rightBackData,
+    this.currentIndex + 2
+  );
+}
+
+
 
   /**
    * @description Given a face element and its array of up to 9 img URLs, plus a pageNumber,
@@ -403,69 +501,63 @@ _loadFace(faceEl, cardUrls, pageNumber) {
    * @description Flip two pages forward (from currentIndex &amp; currentIndex+1 to currentIndex+2 &amp; +3)
    */
   flipForward() {
-    // Preload the back face of the right leaf (which will become visible mid-flip)
-    if (this.flipping==true) return;
-    this.flipping = true;
+  if (this.flipping) return;
+  this.flipping = true;
 
-    const nextBackData = this.pagesData.get(this.currentIndex + 2);
-    this._loadFace(
-      this._rightLeaf.querySelector(".back"),
-      nextBackData,
-      this.currentIndex + 2
-    );
+  // start the CSS turn on the RIGHT flip-leaf
+  this._rightFlipLeaf.style.zIndex = 3;
+  this._rightFlipLeaf.classList.add('flip-forward');
 
-    this._rightLeaf.classList.add("flip-forward");
-    this._rightLeaf.addEventListener(
-      "transitionend",
-      () => {
-        this._rightLeaf.classList.remove("flip-forward");
-        // Advance by two page-numbers
-        this.currentIndex += 2;
-        // Temporarily disable transition so we can re-render instantly
-        const prevTransition = this._rightLeaf.style.transition;
-        this._rightLeaf.style.transition = "none";
-        this._renderFaces();
-        // Force reflow then restore transition
-        void this._rightLeaf.offsetWidth;
-        this._rightLeaf.style.transition = prevTransition;
-        this.flipping=false;
-      },
-      { once: true }
-    );
-  }
+  this._rightFlipInner.addEventListener('transitionend', () => {
+    // 1) reveal the static leaf underneath
+    //this._rightBackLeaf.style.zIndex = 3;
 
-  /**
-   * @description Flip two pages backward (from currentIndex &amp; currentIndex−1 to currentIndex−2 &amp; −3)
-   */
-  flipBackward() {
-    if (this.currentIndex &lt; 2 || this.flipping==true) return; // nothing to flip if we're at page 0 or 1
-    this.flipping = true;
+    // 2) instant-snap the flip leaf back to 0°
+    this._rightFlipInner.classList.add('instant');
+    this._rightFlipInner.style.transform = 'rotateY(0deg)';
+    void this._rightFlipInner.offsetWidth;       // force reflow
+    this._rightFlipInner.classList.remove('instant');
+    this._rightFlipInner.style.transform = '';
 
-    // Preload the back face of the left leaf (which reveals currentIndex−1)
-    const prevBackData = this.pagesData.get(this.currentIndex - 1);
-    this._loadFace(
-      this._leftLeaf.querySelector(".back"),
-      prevBackData,
-      this.currentIndex - 1
-    );
+    // 3) move flip leaf below static
+    this._rightFlipLeaf.style.zIndex = 2;
+    //this._rightBackLeaf .style.zIndex = 2;
 
-    this._leftLeaf.classList.add("flip-back");
-    this._leftLeaf.addEventListener(
-      "transitionend",
-      () => {
-        this._leftLeaf.classList.remove("flip-back");
-        // Move back by two page-numbers
-        this.currentIndex -= 2;
-        const prevTransition = this._leftLeaf.style.transition;
-        this._leftLeaf.style.transition = "none";
-        this._renderFaces();
-        void this._leftLeaf.offsetWidth;
-        this._leftLeaf.style.transition = prevTransition;
-        this.flipping=false;
-      },
-      { once: true }
-    );
-  }
+    // 4) advance the model &amp; re-render everything
+    this.currentIndex += 2;
+    this.flipping = false;
+    this._rightFlipLeaf.classList.remove('flip-forward');
+    this._renderFaces();
+  }, { once: true });
+}
+
+flipBackward() {
+  if (this.currentIndex &lt; 2 || this.flipping) return;
+  this.flipping = true;
+
+  // start the CSS turn on the LEFT flip-leaf
+  this._leftFlipLeaf.style.zIndex = 3;
+  this._leftFlipLeaf.classList.add('flip-back');
+
+  this._leftFlipInner.addEventListener('transitionend', () => {
+    //this._leftBackLeaf .style.zIndex = 3;
+
+    this._leftFlipInner.classList.add('instant');
+    this._leftFlipInner.style.transform = 'rotateY(0deg)';
+    void this._leftFlipInner.offsetWidth;
+    this._leftFlipInner.classList.remove('instant');
+    this._leftFlipInner.style.transform = '';
+
+    this._leftFlipLeaf .style.zIndex = 2;
+    //this._leftBackLeaf .style.zIndex = 2;
+
+    this.currentIndex -= 2;
+    this.flipping = false;
+    this._leftFlipLeaf.classList.remove('flip-back');
+    this._renderFaces();
+  }, { once: true });
+}
+
 
   /**
    * @description Displays a modal with a larger view of the clicked card and offers a remove from binder option.
@@ -569,13 +661,13 @@ customElements.define("pokemon-binder", PokemonBinder);
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-PokemonBinder.html">PokemonBinder</a></li></ul><h3>Classes</h3><ul><li><a href="PokemonCollection.html">PokemonCollection</a></li></ul><h3>Global</h3><ul><li><a href="global.html#COLLECTION_KEY">COLLECTION_KEY</a></li><li><a href="global.html#getAllSets">getAllSets</a></li><li><a href="global.html#getCardById">getCardById</a></li><li><a href="global.html#getCardsByName">getCardsByName</a></li><li><a href="global.html#getCardsByNameAndNumber">getCardsByNameAndNumber</a></li><li><a href="global.html#getCardsByPage">getCardsByPage</a></li><li><a href="global.html#getCardsBySet">getCardsBySet</a></li><li><a href="global.html#showAddCardModal">showAddCardModal</a></li><li><a href="global.html#showAssignCardModal">showAssignCardModal</a></li><li><a href="global.html#showBinder">showBinder</a></li><li><a href="global.html#showCollection">showCollection</a></li><li><a href="global.html#showOfflineAddCardModal">showOfflineAddCardModal</a></li><li><a href="global.html#turnPageLeft">turnPageLeft</a></li><li><a href="global.html#turnPageRight">turnPageRight</a></li><li><a href="global.html#updateBinder">updateBinder</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-PokemonBinder.html">PokemonBinder</a></li></ul><h3>Classes</h3><ul><li><a href="PokemonCollection.html">PokemonCollection</a></li></ul><h3>Global</h3><ul><li><a href="global.html#COLLECTION_KEY">COLLECTION_KEY</a></li><li><a href="global.html#getAllSets">getAllSets</a></li><li><a href="global.html#getCardById">getCardById</a></li><li><a href="global.html#getCardsByName">getCardsByName</a></li><li><a href="global.html#getCardsByNameAndNumber">getCardsByNameAndNumber</a></li><li><a href="global.html#getCardsByPage">getCardsByPage</a></li><li><a href="global.html#getCardsBySet">getCardsBySet</a></li><li><a href="global.html#handleAddCard">handleAddCard</a></li><li><a href="global.html#initializeFilters">initializeFilters</a></li><li><a href="global.html#showAddCardModal">showAddCardModal</a></li><li><a href="global.html#showAssignCardModal">showAssignCardModal</a></li><li><a href="global.html#showBinder">showBinder</a></li><li><a href="global.html#showCollection">showCollection</a></li><li><a href="global.html#showOfflineAddCardModal">showOfflineAddCardModal</a></li><li><a href="global.html#turnPageLeft">turnPageLeft</a></li><li><a href="global.html#turnPageRight">turnPageRight</a></li><li><a href="global.html#updateBinder">updateBinder</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Sat Jun 07 2025 21:47:58 GMT+0000 (Coordinated Universal Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Sun Jun 08 2025 20:46:59 GMT+0000 (Coordinated Universal Time)
 </footer>
 
 <script> prettyPrint(); </script>
