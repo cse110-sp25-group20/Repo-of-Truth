@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<<<<<<< HEAD
-<coverage generated="1749357805540" clover="3.2.0">
-  <project timestamp="1749357805540" name="All files">
-=======
-<coverage generated="1749361199150" clover="3.2.0">
-  <project timestamp="1749361199150" name="All files">
->>>>>>> f982cb4 (added e2e testing)
+<coverage generated="1749363652317" clover="3.2.0">
+  <project timestamp="1749363652317" name="All files">
     <metrics statements="0" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0" elements="0" coveredelements="0" complexity="0" loc="0" ncloc="0" packages="0" files="0" classes="0"/>
   </project>
 </coverage>
