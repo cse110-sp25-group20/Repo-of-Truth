@@ -10,7 +10,7 @@
   "scripts": {
     "docs": "jsdoc -c jsdoc.json",
     "test:unit": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --testMatch '**.unit.test.js' --coverage --coverageThreshold='{\"global\": {\"branches\": 60, \"functions\": 60, \"lines\": 60, \"statements\": 60}}' --",
-    "test:e2e": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --testMatch '**.e2e.test.js' --preset=jest-puppeteer --testEnvironment=jest-environment-puppeteer -- --detectOpenHandles --forceExit"
+    "test:e2e": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --testMatch '**.e2e.test.js' --"
   },
   "repository": {
     "type": "git",
@@ -39,6 +39,13 @@
   "jest": {
     "rootDir": "tests",
     "testEnvironment": "jest-environment-jsdom",
-    "collectCoverage": true
+    "collectCoverage": true,
+    "transform": {},
+    "globals": {
+      "puppeteerOptions": {
+        "headless": false,
+        "args": ["--no-sandbox"]
+      }
+    }
   }
 }
