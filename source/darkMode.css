@@ -23,11 +23,8 @@ body.dark-mode h1::after {
   background: url('assets/images/Great-ball.webp') no-repeat center/contain;
   display: inline-flex;
   align-self: center;
-  height: 47px;
-  width: 47px;
   margin: 0 8px;
   position: relative;
-  top: -2px;
 }
 
 body.dark-mode .navbar {
