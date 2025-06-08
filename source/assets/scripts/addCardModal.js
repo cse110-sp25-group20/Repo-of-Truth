@@ -36,7 +36,7 @@ export function showAddCardModal() {
       <article class="modal-info" style="flex: 1;">
         <h2 class="modal-name">Add a Pokémon Card</h2>
         <input id="cardSearchInputName" type="text" placeholder="Enter Pokémon name" />
-        <input id="cardSearchInputNum" type="text" placeholder="Enter card index within set (name required)" />
+        <input id="cardSearchInputNum" type="text" placeholder="Enter the card number within its set (found on the card, usually at the bottom, e.g., 17/102)" />
         <button id="cardSearchSubmit">Search</button>
         <div id="cardSearchResult" style="margin-top: 16px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 50px; max-height: 40vh; overflow-y: auto;"></div>
         <button id="confirmAddCardBtn" style="display: none; margin-top: 10px;">Add to Collection</button>
