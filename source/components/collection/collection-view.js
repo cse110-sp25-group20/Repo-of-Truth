@@ -76,6 +76,7 @@ class PokemonCollection extends HTMLElement {
           min-height: 200px;
           margin: 0;
           transition: box-shadow 0.2s, border-color 0.2s;
+          cursor: pointer;
         }
         .collection-card img {
           width: 100px;
@@ -177,7 +178,7 @@ class PokemonCollection extends HTMLElement {
       cardDiv.appendChild(nameEl);
       container.appendChild(cardDiv);
 
-      img.addEventListener('click', () => {
+      cardDiv.addEventListener('click', () => {
         this.showCardModal(card.imgUrl);
       })
     });
