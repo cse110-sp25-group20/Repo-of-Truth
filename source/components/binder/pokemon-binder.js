@@ -1,10 +1,11 @@
 /**
  * @file pokemon-binder.js
- * @description Custom web component for displaying and managing a Pokemon card binder, including a page-turning feature.
- * @module PokemonBinder
+ * @description Custom Web Component for displaying and managing a Pokémon card binder with a page-turning feature and modal interactions.
+ * @class PokemonBinder
  */
 
 import { showAssignCardModal } from "../../assets/scripts/assign-card-modal.js";
+import { formatMarketPrice } from '../../assets/scripts/priceHelper.js';
 
 const template = document.createElement("template");
 template.innerHTML = `
@@ -25,59 +26,31 @@ template.innerHTML = `
       position: relative;
     }
     /* Container for each side’s backing + flipping leaves */
-.leaf-container {
-  flex: 1;
-  position: relative;
-}
-
-/* Both leaves sit exactly on top of each other */
-.leaf-back,
-.leaf-flip {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
-
-/* Backing leaf is underneath */
-.leaf-back {
-  z-index: 1;
-}
-/* Hide any back‐page on the static leaf */
-.leaf-back .page.back {
-  display: none;
-}
-
-/* Flipping leaf sits above */
-.leaf-flip {
-  z-index: 2;
-}
-
-/* Only the flipping leaf’s inner container actually animates */
-.leaf-flip .leaf-inner {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  transform-style: preserve-3d;
-  transition: transform 0.3s ease;
-}
-
-/* Correct pivot for left vs. right sides */
-.left-leaf .leaf-flip .leaf-inner {
-  transform-origin: right center;
-}
-.right-leaf .leaf-flip .leaf-inner {
-  transform-origin: left center;
-}
-
-/* Trigger the 180° turn */
-.leaf-flip.flip-forward .leaf-inner {
-  transform: rotateY(-180deg);
-}
-.leaf-flip.flip-back    .leaf-inner {
-  transform: rotateY( 180deg);
-}
+    .leaf-container {
+      flex: 1;
+      position: relative;
+    }
+    .leaf-back, .leaf-flip {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+    .leaf-back { z-index: 1; }
+    .leaf-back .page.back { display: none; }
+    .leaf-flip { z-index: 2; }
+    .leaf-flip .leaf-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+      transition: transform 0.3s ease;
+    }
+    .left-leaf .leaf-flip .leaf-inner { transform-origin: right center; }
+    .right-leaf .leaf-flip .leaf-inner { transform-origin: left center; }
+    .leaf-flip.flip-forward .leaf-inner { transform: rotateY(-180deg); }
+    .leaf-flip.flip-back    .leaf-inner { transform: rotateY( 180deg); }
     .page {
       position: absolute;
       top: 0;
@@ -91,26 +64,17 @@ template.innerHTML = `
       padding: 10px;
       background: #fff;
     }
-
     :host-context(body.dark-mode) .page {
       background: #2a2a2a;
       color: #fff;
     }
-    .page.back {
-      transform: rotateY(180deg);
-    }
-    .page.back .page-number {
-      visibility: hidden;
-    }
+    .page.back { transform: rotateY(180deg); }
+    .page.back .page-number { visibility: hidden; }
     .leaf.flip-forward .page.back .page-number,
-    .leaf.flip-back .page.back .page-number {
-      visibility: visible;
-    }
-      .leaf-inner.instant {
-  transition: none !important;
-}
+    .leaf.flip-back .page.back .page-number { visibility: visible; }
+    .leaf-inner.instant { transition: none !important; }
     .page-number {
-      font-family: 'Luckiest Guy', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+      font-family: 'Luckiest Guy','Segoe UI',Tahoma,Verdana,sans-serif !important;
       font-weight: bold;
       color: #2a75bb;
       font-size: 18px !important;
@@ -135,15 +99,13 @@ template.innerHTML = `
       display: flex;
       align-items: center;
       justify-content: center;
-      aspect-ratio: 1 / 1.4;
+      aspect-ratio: 1/1.4;
       transition: background 0.3s, border-color 0.3s;
     }
-
     :host-context(body.dark-mode) .card-slot {
       background: #3a3a3a;
       border: 1px dashed #666;
     }
-
     :host-context(body.dark-mode) .card-slot:hover {
       border-color: #4180bb !important;
       box-shadow: 0 4px 16px #4180bb66;
@@ -164,7 +126,7 @@ template.innerHTML = `
       background: linear-gradient(to bottom right, #fff, #f9f9f9);
       border: 2px solid #2a75bb;
       border-radius: 12px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
       padding: 8px;
       box-sizing: border-box;
       display: flex;
@@ -175,7 +137,7 @@ template.innerHTML = `
     }
     .pokemon-card:hover {
       transform: scale(1.03);
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.15);
       z-index: 5;
     }
     .card-modal {
@@ -184,7 +146,7 @@ template.innerHTML = `
       left: 0;
       width: 100vw;
       height: 100vh;
-      background: rgba(0, 0, 0, 0.8);
+      background: rgba(0,0,0,0.8);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -192,9 +154,7 @@ template.innerHTML = `
       pointer-events: none;
       overflow: auto;
     }
-    .card-modal.hidden {
-      display: none;
-    }
+    .card-modal.hidden { display: none; }
     .modal-content {
       display: flex;
       flex-direction: row;
@@ -220,10 +180,10 @@ template.innerHTML = `
       color: #222;
     }
     .modal-name {
-      font-family: 'Luckiest Guy', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: 'Luckiest Guy','Segoe UI',Tahoma,Verdana,sans-serif;
       color: #ee1515;
       font-size: 2rem;
-      margin: 0 0 8px 0;
+      margin: 0 0 8px;
       text-shadow: 1px 1px 0 #ffcb05, 2px 2px 0 #2a75bb;
     }
     .modal-details {
@@ -239,296 +199,204 @@ template.innerHTML = `
       color: #2a75bb;
       font-weight: bold;
     }
-    @media (max-width: 600px) {
-      .modal-content {
-        flex-direction: column;
-        padding: 12px 4px;
-        gap: 12px;
-        max-width: 98vw;
-        max-height: 98vh;
-      }
-      .modal-image {
-        min-width: 60px;
-        min-height: 60px;
-        padding: 4px;
-      }
-      .modal-card {
-        max-width: 60px;
-        max-height: 60px;
-      }
+    @media (max-width:600px) {
+      .modal-content { flex-direction:column; padding:12px 4px; gap:12px; max-width:98vw; max-height:98vh; }
+      .modal-image { min-width:60px; min-height:60px; padding:4px; }
+      .modal-card { max-width:60px; max-height:60px; }
     }
   </style>
   <div class="binder">
-  <!-- Left side with a static “backing” leaf underneath a flip leaf -->
-  <div class="leaf-container left-leaf">
-    <!-- Static backing leaf (shows the next page after flip) -->
-    <div class="leaf leaf-back">
-      <div class="page front">
-        <div class="page-number"></div>
-        <div class="cards-container"></div>
-      </div>
-    </div>
-    <!-- Animated flip leaf -->
-    <div class="leaf leaf-flip">
-      <div class="leaf-inner">
+    <div class="leaf-container left-leaf">
+      <div class="leaf leaf-back">
         <div class="page front">
           <div class="page-number"></div>
           <div class="cards-container"></div>
         </div>
-        <div class="page back">
-          <div class="page-number"></div>
-          <div class="cards-container"></div>
+      </div>
+      <div class="leaf leaf-flip">
+        <div class="leaf-inner">
+          <div class="page front">
+            <div class="page-number"></div>
+            <div class="cards-container"></div>
+          </div>
+          <div class="page back">
+            <div class="page-number"></div>
+            <div class="cards-container"></div>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-
-  <!-- Right side with its own backing + flip leaves -->
-  <div class="leaf-container right-leaf">
-    <div class="leaf leaf-back">
-      <div class="page front">
-        <div class="page-number"></div>
-        <div class="cards-container"></div>
-      </div>
-    </div>
-    <div class="leaf leaf-flip">
-      <div class="leaf-inner">
+    <div class="leaf-container right-leaf">
+      <div class="leaf leaf-back">
         <div class="page front">
           <div class="page-number"></div>
           <div class="cards-container"></div>
         </div>
-        <div class="page back">
-          <div class="page-number"></div>
-          <div class="cards-container"></div>
+      </div>
+      <div class="leaf leaf-flip">
+        <div class="leaf-inner">
+          <div class="page front">
+            <div class="page-number"></div>
+            <div class="cards-container"></div>
+          </div>
+          <div class="page back">
+            <div class="page-number"></div>
+            <div class="cards-container"></div>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
 `;
 
+/**
+ * @class PokemonBinder
+ * @extends HTMLElement
+ * @description Web Component encapsulating binder DOM, state, and user interactions, including page turning and modals.
+ */
 class PokemonBinder extends HTMLElement {
+  /**
+   * @description Creates shadow DOM, initializes leaf containers, and renders initial faces.
+   */
   constructor() {
-  super();
-  this.attachShadow({ mode: "open" });
-  this.shadowRoot.appendChild(template.content.cloneNode(true));
+    super();
+    this.attachShadow({ mode: "open" });
+    this.shadowRoot.appendChild(template.content.cloneNode(true));
+    this._leftLeafContainer = this.shadowRoot.querySelector('.left-leaf');
+    this._rightLeafContainer = this.shadowRoot.querySelector('.right-leaf');
+    this._leftBackLeaf = this._leftLeafContainer.querySelector('.leaf-back');
+    this._leftFlipLeaf = this._leftLeafContainer.querySelector('.leaf-flip');
+    this._rightBackLeaf = this._rightLeafContainer.querySelector('.leaf-back');
+    this._rightFlipLeaf = this._rightLeafContainer.querySelector('.leaf-flip');
+    this._leftFlipInner = this._leftFlipLeaf.querySelector('.leaf-inner');
+    this._rightFlipInner = this._rightFlipLeaf.querySelector('.leaf-inner');
+    this.pagesData = new Map();
 
-  // --- NEW: get both containers and their two leaves each ---
-  this._leftLeafContainer  = this.shadowRoot.querySelector('.left-leaf');
-  this._rightLeafContainer = this.shadowRoot.querySelector('.right-leaf');
+    this.currentIndex = 1;
 
-  this._leftBackLeaf   = this._leftLeafContainer .querySelector('.leaf-back');
-  this._leftFlipLeaf   = this._leftLeafContainer .querySelector('.leaf-flip');
-  this._rightBackLeaf  = this._rightLeafContainer.querySelector('.leaf-back');
-  this._rightFlipLeaf  = this._rightLeafContainer.querySelector('.leaf-flip');
+    this.flipping = false;
 
-  this._leftFlipInner  = this._leftFlipLeaf .querySelector('.leaf-inner');
-  this._rightFlipInner = this._rightFlipLeaf.querySelector('.leaf-inner');
-
-  // your existing state
-  this.pagesData    = new Map();
-  this.currentIndex = 1;
-  this.flipping     = false;
-
-  this._renderFaces();
-}
+    this._renderFaces();
+  }
 
   /**
-   * @description Takes a flat collection of { name, imgUrl, page, slot } objects,
-   *              builds a Map keyed by pageNumber → array of 9 img URLs,
-   *              then re-renders the binder.
-   * @param {Array<{ name: string, imgUrl: string, page: number|string, slot: number|string }>} collection
+   * @description Takes a flat collection of card objects and constructs pages data.
+   * @param {Array<{ name: string, imgUrl: string, page: number|string, slot: number|string }>} collection Flat array of card info
+   * @returns {void}
    */
   setPages(collection) {
     if (!Array.isArray(collection)) return;
-
-    // 1) Build a Map<pageNumber, Array(9)>
     const pagesMap = new Map();
-
     for (const card of collection) {
       const page = parseInt(card.page, 10);
       const slot = parseInt(card.slot, 10);
-
-      // Skip invalid page/slot/img
-      if (
-        !Number.isInteger(page) ||
-        page < 1 ||
-        !Number.isInteger(slot) ||
-        slot < 0 ||
-        slot > 8 ||
-        !card.imgUrl
-      ) {
-        continue;
-      }
-
-      if (!pagesMap.has(page)) {
-        pagesMap.set(page, Array(9).fill(undefined));
-      }
+      if (!Number.isInteger(page) || page < 1 || !Number.isInteger(slot) || slot < 0 || slot > 8 || !card.imgUrl) continue;
+      if (!pagesMap.has(page)) pagesMap.set(page, Array(9).fill(undefined));
       pagesMap.get(page)[slot] = card.imgUrl;
     }
-
-    // 2) Swap in our new Map
     this.pagesData = pagesMap;
-
-    // 3) Set currentIndex to the smallest pageNumber, or 1 if none
-    if (this.currentIndex<1) {
-      this.currentIndex = 1;
-    }
-
-    // 4) Re-render
+    if (this.currentIndex < 1) this.currentIndex = 1;
     this._renderFaces();
   }
 
   /**
-   * @description Renders the four visible "faces" of the binder (two pages on each leaf).
-   *              Uses page numbers relative to this.currentIndex.
+   * @private
+   * @description Updates the four visible pages on the binder leaves according to currentIndex.
+   * @returns {void}
    */
   _renderFaces() {
-  // … your existing code to compute:
-  const leftFrontData  = this.pagesData.get(this.currentIndex);
-  const leftBackData   = this.pagesData.get(this.currentIndex - 1);
-  const rightFrontData = this.pagesData.get(this.currentIndex + 1);
-  const rightBackData  = this.pagesData.get(this.currentIndex + 2);
+    const leftFrontData = this.pagesData.get(this.currentIndex);
+    const leftBackData = this.pagesData.get(this.currentIndex - 1);
+    const rightFrontData = this.pagesData.get(this.currentIndex + 1);
+    const rightBackData = this.pagesData.get(this.currentIndex + 2);
 
-  // —— STATIC BACKING LEAFS ——  
-  // LEFT side: show the *page before* the flip-back for a backward turn
-  this._loadFace(
-    this._leftBackLeaf.querySelector('.page.front'),
-    this.pagesData.get(this.currentIndex - 2),
-    this.currentIndex - 2
-  );
-  this._loadFace(
-    this._rightBackLeaf.querySelector('.page.front'),
-    this.pagesData.get(this.currentIndex + 3),
-    this.currentIndex + 3
-  );
+    this._loadFace(this._leftBackLeaf.querySelector('.page.front'), this.pagesData.get(this.currentIndex - 2), this.currentIndex - 2);
+    this._loadFace(this._rightBackLeaf.querySelector('.page.front'), this.pagesData.get(this.currentIndex + 3), this.currentIndex + 3);
 
-  // —— FLIPPING LEAFS ——  
-  // (unchanged)
-  this._loadFace(
-    this._leftFlipLeaf.querySelector('.page.front'),
-    leftFrontData,
-    this.currentIndex
-  );
-  this._loadFace(
-    this._leftFlipLeaf.querySelector('.page.back'),
-    leftBackData,
-    this.currentIndex - 1
-  );
-  this._loadFace(
-    this._rightFlipLeaf.querySelector('.page.front'),
-    rightFrontData,
-    this.currentIndex + 1
-  );
-  this._loadFace(
-    this._rightFlipLeaf.querySelector('.page.back'),
-    rightBackData,
-    this.currentIndex + 2
-  );
-}
-
-
-
-  /**
-   * @description Given a face element and its array of up to 9 img URLs, plus a pageNumber,
-   *              populate the 3×3 grid.  If pageNumber ≤ 0, the label is blank.
-   * @param {HTMLElement} faceEl
-   * @param {Array<string>|undefined} cardUrls
-   * @param {number} pageNumber
-   */
-_loadFace(faceEl, cardUrls, pageNumber) {
-  const pageLabel = faceEl.querySelector(".page-number");
-  pageLabel.textContent = pageNumber > 0 ? `Page ${pageNumber}` : "";
-
-  const container = faceEl.querySelector(".cards-container");
-  container.innerHTML = "";
-
-  const urls = Array.isArray(cardUrls) ? cardUrls : [];
-
-  for (let i = 0; i < 9; i++) {
-    const slot = document.createElement("div");
-    slot.className = "card-slot";
-
-    if (urls[i]) {
-      const img = document.createElement("img");
-      img.src = urls[i];
-      img.alt = "Pokemon card";
-      img.onerror = () => {
-        img.onerror = null; // prevent infinite loop if fallback also missing
-        img.src = 'assets/images/card-back.png';
-      };
-      img.addEventListener("click", () => this.showModal(img.src));
-      slot.appendChild(img);
-    } else {
-      // Empty slot: open the assign-card modal
-      slot.addEventListener("click", () => showAssignCardModal(pageNumber, i));
-    }
-
-    container.appendChild(slot);
+    this._loadFace(this._leftFlipLeaf.querySelector('.page.front'), leftFrontData, this.currentIndex);
+    this._loadFace(this._leftFlipLeaf.querySelector('.page.back'), leftBackData, this.currentIndex - 1);
+    this._loadFace(this._rightFlipLeaf.querySelector('.page.front'), rightFrontData, this.currentIndex + 1);
+    this._loadFace(this._rightFlipLeaf.querySelector('.page.back'), rightBackData, this.currentIndex + 2);
   }
-}
-
 
   /**
-   * @description Flip two pages forward (from currentIndex & currentIndex+1 to currentIndex+2 & +3)
+   * @private
+   * @description Populates a face element with card images and page label.
+   * @param {HTMLElement} faceEl DOM element for the page face
+   * @param {Array<string>|undefined} cardUrls Array of up to 9 image URLs
+   * @param {number} pageNumber Page index for labeling
+   * @returns {void}
+   */
+  _loadFace(faceEl, cardUrls, pageNumber) {
+    const pageLabel = faceEl.querySelector(".page-number");
+    pageLabel.textContent = pageNumber > 0 ? `Page ${pageNumber}` : "";
+    const container = faceEl.querySelector(".cards-container");
+    container.innerHTML = "";
+    const urls = Array.isArray(cardUrls) ? cardUrls : [];
+    for (let i = 0; i < 9; i++) {
+      const slot = document.createElement("div");
+      slot.className = "card-slot";
+      if (urls[i]) {
+        const img = document.createElement("img");
+        img.src = urls[i];
+        img.alt = "Pokémon card";
+        img.onerror = () => { img.onerror = null; img.src = 'assets/images/card-back.png'; };
+        img.addEventListener("click", () => this.showModal(img.src));
+        slot.appendChild(img);
+      } else {
+        slot.addEventListener("click", () => showAssignCardModal(pageNumber, i));
+      }
+      container.appendChild(slot);
+    }
+  }
+
+  /**
+   * @description Performs a forward page-flip animation and updates binder state.
+   * @returns {void}
    */
   flipForward() {
-  if (this.flipping) return;
-  this.flipping = true;
+    if (this.flipping) return;
+    this.flipping = true;
+    this._rightFlipLeaf.style.zIndex = 3;
+    this._rightFlipLeaf.classList.add('flip-forward');
 
-  // start the CSS turn on the RIGHT flip-leaf
-  this._rightFlipLeaf.style.zIndex = 3;
-  this._rightFlipLeaf.classList.add('flip-forward');
+    this._rightFlipInner.addEventListener('transitionend', () => {
+      this._rightFlipInner.classList.add('instant');
+      this._rightFlipInner.style.transform = 'rotateY(0deg)';
+      void this._rightFlipInner.offsetWidth;
+      this._rightFlipInner.classList.remove('instant');
+      this._rightFlipInner.style.transform = '';
+      this._rightFlipLeaf.style.zIndex = 2;
+      this.currentIndex += 2;
+      this.flipping = false;
+      this._rightFlipLeaf.classList.remove('flip-forward');
+      this._renderFaces();
+    }, { once: true });
+  }
 
-  this._rightFlipInner.addEventListener('transitionend', () => {
-    // 1) reveal the static leaf underneath
-    //this._rightBackLeaf.style.zIndex = 3;
+  /**
+   * @description Performs a backward page-flip animation and updates binder state.
+   * @returns {void}
+   */
+  flipBackward() {
+    if (this.currentIndex < 2 || this.flipping) return;
+    this.flipping = true;
+    this._leftFlipLeaf.style.zIndex = 3;
+    this._leftFlipLeaf.classList.add('flip-back');
 
-    // 2) instant-snap the flip leaf back to 0°
-    this._rightFlipInner.classList.add('instant');
-    this._rightFlipInner.style.transform = 'rotateY(0deg)';
-    void this._rightFlipInner.offsetWidth;       // force reflow
-    this._rightFlipInner.classList.remove('instant');
-    this._rightFlipInner.style.transform = '';
-
-    // 3) move flip leaf below static
-    this._rightFlipLeaf.style.zIndex = 2;
-    //this._rightBackLeaf .style.zIndex = 2;
-
-    // 4) advance the model & re-render everything
-    this.currentIndex += 2;
-    this.flipping = false;
-    this._rightFlipLeaf.classList.remove('flip-forward');
-    this._renderFaces();
-  }, { once: true });
-}
-
-flipBackward() {
-  if (this.currentIndex < 2 || this.flipping) return;
-  this.flipping = true;
-
-  // start the CSS turn on the LEFT flip-leaf
-  this._leftFlipLeaf.style.zIndex = 3;
-  this._leftFlipLeaf.classList.add('flip-back');
-
-  this._leftFlipInner.addEventListener('transitionend', () => {
-    //this._leftBackLeaf .style.zIndex = 3;
-
-    this._leftFlipInner.classList.add('instant');
-    this._leftFlipInner.style.transform = 'rotateY(0deg)';
-    void this._leftFlipInner.offsetWidth;
-    this._leftFlipInner.classList.remove('instant');
-    this._leftFlipInner.style.transform = '';
-
-    this._leftFlipLeaf .style.zIndex = 2;
-    //this._leftBackLeaf .style.zIndex = 2;
-
-    this.currentIndex -= 2;
-    this.flipping = false;
-    this._leftFlipLeaf.classList.remove('flip-back');
-    this._renderFaces();
-  }, { once: true });
-}
+    this._leftFlipInner.addEventListener('transitionend', () => {
+      this._leftFlipInner.classList.add('instant');
+      this._leftFlipInner.style.transform = 'rotateY(0deg)';
+      void this._leftFlipInner.offsetWidth;
+      this._leftFlipInner.classList.remove('instant');
+      this._leftFlipInner.style.transform = '';
+      this._leftFlipLeaf.style.zIndex = 2;
+      this.currentIndex -= 2;
+      this.flipping = false;
+      this._leftFlipLeaf.classList.remove('flip-back');
+      this._renderFaces();
+    }, { once: true });
+  }
 
 
   /**
@@ -553,11 +421,12 @@ flipBackward() {
     } catch (err) {
       console.error("Failed to load full card info:", err);
     }
-    const name = fullCard?.name || "Unknown";
-    const type = fullCard?.types?.[0] || "Unknown";
-    const hp = fullCard?.hp || "--";
-    const rarity = fullCard?.rarity || "Unknown";
-    const set = fullCard?.set?.name || "--";
+    const name = fullCard?.name || 'Unknown';
+    const price = formatMarketPrice(fullCard);
+    const rarity = fullCard?.rarity || 'Unknown';
+    const set = fullCard?.set?.name || '--';
+    const number = fullCard?.number || '-';
+    const setSize = fullCard?.set?.printedTotal || '-';
     const modal = document.createElement("div");
     modal.className = "card-modal";
     modal.id = "global-pokemon-modal";
@@ -569,10 +438,10 @@ flipBackward() {
         <article class="modal-info">
           <h2 class="modal-name">${name}</h2>
           <ul class="modal-details">
-            <li class="modal-type">Type: ${type}</li>
-            <li class="modal-hp">HP: ${hp}</li>
-            <li class="modal-rarity">Rarity: ${rarity}</li>
             <li class="modal-set">Set: ${set}</li>
+            <li class="modal-type">Number: ${number}/${setSize}</li>
+            <li class="modal-rarity">Rarity: ${rarity}</li>
+            <li class="modal-hp">Price: ${price}</li>
           </ul>
           <button id="removeBinderBtn" style="margin-top: 12px; padding: 8px 12px; background: red; color: white; border: none; border-radius: 5px; font-weight: bold; cursor: pointer;"> Remove from Binder
           </button>

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: assets/scripts/pokemon-filter.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: assets/scripts/pokemon-filter.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>// pokemon-filter.js
+
+/**
+ * Initializes the Pokémon filter panel.
+ * 
+ * - Waits for essential DOM elements to load.
+ * - Adds a styled filter dropdown with sort options.
+ * - Dispatches a 'sortCards' custom event with the selected sorting method.
+ * 
+ * This function should be called once after the DOM is fully loaded.
+ * @returns {void}
+ */
+export function initializeFilters() {
+    // Wait until the header and binder component are available in DOM
+    const checkElements = setInterval(() => {
+        const header = document.querySelector('header');
+        const pokemonBinder = document.querySelector('pokemon-binder');
+        
+        if (header &amp;&amp; pokemonBinder) {
+            clearInterval(checkElements);
+            createFilterPanel();
+        }
+    }, 100);
+
+    /**
+     * Creates and renders the filter panel on the page.
+     * Includes a select dropdown and apply button for sorting cards.
+     * @returns {void}
+     */
+    function createFilterPanel() {
+        // Remove existing filter if one already exists
+        const existingFilter = document.querySelector('.filter-wrapper');
+        if (existingFilter) existingFilter.remove();
+
+        // Create the outer wrapper
+        const filterWrapper = document.createElement('div');
+        filterWrapper.className = 'filter-wrapper';
+
+        // Set the inner HTML content
+        filterWrapper.innerHTML = `
+            &lt;div class="filter-container">
+                &lt;h3 class="filter-title">SORT CARDS&lt;/h3>
+                &lt;div class="filter-controls">
+                    &lt;select id="sort-options" class="filter-select">
+                        &lt;option value="set">By Set&lt;/option>
+                        &lt;option value="name">By Name&lt;/option>
+                        &lt;option value="binder">By Binder&lt;/option>
+                        &lt;option value="date">By Date&lt;/option>
+                        &lt;option value="value">By Value&lt;/option>
+                        &lt;option value="hp">By HP&lt;/option>
+                    &lt;/select>
+                    &lt;button class="filter-btn">Apply&lt;/button>
+                &lt;/div>
+            &lt;/div>
+        `;
+
+        // Add the panel to the page
+        document.body.appendChild(filterWrapper);
+
+        // Position the panel correctly under the header
+        positionFilterPanel();
+
+        // Adjust panel position on window resize
+        window.addEventListener('resize', positionFilterPanel);
+
+        // Emit a custom event when Apply is clicked
+        document.querySelector('.filter-btn').addEventListener('click', () => {
+            const sortMethod = document.getElementById('sort-options').value;
+            document.dispatchEvent(new CustomEvent('sortCards', {
+                detail: { sortMethod }
+            }));
+        });
+    }
+
+    /**
+     * Positions the filter panel relative to the header.
+     * Ensures consistent spacing and visibility on screen.
+     * @returns {void}
+     */
+    function positionFilterPanel() {
+        const header = document.querySelector('header');
+        const filterWrapper = document.querySelector('.filter-wrapper');
+        
+        if (!header || !filterWrapper) return;
+
+        const headerRect = header.getBoundingClientRect();
+        
+        filterWrapper.style.cssText = `
+            position: fixed;
+            top: ${headerRect.bottom + 15}px;
+            left: 20px;
+            width: 180px;
+            z-index: 1000;
+        `;
+    }
+
+    /**
+     * Appends custom styles for the filter panel directly to the document head.
+     * Ensures cohesive styling with a clean and modern design.
+     * @returns {void}
+     */
+    const style = document.createElement('style');
+    style.textContent = `
+        .filter-wrapper {
+            transition: top 0.3s ease;
+        }
+        .filter-container {
+            background: #fff;
+            border: 2px solid #e91e63;
+            border-radius: 8px;
+            padding: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .filter-title {
+            color: #e91e63;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+            text-align: center;
+        }
+        .filter-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .filter-select {
+            padding: 5px 8px;
+            font-size: 0.85rem;
+            border: 1.5px solid #e91e63;
+            border-radius: 5px;
+            background-color: white;
+            color: #333;
+            cursor: pointer;
+        }
+        .filter-select:focus {
+            outline: none;
+            border-color: #c2185b;
+        }
+        .filter-btn {
+            padding: 5px 10px;
+            font-size: 0.8rem;
+            background-color: #e91e63;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .filter-btn:hover {
+            background-color: #d81b60;
+        }
+    `;
+    document.head.appendChild(style);
+}
+
+/**
+ * Automatically initializes filters when the DOM is fully loaded.
+ */
+document.addEventListener('DOMContentLoaded', () => {
+    initializeFilters();
+});
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="PokemonBinder.html">PokemonBinder</a></li><li><a href="PokemonCollection.html">PokemonCollection</a></li></ul><h3>Global</h3><ul><li><a href="global.html#COLLECTION_KEY">COLLECTION_KEY</a></li><li><a href="global.html#formatMarketPrice">formatMarketPrice</a></li><li><a href="global.html#getAllSets">getAllSets</a></li><li><a href="global.html#getCardById">getCardById</a></li><li><a href="global.html#getCardsByName">getCardsByName</a></li><li><a href="global.html#getCardsByNameAndNumber">getCardsByNameAndNumber</a></li><li><a href="global.html#getCardsByPage">getCardsByPage</a></li><li><a href="global.html#getCardsBySet">getCardsBySet</a></li><li><a href="global.html#handleAddCard">handleAddCard</a></li><li><a href="global.html#initializeFilters">initializeFilters</a></li><li><a href="global.html#showAddCardModal">showAddCardModal</a></li><li><a href="global.html#showAssignCardModal">showAssignCardModal</a></li><li><a href="global.html#showBinder">showBinder</a></li><li><a href="global.html#showCollection">showCollection</a></li><li><a href="global.html#showOfflineAddCardModal">showOfflineAddCardModal</a></li><li><a href="global.html#turnPageLeft">turnPageLeft</a></li><li><a href="global.html#turnPageRight">turnPageRight</a></li><li><a href="global.html#updateBinder">updateBinder</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Sun Jun 08 2025 23:11:32 GMT+0000 (Coordinated Universal Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

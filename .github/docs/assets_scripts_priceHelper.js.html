@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: assets/scripts/binder-controller.js</title>
+    <title>JSDoc: Source: assets/scripts/priceHelper.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: assets/scripts/binder-controller.js</h1>
+    <h1 class="page-title">Source: assets/scripts/priceHelper.js</h1>
 
     
 
@@ -26,79 +26,42 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>// binder-controller.js
-
-import "../../components/binder/pokemon-binder.js";
-
-/**
- * Reads the flat collection array from localStorage (key: "pokemonCollection"),
- * parses it, and hands it to &lt;pokemon-binder> to re-render.
+            <pre class="prettyprint source linenums"><code>/**
+ * Given a Poké TCG API card object, computes and formats the market‐price range
+ * across all available pricing variants, or returns a fallback if none exist.
  *
- * If the stored data is not a valid array or fails to parse,
- * it defaults to an empty array.
+ * @param {Object} fullCard
+ *   The full card data as returned by the Poké TCG API.
+ * @param {Object} [fullCard.tcgplayer]
+ *   Optional TCGPlayer block containing pricing information.
+ * @param {Object.&lt;string, {market:number}>} [fullCard.tcgplayer.prices]
+ *   An object whose keys are variant names (e.g. "normal", "reverseHolofoil")
+ *   and whose values contain a `market` number.
+ * @returns {string}
+ *   A formatted price string:
+ *     - `"$X.XX"` if all variants share the same market price,  
+ *     - `"$X.XX – $Y.YY"` if there’s a range,  
+ *     - `"Price unavailable"` if no data is present.
  */
-function updateBinder() {
-  const raw = localStorage.getItem("pokemonCollection");
-  let collection = [];
-  try {
-    const parsed = JSON.parse(raw);
-    if (Array.isArray(parsed)) {
-      collection = parsed;
-    }
-  } catch {
-    collection = [];
+export function formatMarketPrice(fullCard) {
+  const prices = fullCard?.tcgplayer?.prices;
+  if (!prices) return 'Price unavailable';
+
+  const markets = Object.values(prices)
+    .map(p => p.market)
+    .filter(p => typeof p === 'number');
+
+  if (markets.length === 0) {
+    return 'Price unavailable';
   }
 
-  const binder = document.querySelector("pokemon-binder");
-  if (binder) {
-    binder.setPages(collection);
-  }
-}
+  const min = Math.min(...markets);
+  const max = Math.max(...markets);
 
-/**
- * Instructs the &lt;pokemon-binder> component to flip forward by two pages.
- * Typically used for navigating to the next set of card pages.
- */
-function turnPageRight() {
-  const binder = document.querySelector("pokemon-binder");
-  if (binder) {
-    binder.flipForward();
-  }
-}
-
-/**
- * Instructs the &lt;pokemon-binder> component to flip backward by two pages.
- * Typically used for navigating to the previous set of card pages.
- */
-function turnPageLeft() {
-  const binder = document.querySelector("pokemon-binder");
-  if (binder) {
-    binder.flipBackward();
-  }
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-  updateBinder();
-
-  document
-    .getElementById("turnPageRight")
-    ?.addEventListener("click", turnPageRight);
-
-  document
-    .getElementById("turnPageLeft")
-    ?.addEventListener("click", turnPageLeft);
-});
-
-/**
- * Handles the action after a card has been added to the collection.
- * This re-renders the binder view with the updated card data.
- *
- * @param {string} imgURL - The image URL of the card that was added. (Not currently used.)
- */
-export function handleAddCard(imgURL) {
-  updateBinder();
-}
-</code></pre>
+  return min === max
+    ? `$${min.toFixed(2)}`
+    : `$${min.toFixed(2)} – $${max.toFixed(2)}`;
+}</code></pre>
         </article>
     </section>
 

@@ -11,6 +11,11 @@
 /* =========================
    BODY & BACKGROUND
    ========================= */
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
 body {
     align-items: center;
     background: linear-gradient(135deg, #c3dcf3 20%, #4180bb 80%);
@@ -43,7 +48,7 @@ header {
     align-items: center;
     display: flex;
     flex-direction: column;
-    margin-bottom: 28px;
+    margin-bottom: 8px;
     width: 100%;
 }
 
@@ -78,7 +83,7 @@ nav {
 }
 
 .navbar {
-    background: rgba(247, 202, 25, 0.85);
+    background: #ffcb05;
     border: 2px solid #3B4CCA;
     border-radius: 32px;
     box-shadow: 0 2px 12px #2a75bb33;
@@ -171,12 +176,15 @@ button:active {
     transform: translateY(0) scale(1);
 }
 #addCard {
+    max-width: 240px;
+    width: auto;
+    padding: 14px 32px;
     background: #ffcb05;
-    color: #2a75bb;
+    color: #3B4CCA;
 }
 #addCard:hover {
     background: #ffcb05;
-    color: #2a75bb;
+    color: #3B4CCA;
 }
 .controls {
     display: flex;
@@ -268,7 +276,7 @@ button:active {
 }
 .modal-content {
   display: flex;
-  align-items: center;
+  flex-direction: row;
   background: #fff;
   border: 4px solid #2a75bb;
   border-radius: 20px;
@@ -280,7 +288,7 @@ button:active {
   align-items: center;
   justify-content: space-between;
   gap: 24px;
-  margin: auto;
+  overflow: hidden;
 }
 .modal-image {
   flex: 0 1 320px;
@@ -298,9 +306,8 @@ button:active {
 }
 
 .modal-card {
-  width: 100%;
-  height: auto;
-  object-fit: contain;
+  max-width: 260px;
+  max-height: 340px;
   border-radius: 16px;
   box-shadow: 0 4px 12px #2a75bb33;
   background: #fff;
