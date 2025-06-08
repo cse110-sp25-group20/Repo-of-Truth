@@ -152,7 +152,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="components_collection_collection-view.js.html">components/collection/collection-view.js</a>, <a href="components_collection_collection-view.js.html#line1">line 1</a>
+        <a href="components_collection_collection-view.js.html">components/collection/collection-view.js</a>, <a href="components_collection_collection-view.js.html#line3">line 3</a>
     </li></ul></dd>
     
 
@@ -173,6 +173,292 @@
 
     
         <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="formatMarketPrice"><span class="type-signature"></span>formatMarketPrice<span class="signature">(fullCard)</span><span class="type-signature"> &rarr; {string}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Given a Poké TCG API card object, computes and formats the market‐price range
+across all available pricing variants, or returns a fallback if none exist.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>fullCard</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The full card data as returned by the Poké TCG API.
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>tcgplayer</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Optional TCGPlayer block containing pricing information.
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>prices</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object.&lt;string, {market:number}></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">An object whose keys are variant names (e.g. "normal", "reverseHolofoil")
+  and whose values contain a `market` number.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="assets_scripts_priceHelper.js.html">assets/scripts/priceHelper.js</a>, <a href="assets_scripts_priceHelper.js.html#line18">line 18</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    A formatted price string:
+    - `"$X.XX"` if all variants share the same market price,  
+    - `"$X.XX – $Y.YY"` if there’s a range,  
+    - `"Price unavailable"` if no data is present.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">string</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
 
         
             
@@ -2382,13 +2668,13 @@ it defaults to an empty array.
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-PokemonBinder.html">PokemonBinder</a></li></ul><h3>Classes</h3><ul><li><a href="PokemonCollection.html">PokemonCollection</a></li></ul><h3>Global</h3><ul><li><a href="global.html#COLLECTION_KEY">COLLECTION_KEY</a></li><li><a href="global.html#getAllSets">getAllSets</a></li><li><a href="global.html#getCardById">getCardById</a></li><li><a href="global.html#getCardsByName">getCardsByName</a></li><li><a href="global.html#getCardsByNameAndNumber">getCardsByNameAndNumber</a></li><li><a href="global.html#getCardsByPage">getCardsByPage</a></li><li><a href="global.html#getCardsBySet">getCardsBySet</a></li><li><a href="global.html#handleAddCard">handleAddCard</a></li><li><a href="global.html#initializeFilters">initializeFilters</a></li><li><a href="global.html#showAddCardModal">showAddCardModal</a></li><li><a href="global.html#showAssignCardModal">showAssignCardModal</a></li><li><a href="global.html#showBinder">showBinder</a></li><li><a href="global.html#showCollection">showCollection</a></li><li><a href="global.html#showOfflineAddCardModal">showOfflineAddCardModal</a></li><li><a href="global.html#turnPageLeft">turnPageLeft</a></li><li><a href="global.html#turnPageRight">turnPageRight</a></li><li><a href="global.html#updateBinder">updateBinder</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-PokemonBinder.html">PokemonBinder</a></li></ul><h3>Classes</h3><ul><li><a href="PokemonCollection.html">PokemonCollection</a></li></ul><h3>Global</h3><ul><li><a href="global.html#COLLECTION_KEY">COLLECTION_KEY</a></li><li><a href="global.html#formatMarketPrice">formatMarketPrice</a></li><li><a href="global.html#getAllSets">getAllSets</a></li><li><a href="global.html#getCardById">getCardById</a></li><li><a href="global.html#getCardsByName">getCardsByName</a></li><li><a href="global.html#getCardsByNameAndNumber">getCardsByNameAndNumber</a></li><li><a href="global.html#getCardsByPage">getCardsByPage</a></li><li><a href="global.html#getCardsBySet">getCardsBySet</a></li><li><a href="global.html#handleAddCard">handleAddCard</a></li><li><a href="global.html#initializeFilters">initializeFilters</a></li><li><a href="global.html#showAddCardModal">showAddCardModal</a></li><li><a href="global.html#showAssignCardModal">showAssignCardModal</a></li><li><a href="global.html#showBinder">showBinder</a></li><li><a href="global.html#showCollection">showCollection</a></li><li><a href="global.html#showOfflineAddCardModal">showOfflineAddCardModal</a></li><li><a href="global.html#turnPageLeft">turnPageLeft</a></li><li><a href="global.html#turnPageRight">turnPageRight</a></li><li><a href="global.html#updateBinder">updateBinder</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Sun Jun 08 2025 20:46:59 GMT+0000 (Coordinated Universal Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Sun Jun 08 2025 21:10:12 GMT+0000 (Coordinated Universal Time)
 </footer>
 
 <script> prettyPrint(); </script>

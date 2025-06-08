@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Module: PokemonBinder</title>
+    <title>JSDoc: Source: assets/scripts/priceHelper.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,132 +17,53 @@
 
 <div id="main">
 
-    <h1 class="page-title">Module: PokemonBinder</h1>
+    <h1 class="page-title">Source: assets/scripts/priceHelper.js</h1>
 
     
 
 
 
-
-<section>
-
-<header>
     
-        
-            
-        
-    
-</header>
-
-<article>
-    <div class="container-overview">
-    
-        
-            <div class="description">Custom web component for displaying and managing a Pokemon card binder, including a page-turning feature.</div>
-        
-
-        
-            
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="components_binder_pokemon-binder.js.html">components/binder/pokemon-binder.js</a>, <a href="components_binder_pokemon-binder.js.html#line1">line 1</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-    
-    </div>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</article>
-
-</section>
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Given a Poké TCG API card object, computes and formats the market‐price range
+ * across all available pricing variants, or returns a fallback if none exist.
+ *
+ * @param {Object} fullCard
+ *   The full card data as returned by the Poké TCG API.
+ * @param {Object} [fullCard.tcgplayer]
+ *   Optional TCGPlayer block containing pricing information.
+ * @param {Object.&lt;string, {market:number}>} [fullCard.tcgplayer.prices]
+ *   An object whose keys are variant names (e.g. "normal", "reverseHolofoil")
+ *   and whose values contain a `market` number.
+ * @returns {string}
+ *   A formatted price string:
+ *     - `"$X.XX"` if all variants share the same market price,  
+ *     - `"$X.XX – $Y.YY"` if there’s a range,  
+ *     - `"Price unavailable"` if no data is present.
+ */
+export function formatMarketPrice(fullCard) {
+  const prices = fullCard?.tcgplayer?.prices;
+  if (!prices) return 'Price unavailable';
+
+  const markets = Object.values(prices)
+    .map(p => p.market)
+    .filter(p => typeof p === 'number');
+
+  if (markets.length === 0) {
+    return 'Price unavailable';
+  }
+
+  const min = Math.min(...markets);
+  const max = Math.max(...markets);
+
+  return min === max
+    ? `$${min.toFixed(2)}`
+    : `$${min.toFixed(2)} – $${max.toFixed(2)}`;
+}</code></pre>
+        </article>
+    </section>
 
 
 
