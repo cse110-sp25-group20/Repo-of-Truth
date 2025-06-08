@@ -9,10 +9,10 @@
   },
   "scripts": {
     "docs": "jsdoc -c jsdoc.json",
-    "test:unit": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --rootDir ./tests --testMatch \"**/*.unit.test.js\" --coverage --coverageThreshold=\"{\\\"global\\\":{\\\"branches\\\":60,\\\"functions\\\":60,\\\"lines\\\":60,\\\"statements\\\":60}}\" --",
-    "start:dev": "live-server source --port=5000 --no-browser",
+    "test:unit": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --config=jest.unit.config.js",
+    "start:dev": "live-server source --port=5500 --no-browser",
     "jest": "jest",
-    "test:e2e": "start-server-and-test start:dev http://localhost:5000 \"node --experimental-vm-modules ./node_modules/jest/bin/jest.js --rootDir ./tests --testMatch \\\"**/*.e2e.test.js\\\"\""
+    "test:e2e": "start-server-and-test start:dev http://localhost:5500 \"node --experimental-vm-modules ./node_modules/jest/bin/jest.js --config=jest.e2e.config.js --verbose --silent false\""
   },
   "repository": {
     "type": "git",
@@ -41,19 +41,5 @@
   "dependencies": {
     "dotenv": "^16.5.0",
     "puppeteer": "^19.11.1"
-  },
-  "jest": {
-    "rootDir": "tests",
-    "preset": "jest-puppeteer",
-    "collectCoverage": true,
-    "transform": {},
-    "globals": {
-      "puppeteerOptions": {
-        "headless": false,
-        "args": [
-          "--no-sandbox"
-        ]
-      }
-    }
   }
 }
