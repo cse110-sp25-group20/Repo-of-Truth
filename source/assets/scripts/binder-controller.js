@@ -52,10 +52,6 @@ function turnPageLeft() {
 document.addEventListener("DOMContentLoaded", () => {
   updateBinder();
 
-  document.getElementById("addCard")?.addEventListener("click", () => {
-    document.querySelector("pokemon-binder")?.showAddCardModal();
-  });
-
   document
     .getElementById("turnPageRight")
     ?.addEventListener("click", turnPageRight);

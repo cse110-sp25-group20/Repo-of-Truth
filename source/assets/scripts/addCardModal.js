@@ -140,9 +140,7 @@ export function showAddCardModal() {
         cardDiv.style.alignItems = 'center';
         cardDiv.style.justifyContent = 'center';
         cardDiv.style.padding = '10px';
-        cardDiv.style.border = '1px solid #ccc';
         cardDiv.style.borderRadius = '8px';
-        cardDiv.style.backgroundColor = '#fff';
         cardDiv.style.boxShadow = '0 2px 6px rgba(0,0,0,0.1)';
         cardDiv.style.cursor = 'pointer';
         cardDiv.style.transition = 'transform 0.2s ease, border 0.2s ease';
