@@ -26,19 +26,6 @@ class PokemonCollection extends HTMLElement {
           width: 100%;
           min-height: 400px;
         }
-        .collection-outer {
-          background: #fff;
-          border-radius: 20px;
-          box-shadow: 0 4px 24px 0 rgba(34,34,34,0.10), 0 0 0 4px #2a75bb22;
-          padding: 24px 16px 32px 16px;
-          margin: 32px 0;
-          max-width: 900px;
-          width: 100%;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          border: 2.5px solid #2a75bb;
-        }
         .collection-list {
           display: flex;
           flex-wrap: wrap;
@@ -67,14 +54,6 @@ class PokemonCollection extends HTMLElement {
           display: flex;
           flex-direction: column;
           align-items: center;
-          background: linear-gradient(135deg, #fff 60%, #ffcb05 100%);
-          border: 2px solid #2a75bb;
-          border-radius: 12px;
-          box-shadow: 0 2px 8px rgba(34,34,34,0.10);
-          padding: 16px 10px 12px 10px;
-          width: 140px;
-          min-height: 200px;
-          margin: 0;
           transition: box-shadow 0.2s, border-color 0.2s, transform 0.15s ease-in-out;
         }
         .collection-card:hover {
@@ -83,17 +62,11 @@ class PokemonCollection extends HTMLElement {
           transition: transform 0.15s ease-in-out;
         }
         .collection-card img {
-          width: 100px;
-          height: 140px;
-          object-fit: contain;
-          border-radius: 8px;
-          background: #f0f0f0;
           margin-bottom: 12px;
         }
         .collection-card .card-name {
           font-weight: bold;
           font-size: 1.1rem;
-          color: #2a75bb;
           text-align: center;
           margin-top: 4px;
           word-break: break-word;
