@@ -1,4 +1,4 @@
-# Pokémon Collector App
+# PokéCollect - A Pokémon Collector App
 
 <!-- TODO: 
 - read here: https://github.com/matiassingers/awesome-readme for more good README.md files
