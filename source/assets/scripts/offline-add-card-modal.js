@@ -4,17 +4,23 @@ import { offlineCards } from "../offline/offline-cards.js";
 
 /**
  * Displays a modal popup listing offline card subset to add to collection or binder.
- * @param {('binder'|'collection')} context - Determines add-to behavior.
+ * 
+ * - Allows user to choose from pre-defined offline cards.
+ * - Supports selection, preview, and confirmation to add.
+ * - Persists selection to localStorage and updates collection/binder views.
+ * 
+ * @param {('binder'|'collection')} context - Determines whether the selected card is added to the binder or the collection.
+ * @returns {void}
  */
 export function showOfflineAddCardModal(context) {
-  // Remove any existing modal
+  // Remove any existing modal from the DOM
   const old = document.getElementById('offline-pokemon-modal');
   if (old) old.remove();
 
-  // Use the imported offlineCards array
+  // Validate and fetch offline cards
   const cards = Array.isArray(offlineCards) ? offlineCards : [];
 
-  // Create modal container
+  // Create modal container and structure
   const modal = document.createElement('div');
   modal.className = 'card-modal';
   modal.id = 'offline-pokemon-modal';
@@ -52,6 +58,8 @@ export function showOfflineAddCardModal(context) {
     </section>
   `;
   document.body.appendChild(modal);
+
+  // Dismiss modal on background click
   modal.addEventListener('click', e => {
     if (e.target === modal) modal.remove();
   });
@@ -60,7 +68,10 @@ export function showOfflineAddCardModal(context) {
   const confirmBtn = modal.querySelector('#confirmOfflineAddBtn');
   let selected = null;
 
-  // Render offline cards
+  /**
+   * Renders the list of offline cards for selection.
+   * Each card is selectable, displaying its image and name.
+   */
   cards.forEach(card => {
     const div = document.createElement('div');
     div.className = 'card';
@@ -77,6 +88,7 @@ export function showOfflineAddCardModal(context) {
       maxWidth: '100px',
       margin: 'auto',
     });
+
     // Thumbnail image
     const img = document.createElement('img');
     img.src = card.imgPath;
@@ -89,9 +101,10 @@ export function showOfflineAddCardModal(context) {
     Object.assign(label.style, {
       marginTop: '6px', fontWeight: 'bold', fontSize: '12px', textAlign: 'center', wordBreak: 'break-word'
     });
+
     div.append(img, label);
 
-    // Selection handling
+    // Handle selection
     div.addEventListener('click', () => {
       listEl.querySelectorAll('.card.selected').forEach(el => el.classList.remove('selected'));
       div.classList.add('selected');
@@ -102,15 +115,21 @@ export function showOfflineAddCardModal(context) {
     listEl.appendChild(div);
   });
 
-  // Confirm adding offline card
+  /**
+   * Finalizes adding the selected offline card to localStorage.
+   * Updates collection or binder based on current context.
+   */
   confirmBtn.addEventListener('click', () => {
     if (!selected) return;
+
     const collectionKey = 'pokemonCollection';
     const stored = JSON.parse(localStorage.getItem(collectionKey)) || [];
+
+    // Store card in localStorage
     stored.push({ name: selected.name, imgUrl: selected.imgPath });
     localStorage.setItem(collectionKey, JSON.stringify(stored));
 
-    // Invoke existing handlers
+    // Optionally trigger global card handling hooks
     if (window.addCardToCollection) {
       window.addCardToCollection({ name: selected.name, imgUrl: selected.imgPath });
     }
@@ -118,11 +137,13 @@ export function showOfflineAddCardModal(context) {
       window.handleAddCard(selected.imgPath);
     }
 
-    // Refresh views
+    // Refresh UI views
     const collEl = document.querySelector('pokemon-collection');
     if (collEl?.render) collEl.render();
     const binderEl = document.querySelector('pokemon-binder');
-    if (binderEl?.setPages && window.getBinderPages) binderEl.setPages(window.getBinderPages());
+    if (binderEl?.setPages && window.getBinderPages) {
+      binderEl.setPages(window.getBinderPages());
+    }
 
     modal.remove();
   });
