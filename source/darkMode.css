@@ -17,6 +17,16 @@ body.dark-mode h1 {
   text-shadow: 2px 2px 0 #2a75bb, 4px 4px 0 #ee1515;
 }
 
+
+body.dark-mode h1::before,
+body.dark-mode h1::after {
+  background: url('assets/images/Great-ball.webp') no-repeat center/contain;
+  display: inline-flex;
+  align-self: center;
+  margin: 0 8px;
+  position: relative;
+}
+
 body.dark-mode .navbar {
   background: rgba(34, 39, 47, 0.92);
   border: 2px solid #ffcb05;
@@ -25,8 +35,13 @@ body.dark-mode .navbar {
 body.dark-mode .navbar a {
   color: #ffcb05;
 }
-body.dark-mode .navbar a:hover, body.dark-mode .navbar a:focus {
-  background: #2a75bb;
+body.dark-mode .navbar a:hover {
+  background: linear-gradient(90deg, #2a75bb 60%, #ee1515 100%);
+  color: #fff;
+  box-shadow: 0 4px 16px #2a75bb33;
+}
+body.dark-mode .navbar a.active {
+  background: linear-gradient(90deg, #2a75bb 60%, #ee1515 100%);
   color: #fff;
   box-shadow: 0 4px 16px #2a75bb33;
 }
@@ -50,8 +65,7 @@ body.dark-mode .pokeball-toggle::after {
   border: 4px solid #ffcb05;
   box-shadow: 0 0 0 2px #2a75bb;
 }
-body.dark-mode #darkModeToggle:hover .pokeball-toggle,
-body.dark-mode #darkModeToggle:focus .pokeball-toggle {
+body.dark-mode #darkModeToggle:hover .pokeball-toggle {
   box-shadow: 0 0 0 4px #2a75bbaa;
 }
 
@@ -124,6 +138,28 @@ body.dark-mode .modal-name {
 }
 body.dark-mode .modal-details li {
   color: #ffcb05;
+}
+
+/* =========================
+   DARK MODE: COLLECTION VIEW
+   ========================= */
+body.dark-mode pokemon-collection::part(collection-outer) {
+    background: rgba(42, 42, 42, 0.95);
+    box-shadow: 0 4px 24px 0 rgba(255,203,5,0.15), 0 0 0 4px #ffcb0522;
+}
+
+body.dark-mode pokemon-collection::part(collection-card) {
+    background: linear-gradient(135deg, #333 60%, rgba(255,203,5,0.3) 100%);
+    border-color: #ffcb05;
+    box-shadow: 0 2px 8px rgba(255,203,5,0.15);
+}
+
+body.dark-mode pokemon-collection::part(card-name) {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+body.dark-mode pokemon-collection::part(empty-message) {
+    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.3);
 }
 
 /* =========================

@@ -58,13 +58,16 @@ h1 {
     margin: 32px 0 8px 0;
     text-align: center;
     text-shadow: 2px 2px 0 #ffcb05, 4px 4px 0 #2a75bb;
+    user-select: none;
 }
 h1::before, h1::after {
     content: '';
-    display: inline-block;
-    height: 48px;
-    margin-right: 8px;
-    width: 48px;
+    display: inline-flex;
+    align-self: center;
+    height: 52px;
+    width: 52px;
+    margin: 0 8px;
+    position: relative;
 }
 
 nav {
@@ -87,12 +90,14 @@ nav {
     padding: 8px 16px;
     align-items: center;
     position: relative;
+    user-select: none;
 }
 
 .navbar li {
     align-items: center;
     justify-self: center;
     font-size: 1.3rem;
+    user-select: none;
 }
 
 .navbar a {
@@ -106,10 +111,18 @@ nav {
     position: relative;
     text-decoration: none;
     transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+    user-select: none;
 }
 
-.navbar a:hover, .navbar a:focus {
-    background: #ee1515;
+.navbar a:hover {
+    background: linear-gradient(90deg, #ee1515 60%, #ffcb05 100%);
+    box-shadow: 0 4px 16px #ee151533;
+    color: #fff;
+    outline: none;
+}
+
+.navbar a.active {
+    background: linear-gradient(90deg, #ee1515 60%, #ffcb05 100%);
     box-shadow: 0 4px 16px #ee151533;
     color: #fff;
     outline: none;
@@ -174,6 +187,7 @@ button:active {
     box-shadow: none;
     padding: 0;
     position: absolute;
+    user-select: none;
 }
 
 /* Top right for collection view */
@@ -391,8 +405,7 @@ button:active {
   width: 14px;
   z-index: 2;
 }
-#darkModeToggle:hover .pokeball-toggle,
-#darkModeToggle:focus .pokeball-toggle {
+#darkModeToggle:hover .pokeball-toggle {
   box-shadow: 0 0 0 4px #ffcb05aa;
 }
 body.dark-mode::before {

@@ -50,6 +50,27 @@ class PokemonCollection extends HTMLElement {
           letter-spacing: 1px;
           max-width: 80%;
         }
+        .collection-card {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          transition: box-shadow 0.2s, border-color 0.2s, transform 0.15s ease-in-out;
+        }
+        .collection-card:hover {
+          cursor: pointer;
+          transform: scale(1.02);
+          transition: transform 0.15s ease-in-out;
+        }
+        .collection-card img {
+          margin-bottom: 12px;
+        }
+        .collection-card .card-name {
+          font-weight: bold;
+          font-size: 1.1rem;
+          text-align: center;
+          margin-top: 4px;
+          word-break: break-word;
+        }
         @media (max-width: 800px) {
           .collection-outer {
             max-width: 98vw;
