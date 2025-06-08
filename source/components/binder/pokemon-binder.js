@@ -438,6 +438,14 @@ _loadFace(faceEl, cardUrls, pageNumber) {
         img.src = 'assets/images/card-back.png';
       };
       img.addEventListener("click", () => this.showModal(img.src));
+      img.addEventListener('mouseenter', () => {
+        img.style.transform = 'scale(1.05)';
+        img.style.transition = 'transform 0.2s ease';
+      });
+
+      img.addEventListener('mouseleave', () => {
+        img.style.transform = 'scale(1)';
+      });
       slot.appendChild(img);
     } else {
       // Empty slot: open the assign-card modal
