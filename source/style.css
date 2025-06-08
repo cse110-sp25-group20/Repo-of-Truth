@@ -268,7 +268,7 @@ button:active {
 }
 .modal-content {
   display: flex;
-  flex-direction: row;
+  align-items: center;
   background: #fff;
   border: 4px solid #2a75bb;
   border-radius: 20px;
@@ -280,7 +280,7 @@ button:active {
   align-items: center;
   justify-content: space-between;
   gap: 24px;
-  overflow: hidden;
+  margin: auto;
 }
 .modal-image {
   flex: 0 1 320px;
@@ -298,8 +298,9 @@ button:active {
 }
 
 .modal-card {
-  max-width: 260px;
-  max-height: 340px;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
   border-radius: 16px;
   box-shadow: 0 4px 12px #2a75bb33;
   background: #fff;
@@ -470,32 +471,27 @@ body.dark-mode::before {
         padding: 10px 12px;
     }
     .modal-content {
-      display: flex;
-      flex-direction: row;
-      background: #fff;
-      border: 4px solid #2a75bb;
-      border-radius: 20px;
-      box-shadow: 0 8px 32px #2a75bb44;
+      flex-direction: column;
       padding: 20px;
-      max-width: 90vw;
+      max-width: 400px;
       width: 100%;
-      box-sizing: border-box;
-      align-items: center;
-      justify-content: center;
-      gap: 24px;
-      overflow-wrap: break-word;
-      margin: auto;
-      flex-wrap: wrap;
+      
+      /* justify-content: center; */
+
+      /* overflow-wrap: break-word; */
+      /* margin: auto; */
+      /* flex-wrap: wrap; */
     }
     .modal-image {
-      min-height: 80px;
+
       min-width: 80px;
-      padding: 8px;
+      height: auto;
+      width: auto;
+      padding: 16px;
+
+      flex-shrink: 1;
     }
-    .modal-card {
-      max-height: 80px;
-      max-width: 80px;
-    }
+    
     .modal-info {
       gap: 10px;
       min-width: 0;
@@ -505,7 +501,7 @@ body.dark-mode::before {
       width: 100%;
     }
     .modal-name {
-      font-size: 1.5rem;
+      font-size: 2rem;
       margin-bottom: 8px;
     }
     .modal-details li {
