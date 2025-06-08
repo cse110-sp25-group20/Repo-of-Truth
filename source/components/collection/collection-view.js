@@ -187,7 +187,7 @@ class PokemonCollection extends HTMLElement {
       const rarity = fullCard?.rarity || 'Unknown';
       const set = fullCard?.set?.name || '--';
       const number = fullCard?.number || '-';
-      const setSize = fullCard?.set?.total || '-';
+      const setSize = fullCard?.set?.printedTotal || '-';
 
       const modal = document.createElement('div');
       modal.className = 'card-modal';
