@@ -429,86 +429,93 @@ body.dark-mode::before {
    RESPONSIVE DESIGN
    ========================= */
 @media (max-width: 900px) {
-    pokemon-binder {
-        aspect-ratio: 4/3;
-        height: auto !important;
-        width: 95% !important;
-    }
-    .controls {
-        flex-direction: column;
-        align-items: center;
-        width: 100%;
-        margin: 20px 0;
-    }
-    .collection-controls {
-        position: static;
-        justify-content: center;
-        margin-top: 20px;
-    }
-    .collection-controls #addCard {
-        position: static;
-        width: 200px;
-        margin: 0;
-    }
-    .binder-controls {
-        flex-direction: column;
-        gap: 12px;
-        margin-top: 16px;
-    }
-    button {
-        margin: 5px 0;
-        width: 80%;
-    }
-    header .logo {
-        width: 500px;
-    }
-    .navbar {
-        gap: 8px;
-        padding: 0 8px;
-    }
-    .navbar a {
-        font-size: 1rem;
-        padding: 10px 12px;
-    }
-    .modal-content {
-      flex-direction: column;
-      padding: 20px;
-      max-width: 450px;
-      width: 100%;
-    }
-    .modal-image {
+  .binder-container {
+    width: 100%;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 16px;
+    box-sizing: border-box;
+  }
+  
+  pokemon-binder {
+    height: 70vw;
+    width: 100%;
+    max-width: 700px;
+    max-height: 550px;
+    min-height: 275px;
+  }
 
-      min-width: 80px;
-      height: auto;
-      width: auto;
-      padding: 16px;
-
-      flex-shrink: 1;
-    }
-    
-    .modal-info {
-      gap: 10px;
-      min-width: 0;
-      align-items: center;
-    }
-    .modal-info * {
-      width: 100%;
-    }
-    .modal-name {
-      font-size: 2rem;
-      margin-bottom: 8px;
-    }
-    .modal-details li {
-      font-size: 1rem;
-    }
+  .controls {
+    flex-direction: column;
+    align-items: center;
+    max-width: 300px;
+    margin: 20px 0;
+  }
+  .collection-controls {
+    position: static;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  .collection-controls #addCard {
+    position: static;
+    width: 200px;
+    margin: 0;
+  }
+  .binder-controls {
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 16px;
+  }
+  button {
+    margin: 5px 0;
+    width: 80%;
+  }
+  header .logo {
+    width: 500px;
+  }
+  .navbar {
+    gap: 8px;
+    padding: 0 4px;
+  }
+  .navbar a {
+    font-size: 1rem;
+    padding: 10px 12px;
+  }
+  .modal-content {
+    flex-direction: column;
+    padding: 20px;
+    max-width: 450px;
+    width: 100%;
+  }
+  .modal-image {
+    min-width: 80px;
+    height: auto;
+    width: auto;
+    padding: 16px;
+    flex-shrink: 1;
+  }
+  .modal-info {
+    gap: 10px;
+    min-width: 0;
+    align-items: center;
+  }
+  .modal-info * {
+    width: 100%;
+  }
+  .modal-name {
+    font-size: 2rem;
+    margin-bottom: 8px;
+  }
+  .modal-details li {
+    font-size: 1rem;
+  }
 }
 @media (max-width: 550px) {
   header .logo {
     width: 300px;
   }
-  /* .collection-controls {
-    top: 230px;
-  } */
 }
 .collection-controls{
   top: 230px;

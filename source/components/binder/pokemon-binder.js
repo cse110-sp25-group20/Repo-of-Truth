@@ -199,6 +199,12 @@ template.innerHTML = `
       color: #2a75bb;
       font-weight: bold;
     }
+    @media (max-width: 1024px) {
+      :host {
+        width: 400px;
+        height: 300px;
+      }
+    }
     @media (max-width:600px) {
       .modal-content { flex-direction:column; padding:12px 4px; gap:12px; max-width:98vw; max-height:98vh; }
       .modal-image { min-width:60px; min-height:60px; padding:4px; }
