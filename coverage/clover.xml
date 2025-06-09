@@ -1,6 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1749345856439" clover="3.2.0">
-  <project timestamp="1749345856439" name="All files">
-    <metrics statements="0" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0" elements="0" coveredelements="0" complexity="0" loc="0" ncloc="0" packages="0" files="0" classes="0"/>
+<coverage generated="1749448405371" clover="3.2.0">
+  <project timestamp="1749448405371" name="All files">
+    <metrics statements="50" coveredstatements="0" conditionals="51" coveredconditionals="0" methods="9" coveredmethods="0" elements="110" coveredelements="0" complexity="0" loc="50" ncloc="50" packages="1" files="1" classes="1"/>
+    <file name="pokemonAPI.js" path="F:\Downloads\Repo-of-Truth\source\api\pokemonAPI.js">
+      <metrics statements="50" coveredstatements="0" conditionals="51" coveredconditionals="0" methods="9" coveredmethods="0"/>
+      <line num="2" count="0" type="stmt"/>
+      <line num="3" count="0" type="stmt"/>
+      <line num="8" count="0" type="stmt"/>
+      <line num="17" count="0" type="stmt"/>
+      <line num="20" count="0" type="stmt"/>
+      <line num="21" count="0" type="cond" truecount="0" falsecount="4"/>
+      <line num="22" count="0" type="stmt"/>
+      <line num="26" count="0" type="stmt"/>
+      <line num="31" count="0" type="cond" truecount="0" falsecount="2"/>
+      <line num="32" count="0" type="stmt"/>
+      <line num="33" count="0" type="stmt"/>
+      <line num="38" count="0" type="stmt"/>
+      <line num="39" count="0" type="stmt"/>
+      <line num="50" count="0" type="cond" truecount="0" falsecount="4"/>
+      <line num="51" count="0" type="stmt"/>
+      <line num="56" count="0" type="stmt"/>
+      <line num="57" count="0" type="stmt"/>
+      <line num="61" count="0" type="stmt"/>
+      <line num="64" count="0" type="cond" truecount="0" falsecount="2"/>
+      <line num="74" count="0" type="cond" truecount="0" falsecount="4"/>
+      <line num="75" count="0" type="stmt"/>
+      <line num="77" count="0" type="cond" truecount="0" falsecount="4"/>
+      <line num="78" count="0" type="stmt"/>
+      <line num="82" count="0" type="stmt"/>
+      <line num="85" count="0" type="cond" truecount="0" falsecount="2"/>
+      <line num="95" count="0" type="cond" truecount="0" falsecount="4"/>
+      <line num="96" count="0" type="stmt"/>
+      <line num="100" count="0" type="stmt"/>
+      <line num="101" count="0" type="stmt"/>
+      <line num="103" count="0" type="cond" truecount="0" falsecount="2"/>
+      <line num="105" count="0" type="cond" truecount="0" falsecount="2"/>
+      <line num="106" count="0" type="stmt"/>
+      <line num="108" count="0" type="stmt"/>
+      <line num="120" count="0" type="cond" truecount="0" falsecount="4"/>
+      <line num="121" count="0" type="stmt"/>
+      <line num="125" count="0" type="stmt"/>
+      <line num="126" count="0" type="cond" truecount="0" falsecount="2"/>
+      <line num="131" count="0" type="stmt"/>
+      <line num="132" count="0" type="cond" truecount="0" falsecount="2"/>
+      <line num="133" count="0" type="stmt"/>
+      <line num="135" count="0" type="stmt"/>
+      <line num="138" count="0" type="stmt"/>
+      <line num="140" count="0" type="stmt"/>
+      <line num="141" count="0" type="cond" truecount="0" falsecount="2"/>
+      <line num="150" count="0" type="stmt"/>
+      <line num="151" count="0" type="cond" truecount="0" falsecount="2"/>
+      <line num="160" count="0" type="cond" truecount="0" falsecount="4"/>
+      <line num="161" count="0" type="stmt"/>
+      <line num="164" count="0" type="stmt"/>
+      <line num="169" count="0" type="cond" truecount="0" falsecount="2"/>
+    </file>
   </project>
 </coverage>

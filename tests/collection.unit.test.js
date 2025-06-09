@@ -88,4 +88,58 @@ describe('PokemonCollection Web Component', () => {
     expect(message).not.toBeNull();
     expect(message.textContent).toContain('No cards in your collection yet');
   });
+
+  test('should open a modal with card details when a card is clicked', async () => {
+    const fakeCards = [
+      { name: 'Pikachu', imgUrl: 'https://example.com/pikachu.png', id: 'xy1-1' }
+    ];
+    localStorage.setItem(COLLECTION_KEY, JSON.stringify(fakeCards));
+    element.render();
+    const cardDiv = element.shadowRoot.querySelector('.collection-card');
+    // Mock getCardById import
+    const getCardById = jest.fn().mockResolvedValue({
+      name: 'Pikachu', rarity: 'Rare', set: { name: 'Base', printedTotal: 100 }, number: '1', tcgplayer: { prices: { normal: { market: 2.5 } } }
+    });
+    // Patch dynamic import
+    jest.spyOn(element, 'getCollection').mockReturnValue(fakeCards);
+    global.import = jest.fn().mockResolvedValue({ getCardById });
+    // Simulate click
+    cardDiv.click();
+    // Wait for modal to appear
+    await new Promise(r => setTimeout(r, 20));
+    const modal = document.getElementById('global-pokemon-modal');
+    expect(modal).not.toBeNull();
+    expect(modal.innerHTML).toContain('Pikachu');
+    expect(modal.innerHTML).toContain('Base');
+    expect(modal.innerHTML).toContain('Rare');
+    expect(modal.innerHTML).toContain('$2.50');
+  });
+
+  test('should remove card from collection when delete button is clicked in modal', async () => {
+    const fakeCards = [
+      { name: 'Pikachu', imgUrl: 'https://example.com/pikachu.png', id: 'xy1-1' }
+    ];
+    localStorage.setItem(COLLECTION_KEY, JSON.stringify(fakeCards));
+    element.render();
+    const cardDiv = element.shadowRoot.querySelector('.collection-card');
+    // Mock getCardById import
+    const getCardById = jest.fn().mockResolvedValue({
+      name: 'Pikachu', rarity: 'Rare', set: { name: 'Base', printedTotal: 100 }, number: '1', tcgplayer: { prices: { normal: { market: 2.5 } } }
+    });
+    jest.spyOn(element, 'getCollection').mockReturnValue(fakeCards);
+    global.import = jest.fn().mockResolvedValue({ getCardById });
+    // Simulate click
+    cardDiv.click();
+    // Wait for modal to appear
+    await new Promise(r => setTimeout(r, 20));
+    const modal = document.getElementById('global-pokemon-modal');
+    expect(modal).not.toBeNull();
+    // Simulate delete button click
+    const deleteBtn = modal.querySelector('#deleteCardBtn');
+    deleteBtn.click();
+    // Wait for DOM update
+    await new Promise(r => setTimeout(r, 20));
+    expect(localStorage.getItem(COLLECTION_KEY)).toBe(JSON.stringify([]));
+    expect(document.getElementById('global-pokemon-modal')).toBeNull();
+  });
 });

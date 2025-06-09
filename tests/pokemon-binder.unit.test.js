@@ -43,6 +43,18 @@ describe("PokemonBinder", () => {
     expect(binder.currentIndex).toBe(1);
   });
 
+  test('setPages ignores cards with missing imgUrl, invalid page/slot', () => {
+    const cards = [
+      { name: 'NoImg', imgUrl: '', page: 1, slot: 0 },
+      { name: 'BadPage', imgUrl: 'x.png', page: 'NaN', slot: 2 },
+      { name: 'BadSlot', imgUrl: 'y.png', page: 3, slot: 999 },
+      { name: 'Valid', imgUrl: 'good.png', page: 2, slot: 1 }
+    ];
+    binder.setPages(cards);
+    expect(binder.pagesData.size).toBe(1);
+    expect(binder.pagesData.get(2)[1]).toBe('good.png');
+  });
+
   test("setPages filters invalid entries", () => {
     const invalidCards = [
       { name: "NoImg", imgUrl: "", page: 1, slot: 0 },
@@ -932,5 +944,122 @@ describe("Search input event and result rendering", () => {
     expect(resultBox.textContent).toMatch(/Error: API failure/);
 
     global.getCardsByName.mockRestore();
+  });
+});
+
+describe('Error handling', () => {
+  let binder;
+
+  beforeEach(() => {
+    document.body.innerHTML = `<pokemon-binder></pokemon-binder>`;
+    binder = document.querySelector('pokemon-binder');
+  });
+
+  test('showModal handles error in getCardById gracefully', async () => {
+    // Setup localStorage with a card
+    const card = {
+      name: 'Pikachu', imgUrl: 'pikachu.png', id: 'xy1-1', page: 1, slot: 0
+    };
+    localStorage.setItem('pokemonCollection', JSON.stringify([card]));
+    // Mock getCardById import to throw
+    const getCardById = jest.fn().mockRejectedValue(new Error('API fail'));
+    global.import = jest.fn().mockResolvedValue({ getCardById });
+    const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+    await binder.showModal('pikachu.png');
+    expect(errorSpy).toHaveBeenCalledWith(
+      'Failed to load full card info:',
+      expect.any(Error)
+    );
+    errorSpy.mockRestore();
+    // Cleanup
+    document.getElementById('global-pokemon-modal')?.remove();
+  });
+
+  test('removeBinderBtn click handles JSON parse error gracefully', async () => {
+    // Setup localStorage with a card
+    const card = {
+      name: 'Pikachu', imgUrl: 'pikachu.png', id: 'xy1-1', page: 1, slot: 0
+    };
+    localStorage.setItem('pokemonCollection', JSON.stringify([card]));
+    // Show modal
+    await binder.showModal('pikachu.png');
+    const modal = document.getElementById('global-pokemon-modal');
+    // Corrupt localStorage to cause JSON.parse error
+    localStorage.setItem('pokemonCollection', 'not-json');
+    const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+    // Simulate remove button click
+    const removeBtn = modal.querySelector('#removeBinderBtn');
+    removeBtn.click();
+    expect(errorSpy).toHaveBeenCalledWith(
+      'Failed to remove card from binder:',
+      expect.any(Error)
+    );
+    errorSpy.mockRestore();
+    // Cleanup
+    document.getElementById('global-pokemon-modal')?.remove();
+  });
+});
+
+test("modal card click handles error in toggleModal gracefully", () => {
+  const binder = document.createElement("pokemon-binder");
+  document.body.appendChild(binder);
+  binder.showModal("some-image-url");
+  const modal = document.getElementById("global-pokemon-modal");
+  const modalCard = modal.querySelector(".modal-card");
+  // Force toggleModal to throw
+  const orig = binder.toggleModal;
+  binder.toggleModal = jest.fn(() => { throw new Error("fail toggle") });
+  const errorSpy = jest.spyOn(console, "error").mockImplementation(() => {});
+  expect(() => modalCard.click()).not.toThrow();
+  expect(errorSpy).toHaveBeenCalledWith(
+    "Error closing modal:",
+    expect.any(Error)
+  );
+  binder.toggleModal = orig;
+  errorSpy.mockRestore();
+  modal.remove();
+});
+
+describe("Add card to collection error handling", () => {
+  test("addCardToCollection throws, modal still removed and error logged", () => {
+    window.addCardToCollection = jest.fn(() => { throw new Error("fail add") });
+    window.getBinderPages = jest.fn(() => ["page1"]);
+    const binderEl = document.querySelector("pokemon-binder");
+    jest.spyOn(binderEl, "setPages").mockImplementation(() => {});
+    const collEl = document.querySelector("pokemon-collection");
+    collEl.render = jest.fn();
+    const errorSpy = jest.spyOn(console, "error").mockImplementation(() => {});
+    // Try to add card
+    try {
+      window.addCardToCollection({
+        name: "Pikachu",
+        imgUrl: "pikachu.png",
+      });
+    } catch (e) {
+      // Expected error, do nothing
+    }
+    // Modal should still be removed
+    document.getElementById("global-pokemon-modal")?.remove();
+    expect(errorSpy).toHaveBeenCalledWith(
+      "Failed to add card to collection:",
+      expect.any(Error)
+    );
+    errorSpy.mockRestore();
+  });
+});
+
+describe("Search input event error handling", () => {
+  test("_onInput throws, error is logged and UI does not break", async () => {
+    const binder = new PokemonBinder();
+    const orig = binder._onInput;
+    binder._onInput = jest.fn(() => { throw new Error("fail input") });
+    const errorSpy = jest.spyOn(console, "error").mockImplementation(() => {});
+    expect(() => binder._onInput({ target: { value: "test" } })).not.toThrow();
+    expect(errorSpy).toHaveBeenCalledWith(
+      "Error handling search input:",
+      expect.any(Error)
+    );
+    binder._onInput = orig;
+    errorSpy.mockRestore();
   });
 });
