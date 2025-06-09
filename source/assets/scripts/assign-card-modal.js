@@ -31,23 +31,6 @@ export function showAssignCardModal(pageIndex, slotIndex) {
       .modal-name {
         margin-top: 16px;
       }
-      .empty-message {
-        grid-column: 1 / -1;
-        grid-row: 1 / -1;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-family: 'Luckiest Guy', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        font-size: 1.5rem;
-        line-height: 1.3;
-        color: #2a75bb;
-        text-shadow: 1px 1px 2px #ffcb05;
-        letter-spacing: 1px;
-        padding: 0;
-        margin: 0;
-        background: transparent;
-        border: none;
-      }
     </style>
     <section class="modal-content" role="dialog" aria-modal="true">
       <article class="modal-info" style="flex: 1;">
@@ -89,15 +72,6 @@ export function showAssignCardModal(pageIndex, slotIndex) {
   const COLLECTION_STORAGE_KEY = 'pokemonCollection';
   const collection = JSON.parse(localStorage.getItem(COLLECTION_STORAGE_KEY)) || [];
 
-  if (collection.length === 0) {
-    // hide the confirm button
-    confirmBtn.style.display = 'none';
-    // show the empty message
-    resultBox.innerHTML = `<p class="empty-message">No cards in your collection yet!</p>`;
-    // early return so we don't try to render cards
-    return;
-  }
-
   /**
    * Renders each card from the collection as a clickable option
    */
@@ -115,7 +89,7 @@ export function showAssignCardModal(pageIndex, slotIndex) {
       boxShadow: '0 2px 6px rgba(0,0,0,0.1)',
       cursor: 'pointer',
       transition: 'transform 0.2s ease, border 0.2s ease',
-      maxWidth: '110px',
+      maxWidth: '90px',
       margin: 'auto',
     });
 
