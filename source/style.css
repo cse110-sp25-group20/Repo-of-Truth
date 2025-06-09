@@ -370,6 +370,9 @@ button:active {
   opacity: 0.8;
 }
 
+/* =========================
+   TOOL TIP STYLING
+   ========================= */
 /* Input with tooltip */
 .input-tooltip-container {
   position: relative;
@@ -406,6 +409,7 @@ button:active {
 }
 
 .tooltip-text {
+  text-align: center;
   position: absolute;
   right: -10px;
   top: calc(100% + 8px);

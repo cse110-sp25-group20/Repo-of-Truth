@@ -36,7 +36,11 @@ export function showAddCardModal() {
       <article class="modal-info">
         <h2 class="modal-name">Add a Pokémon Card</h2>
         <input id="cardSearchInputName" type="text" placeholder="Enter Pokémon name" />
-        <input id="cardSearchInputNum" type="text" placeholder="Enter the card number within its set (found on the card, usually at the bottom, e.g., 17/102)" />
+        <div class="input-tooltip-container">
+          <input id="cardSearchInputNum" type="text" placeholder="Enter the card number within its set" />
+          <span class="tooltip-icon" role="img" aria-label="Help">?</span>
+          <span class="tooltip-text">Found on the card, usually at the bottom (e.g., 17/102)</span>
+        </div>
         <button id="cardSearchSubmit">Search</button>
         <div id="cardSearchResult" class="search-results-grid"></div>
         <button id="confirmAddCardBtn" style="display: none;">Add to Collection</button>
