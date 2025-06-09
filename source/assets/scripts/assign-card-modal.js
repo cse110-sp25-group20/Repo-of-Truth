@@ -84,8 +84,6 @@ export function showAssignCardModal(pageIndex, slotIndex) {
       alignItems: 'center',
       justifyContent: 'center',
       padding: '10px',
-      borderRadius: '8px',
-      backgroundColor: '#fff',
       boxShadow: '0 2px 6px rgba(0,0,0,0.1)',
       cursor: 'pointer',
       transition: 'transform 0.2s ease, border 0.2s ease',
