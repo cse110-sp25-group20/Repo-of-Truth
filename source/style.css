@@ -370,6 +370,94 @@ button:active {
   opacity: 0.8;
 }
 
+/* Input with tooltip */
+.input-tooltip-container {
+  position: relative;
+  width: 100%;
+  margin-bottom: 12px;
+}
+
+.input-tooltip-container input {
+  margin-bottom: 0;
+  padding-right: 40px;
+}
+
+.tooltip-icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  background: #2a75bb;
+  border-radius: 50%;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: help;
+  transition: background-color 0.2s ease;
+}
+
+.tooltip-icon:hover {
+  background: #ee1515;
+}
+
+.tooltip-text {
+  position: absolute;
+  right: -10px;
+  top: calc(100% + 8px);
+  background: rgba(42, 117, 187, 0.95);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  width: max-content;
+  max-width: 250px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-5px);
+  transition: all 0.2s ease;
+  z-index: 1;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.tooltip-text::before {
+  content: '';
+  position: absolute;
+  right: 15px;
+  top: -6px;
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-bottom: 6px solid rgba(42, 117, 187, 0.95);
+}
+
+.tooltip-icon:hover + .tooltip-text {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+body.dark-mode .tooltip-icon {
+  background: #4180bb;
+}
+
+body.dark-mode .tooltip-icon:hover {
+  background: #ffcb05;
+}
+
+body.dark-mode .tooltip-text {
+  background: rgba(65, 128, 187, 0.95);
+}
+
+body.dark-mode .tooltip-text::before {
+  border-bottom-color: rgba(65, 128, 187, 0.95);
+}
+
 /* =========================
    CARD SEARCH RESULTS
    ========================= */
@@ -383,6 +471,40 @@ button:active {
   padding: 10px;
   width: 100%;
   box-sizing: border-box;
+}
+
+/* Scrollbar styling */
+.search-results-grid::-webkit-scrollbar {
+  width: 12px;
+}
+
+.search-results-grid::-webkit-scrollbar-track {
+  background: #f0f0f0;
+  border-radius: 10px;
+}
+
+.search-results-grid::-webkit-scrollbar-thumb {
+  background: #2a75bb;
+  border-radius: 10px;
+  border: 3px solid #f0f0f0;
+}
+
+.search-results-grid::-webkit-scrollbar-thumb:hover {
+  background: #ee1515;
+}
+
+/* Dark mode scrollbar */
+body.dark-mode .search-results-grid::-webkit-scrollbar-track {
+  background: #2a2a2a;
+}
+
+body.dark-mode .search-results-grid::-webkit-scrollbar-thumb {
+  background: #4180bb;
+  border-color: #2a2a2a;
+}
+
+body.dark-mode .search-results-grid::-webkit-scrollbar-thumb:hover {
+  background: #ffcb05;
 }
 
 .search-result-card {
