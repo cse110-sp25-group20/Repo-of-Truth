@@ -1,7 +1,7 @@
 // collection-controller.js
 
 import "../../components/collection/collection-view.js";
-import { getCardsByPage } from "../../demos/api-search/api/pokemonAPI.js";
+import { getCardsByPage } from "../../api/pokemonAPI.js";
 import { showAddCardModal } from './addCardModal.js';
 import { showOfflineAddCardModal } from './offline-add-card-modal.js';
 

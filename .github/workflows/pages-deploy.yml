@@ -1,0 +1,39 @@
+name: Deploy site to GitHub Pages
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Inject API key
+        run: |
+          sed -i 's|__API_KEY__|'"${{ secrets.API_KEY }}"'|g' source/api/pokemonAPI.js
+
+      - name: Verify injection worked
+        run: |
+          if grep -q '__API_KEY__' source/api/pokemonAPI.js; then
+            echo "❌ Placeholder still there" && exit 1
+          else
+            echo "✅ Key was injected"
+          fi  
+
+      - uses: actions/configure-pages@v3
+
+      - name: Upload site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: source
+
+      - name: Deploy to Pages
+        if: github.ref == 'refs/heads/main'
+        uses: actions/deploy-pages@v4

@@ -1,6 +1,7 @@
-// Configuration: base URL and API key (move to env)
+// Configuration: base URL and API key
 const BASE_URL = "https://api.pokemontcg.io/v2";
-const API_KEY  = "29d15cf4-7669-4b3d-9d25-d1aad76e4e10";
+const API_KEY = "__API_KEY__";
+export default API_KEY;
 
 // Build a headers object that all requests share
 function defaultHeaders() {
