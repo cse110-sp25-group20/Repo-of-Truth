@@ -236,6 +236,12 @@ class PokemonCollection extends HTMLElement {
         deleteBtn.addEventListener('click', () => {
           const updated = this.getCollection().filter(c => c.imgUrl !== imgSrc);
           localStorage.setItem('pokemonCollection', JSON.stringify(updated));
+          // Refresh binder view if it exists
+          let collection = JSON.parse(localStorage.getItem(COLLECTION_KEY)) || [];
+          const oldBinder = document.querySelector('pokemon-binder');
+          if (oldBinder) {
+            oldBinder.setPages(collection);
+          }
           this.render();
           modal.remove();
         });
