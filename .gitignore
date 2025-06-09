@@ -1,4 +1,3 @@
 node_modules/
-tests/**
 !tests/.gitkeep
 **/.DS_Store

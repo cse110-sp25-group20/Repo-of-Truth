@@ -2,13 +2,17 @@
   "name": "repo-of-truth",
   "version": "1.0.0",
   "description": "[Team Page](admin/team.md)",
+  "type": "module",
   "main": "index.js",
   "directories": {
     "test": "tests"
   },
   "scripts": {
-    "test": "jest --coverage --coverageThreshold='{\"global\": {\"branches\": 70, \"functions\": 70, \"lines\": 70, \"statements\": 70}}'",
-    "docs": "jsdoc -c jsdoc.json"
+    "docs": "jsdoc -c jsdoc.json",
+    "test:unit": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --config=jest.unit.config.js",
+    "start:dev": "live-server source --port=5500 --no-browser",
+    "jest": "jest",
+    "test:e2e": "start-server-and-test start:dev http://localhost:5500 \"node --experimental-vm-modules ./node_modules/jest/bin/jest.js --config=jest.e2e.config.js --verbose --silent false\""
   },
   "repository": {
     "type": "git",
@@ -22,11 +26,20 @@
   },
   "homepage": "https://github.com/cse110-sp25-group20/Repo-of-Truth#readme",
   "devDependencies": {
+    "@babel/core": "^7.27.4",
+    "@babel/preset-env": "^7.27.2",
+    "babel-jest": "^29.7.0",
     "eslint": "^8.57.1",
     "jest": "^29.7.0",
-    "jsdoc": "^4.0.4"
+    "jest-environment-jsdom": "^30.0.0-beta.3",
+    "jest-puppeteer": "^10.1.4",
+    "jsdoc": "^4.0.4",
+    "live-server": "^1.2.2",
+    "puppeteer": "^22.15.0",
+    "start-server-and-test": "^2.0.12"
   },
   "dependencies": {
-    "dotenv": "^16.5.0"
+    "dotenv": "^16.5.0",
+    "puppeteer": "^19.11.1"
   }
 }
