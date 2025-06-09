@@ -66,6 +66,7 @@ class PokemonCollection extends HTMLElement {
         }
         .collection-card img {
           margin-bottom: 12px;
+          width: 245px;
         }
         .collection-card .card-name {
           font-weight: bold;

@@ -160,24 +160,39 @@ button {
     text-transform: uppercase;
     transition: all 0.2s cubic-bezier(.4,2,.6,1);
 }
+
+/* Navigation buttons */
+.binder-controls button {
+    min-width: 200px;
+    width: 200px;
+    text-align: center;
+    margin: 8px;
+    font-size: 16px;
+    padding: 12px 24px;
+}
+
+#addCard {
+    background: #ffcb05;
+    color: #2a75bb;
+}
+
+#addCard:hover {
+    background: #ffcb05;
+    color: #2a75bb;
+}
+
 button:hover {
     background: #ee1515;
     box-shadow: 0 8px 24px rgba(34, 34, 34, 0.18);
     color: #fff;
     transform: translateY(-3px) scale(1.05);
 }
+
 button:active {
     box-shadow: 0 2px 6px rgba(34, 34, 34, 0.10);
     transform: translateY(0) scale(1);
 }
-#addCard {
-    background: #ffcb05;
-    color: #2a75bb;
-}
-#addCard:hover {
-    background: #ffcb05;
-    color: #2a75bb;
-}
+
 .controls {
     display: flex;
     gap: 10px;
@@ -673,13 +688,16 @@ body.dark-mode::before {
     margin: 0;
   }
   .binder-controls {
-    flex-direction: column;
+    /* flex-direction: column; */
     gap: 12px;
     margin-top: 16px;
   }
   button {
     margin: 5px 0;
     width: 80%;
+  }
+  header {
+    margin-bottom: 10px;
   }
   header .logo {
     width: 500px;
