@@ -33,13 +33,13 @@ export function showAddCardModal() {
       }
     </style>
     <section class="modal-content" role="dialog" aria-modal="true">
-      <article class="modal-info" style="flex: 1;">
+      <article class="modal-info">
         <h2 class="modal-name">Add a Pokémon Card</h2>
         <input id="cardSearchInputName" type="text" placeholder="Enter Pokémon name" />
         <input id="cardSearchInputNum" type="text" placeholder="Enter the card number within its set (found on the card, usually at the bottom, e.g., 17/102)" />
         <button id="cardSearchSubmit">Search</button>
-        <div id="cardSearchResult" style="margin-top: 16px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; max-height: 40vh; overflow-y: auto;"></div>
-        <button id="confirmAddCardBtn" style="display: none; margin-top: 10px;">Add to Collection</button>
+        <div id="cardSearchResult" class="search-results-grid"></div>
+        <button id="confirmAddCardBtn" style="display: none;">Add to Collection</button>
       </article>
     </section>
   `;
@@ -134,18 +134,7 @@ export function showAddCardModal() {
       // Render card options
       cards.forEach(card => {
         const cardDiv = document.createElement('div');
-        cardDiv.className = 'card';
-        cardDiv.style.display = 'flex';
-        cardDiv.style.flexDirection = 'column';
-        cardDiv.style.alignItems = 'center';
-        cardDiv.style.justifyContent = 'center';
-        cardDiv.style.padding = '10px';
-        cardDiv.style.borderRadius = '8px';
-        cardDiv.style.boxShadow = '0 2px 6px rgba(0,0,0,0.1)';
-        cardDiv.style.cursor = 'pointer';
-        cardDiv.style.transition = 'transform 0.2s ease, border 0.2s ease';
-        cardDiv.style.maxWidth = '100px';
-        cardDiv.style.margin = 'auto';
+        cardDiv.className = 'card search-result-card';
 
         cardDiv.addEventListener('mouseover', () => {
           cardDiv.style.transform = 'scale(1.05)';
@@ -167,17 +156,11 @@ export function showAddCardModal() {
         const img = document.createElement('img');
         img.src = card.images.small;
         img.alt = card.name;
-        img.style.width = '100%';
-        img.style.borderRadius = '6px';
+        img.className = 'search-result-img';
 
         const nameEl = document.createElement('div');
         nameEl.className = 'card-name';
         nameEl.textContent = card.name;
-        nameEl.style.marginTop = '8px';
-        nameEl.style.fontWeight = 'bold';
-        nameEl.style.fontSize = '12px';
-        nameEl.style.textAlign = 'center';
-        nameEl.style.wordBreak = 'break-word';
 
         cardDiv.appendChild(img);
         cardDiv.appendChild(nameEl);

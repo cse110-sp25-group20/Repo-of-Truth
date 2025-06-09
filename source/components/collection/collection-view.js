@@ -73,6 +73,7 @@ class PokemonCollection extends HTMLElement {
           text-align: center;
           margin-top: 4px;
           word-break: break-word;
+          letter-spacing: 1px;
         }
         @media (max-width: 1150px) {
           .collection-list.has-cards {
