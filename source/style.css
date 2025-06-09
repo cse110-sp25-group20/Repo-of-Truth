@@ -163,11 +163,25 @@ button:active {
     color: #fff;
 }
 .controls {
+    position: absolute;
+    top: 180px;
+    right: 5vw;
     display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    justify-content: center;
-    margin-top: 20px;
+    gap: 10px;
+    z-index: 100;
+    background: none;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 0;
+}
+
+.controls.binder-spacing {
+    margin-top: 32px;
+}
+
+.controls.collection-spacing {
+    top: 220px !important;
+    right: 2vw;
 }
 
 /* =========================
@@ -380,8 +394,10 @@ button:active {
         width: 95% !important;
     }
     .controls {
-        align-items: center;
+        right: 2vw;
+        top: 170px;
         flex-direction: column;
+        align-items: flex-end;
     }
     button {
         margin: 5px 0;
@@ -452,6 +468,7 @@ button:active {
     min-height: 400px;
     max-height: 70vh;
     overflow-y: auto;
+    margin-right: 120px;
 }
 .collection-card {
     display: flex;
