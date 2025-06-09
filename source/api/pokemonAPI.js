@@ -54,7 +54,7 @@ export async function getCardsByName(name) {
   // According to the Pokémon TCG docs, to search by name you do:
   // GET /v2/cards?q=name:[searchTerm]
   const trimmed = name.trim(); 
-  const query = `name:*${trimmed}*`;
+  const query = `name:"*${trimmed}*"`;
  // Using Pokemon TCG API syntax allowing for words with spaces
 
   // _fetchJson returns an object { data: [ …card objects… ], page, pageSize, count, … }
