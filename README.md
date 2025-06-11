@@ -6,6 +6,8 @@
 - link website when its all done :)
 -->
 
+https://cse110-sp25-group20.github.io/cse110-sp25-group20/
+
 A modern web app to browse, collect, and manage your Pokémon cards from all generations. Built with HTML + CSS + JS, and powered by Pokemon TCG API.
 
 ![App Screenshot](admin/misc/demo.gif)
