@@ -20,6 +20,14 @@ A modern web app to browse, collect, and manage your Pokémon cards from all gen
 
 ---
 
+## 📷 Final Videos
+
+[Public Video](https://www.youtube.com/watch?v=HZ4HFHGtKxw)
+
+[Private Video](https://www.youtube.com/watch?v=Bt0JmYFLUrU)
+
+---
+
 ## ©️ Credits
 
 <img src="admin/branding/darklogo.png" alt="drawing" width="50"/>  
